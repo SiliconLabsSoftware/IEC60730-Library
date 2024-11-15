@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ASCII"?>
+<model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
+  <descriptors name="iec60730_demo" label="IEC60730 Example Demo" description="This is a Safety Libraries IEC60730 Example Demo&#xA;">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="universal\ configurator"/>
+    <properties key="solutionReferenceId" value="sample.iec60730_demo.iec60730_demo.slcp"/>
+    <properties key="projectFilePaths" value="sample/iec60730_demo/iec60730_demo.slcp"/>
+    <properties key="readmeFiles" value="sample/iec60730_demo/readme.html"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2601a brd2601b brd2703a brd2704a brd4158a brd4159a brd4161a brd4162a brd4163a brd4164a brd4165b brd4166a brd4166c brd4167a brd4168a brd4170a brd4171a brd4172a brd4172b brd4173a brd4174a brd4174b brd4175a brd4176a brd4179b brd4180a brd4180b brd4181a brd4181b brd4181c brd4182a brd4186a brd4186b brd4186c brd4187a brd4187b brd4187c brd4188a brd4188b brd4190a brd4194a brd4195a brd4195b brd4196a brd4196b brd4197a brd4198a brd4198b brd4199b brd4304a brd4305d brd4305e brd4306c brd4306d brd4308a brd4308b brd4308c brd4308d brd4309a brd4309b brd4311b brd4316a brd4317a brd4318a brd4319a brd4329a brd4337a brd4406a brd4411a"/>
+    <properties key="partCompatibility" value=".*efr32mg1[23]p.* .*efr32mg2[1247].* .*mgm1[23].* .*mgm2[124].* .*rm21."/>
+    <properties key="ideCompatibility" value="generic-template iar-embedded-workbench makefile-ide simplicity-ide visual-studio-code"/>
+    <properties key="toolchainCompatibility" value="gcc iar segger"/>
+    <properties key="category" value="IEC60730 Example Demo"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
+  </descriptors>
+  <descriptors name="iec60730_demo_cpp" label="IEC60730 Example Demo C++" description="This is a Safety Libraries IEC60730 Example Demo C++&#xA;">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="universal\ configurator"/>
+    <properties key="solutionReferenceId" value="sample.iec60730_demo_cpp.iec60730_demo_cpp.slcp"/>
+    <properties key="projectFilePaths" value="sample/iec60730_demo_cpp/iec60730_demo_cpp.slcp"/>
+    <properties key="readmeFiles" value="sample/iec60730_demo_cpp/readme.html"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2601a brd2601b brd2703a brd2704a brd4158a brd4159a brd4161a brd4162a brd4163a brd4164a brd4165b brd4166a brd4166c brd4167a brd4168a brd4170a brd4171a brd4172a brd4172b brd4173a brd4174a brd4174b brd4175a brd4176a brd4179b brd4180a brd4180b brd4181a brd4181b brd4181c brd4182a brd4186a brd4186b brd4186c brd4187a brd4187b brd4187c brd4188a brd4188b brd4190a brd4194a brd4195a brd4195b brd4196a brd4196b brd4197a brd4198a brd4198b brd4199b brd4304a brd4305d brd4305e brd4306c brd4306d brd4308a brd4308b brd4308c brd4308d brd4309a brd4309b brd4311b brd4316a brd4317a brd4318a brd4319a brd4329a brd4337a brd4406a brd4411a"/>
+    <properties key="partCompatibility" value=".*efr32mg1[23]p.* .*efr32mg2[1247].* .*mgm1[23].* .*mgm2[124].* .*rm21."/>
+    <properties key="ideCompatibility" value="generic-template iar-embedded-workbench makefile-ide simplicity-ide visual-studio-code"/>
+    <properties key="toolchainCompatibility" value="gcc iar segger"/>
+    <properties key="category" value="IEC60730 Example Demo"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
+  </descriptors>
+</model:MDescriptors>
