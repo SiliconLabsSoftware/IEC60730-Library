@@ -97,6 +97,7 @@ jobs:
         # ls -la
         mkdir extension
         cd extension
+        echo "REPO_URL=$REPO_URL"
         git clone $REPO_URL
         cd IEC60730-Library
         echo "Curent REPO_BRANCH is $REPO_BRANCH"
