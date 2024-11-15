@@ -19,6 +19,7 @@ on:
         default: '440133193'
     
 env:
+  REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
   AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
   SLC_CLI_URL: https://www.silabs.com/documents/login/software/slc_cli_linux.zip
   COMMANDER_URL: https://www.silabs.com/documents/login/software/SimplicityCommander-Linux.zip
@@ -86,7 +87,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install Gecko SDK
       if: always()
       run: |
@@ -96,8 +97,8 @@ jobs:
         # ls -la
         mkdir extension
         cd extension
-        git clone https://github.com/SiliconLabs/IEC60730_Libs.git
-        cd IEC60730_Libs
+        git clone $REPO_URL
+        cd IEC60730-Library
         echo "Curent REPO_BRANCH is $REPO_BRANCH"
         git checkout $REPO_BRANCH
         # ls -la
@@ -108,7 +109,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install Amazon Corretto 17
       if: always()
       run: |
@@ -118,7 +119,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install SLC CLI
       if: always()
       run: |
@@ -174,7 +175,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
         export PATH=$PATH:$PWD/commander
         export PATH=$PATH:$PWD/slc_cli
         export TOOL_DIRS=$PWD/$TOOL_DIRS
@@ -192,7 +193,7 @@ jobs:
         make prepare
         echo "Generate MG12 image"
         cd build
-        slc signature trust -extpath $SDK_PATH/extension/IEC60730_Libs
+        slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make integration_test_info -j4
@@ -212,7 +213,7 @@ jobs:
         rm -rf build
         make prepare
         cd build
-        slc signature trust -extpath $SDK_PATH/extension/IEC60730_Libs
+        slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make integration_test_info -j4
