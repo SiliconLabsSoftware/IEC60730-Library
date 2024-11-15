@@ -104,7 +104,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install Gecko SDK
       if: always()
       run: |
@@ -114,8 +114,8 @@ jobs:
         # ls -la
         mkdir extension
         cd extension
-        git clone https://github.com/SiliconLabs/IEC60730_Libs.git
-        cd IEC60730_Libs
+        git clone $REPO_URL
+        cd IEC60730-Library
         echo "Curent REPO_BRANCH_BUILD is $REPO_BRANCH_BUILD"
         git checkout $REPO_BRANCH_BUILD
         # ls -la
@@ -126,7 +126,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install Amazon Corretto 17
       if: always()
       run: |
@@ -136,7 +136,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install SLC CLI
       if: always()
       run: |
@@ -192,7 +192,7 @@ jobs:
         echo "Current directory: $PWD"
         ls -la
         echo "List file in simplicity_sdk folfer"
-        ls -la "/home/runner/work/IEC60730_Libs/IEC60730_Libs/simplicity_sdk"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
         export PATH=$PATH:$PWD/commander
         export PATH=$PATH:$PWD/slc_cli
         export TOOL_DIRS=$PWD/$TOOL_DIRS_BUILD
@@ -210,7 +210,7 @@ jobs:
         make prepare
         echo "Generate MG12 image"
         cd build
-        slc signature trust -extpath $SDK_PATH_BUILD/extension/IEC60730_Libs
+        slc signature trust -extpath $SDK_PATH_BUILD/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make unit_test_info -j4
@@ -230,7 +230,7 @@ jobs:
         rm -rf build
         make prepare
         cd build
-        slc signature trust -extpath $SDK_PATH_BUILD/extension/IEC60730_Libs
+        slc signature trust -extpath $SDK_PATH_BUILD/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make unit_test_info -j4
@@ -311,7 +311,7 @@ jobs:
       run: |
           export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
           export REPO_OWNER="SiliconLabs"
-          export REPO_NAME="IEC60730_Libs"
+          export REPO_NAME="IEC60730-Library"
           export RUN_ID="${{ github.run_id }}" 
           export ARTIFACT_NAME="firmware_mg12_gcc"  
           
@@ -337,7 +337,7 @@ jobs:
       run: |
           export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
           export REPO_OWNER="SiliconLabs"
-          export REPO_NAME="IEC60730_Libs"
+          export REPO_NAME="IEC60730-Library"
           export RUN_ID="${{ github.run_id }}" 
           export ARTIFACT_NAME="firmware_mg24_gcc"  
           
