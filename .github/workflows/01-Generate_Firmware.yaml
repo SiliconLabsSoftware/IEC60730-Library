@@ -45,7 +45,7 @@ env:
 jobs:
   job1:
     name: Generate Firmware
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, DS_SQA_HN_01]
     permissions:
       contents: read
       pull-requests: write
