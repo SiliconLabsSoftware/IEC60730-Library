@@ -90,6 +90,10 @@ jobs:
         ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install Gecko SDK
       if: always()
+      env:
+          GIT_ASKPASS: echo
+          GIT_USERNAME: ${{ github.actor }}
+          GIT_PASSWORD: ${{ secrets.SILABS_THIEUVU_PAT }}
       run: |
         git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
         cd gecko_sdk_$SDK_VER
