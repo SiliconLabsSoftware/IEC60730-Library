@@ -1,0 +1,1743 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="index.html">
+      
+      
+        <link rel="next" href="support_calculate_crc.html">
+      
+      
+      <link rel="icon" href="images/silabs-soc.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
+    
+    
+      
+        <title>Integration to SDK - IEC60730 Safety Library</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#user-guide-the-library-iec60730-integration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="IEC60730 Safety Library" class="md-header__button md-logo" aria-label="IEC60730 Safety Library" data-md-component="logo">
+      
+  <img src="images/silabs_banner.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IEC60730 Safety Library
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Integration to SDK
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="IEC60730 Safety Library" class="md-nav__button md-logo" aria-label="IEC60730 Safety Library" data-md-component="logo">
+      
+  <img src="images/silabs_banner.png" alt="logo">
+
+    </a>
+    IEC60730 Safety Library
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    IEC60730 safety library integration to SDK
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            IEC60730 safety library integration to SDK
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Integration to SDK
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="iec60730_safety_library_integration_to_sdk.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Integration to SDK
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-pictures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of pictures
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Background
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-install-the-required-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Install the required software.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-add-an-extension-to-simplicity-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Add an extension to Simplicity Studio
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Add an extension to Simplicity Studio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-1-adding-extension-to-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 1 Adding Extension to SDK
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-2-browse-to-extension-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 2 Browse to extension location
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-generate-an-example-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Generate an example project.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Generate an example project.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-3-create-new-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 3 Create new project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-4-target-sdk-and-toolchain-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 4 Target, SDK, and Toolchain Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-5-add-toolchains" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 5 Add toolchains
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-6-iar-toolchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 6 IAR toolchain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-7-example-project-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 7 Example Project Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-8-project-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 8 Project Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-9-project-generation-in-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 9 Project generation in workspace
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-10-build-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 10 Build Project
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-edit-the-linker-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Edit the Linker file.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Edit the Linker file.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-11-edit-the-linker-script-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 11 Edit the Linker Script Path
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-edit-the-post-build-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Edit the post-build steps.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Edit the post-build steps.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-12-crc-16-and-crc-32-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 12 CRC-16 and CRC-32 scripts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-13-add-the-command-to-post-build-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 13 Add the Command to Post-build steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-14-result-after-post-build-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 14 Result after Post-build complete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-edit-the-included-path-and-preprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Edit the included path and preprocessor.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Edit the included path and preprocessor.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-15-add-the-included-path-and-preprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 15 Add the included path and preprocessor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-add-the-source-code-to-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Add the source code to the project.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Add the source code to the project.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-16-components-support-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 16 Components support library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-17-add-source-code-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 17 Add source code library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-18-assembly-code-algorithm-marchc-for-gcc-compiler" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 18 Assembly code algorithm MARCHC for GCC compiler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-integrate-code-into-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Integrate code into the project.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Integrate code into the project.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-19-flow-chart-of-the-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 19 Flow chart of the library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-20-demo-oem-files-integrated-with-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 20 Demo OEM files integrated with Library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-requires-declaration-and-initialize-variables-for-iec60730-library-with-constant-values-refer-function-oem_iec60730_init-in-file-oem_iec60730c" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Requires declaration and initialize variables for IEC60730 library with constant values. Refer function oem_iec60730_init in file oem_iec60730.c.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-to-perform-an-invariable-memory-check-the-library-uses-crc-cyclic-redundancy-check-calculations-for-flash-memory-if-the-user-calculates-using-hardware-the-user-will-need-to-initialize-the-gpcrc-module-to-support-the-calculation-users-can-also-enable-define-sl_iec60730_crc_use_sw_enable-for-software-calculation-to-calculate-the-crc-value-it-will-have-two-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. To perform an invariable memory check, the library uses CRC (Cyclic Redundancy Check) calculations for Flash memory. If the user calculates using hardware, the user will need to initialize the GPCRC module to support the calculation. Users can also enable #define SL_IEC60730_CRC_USE_SW_ENABLE for software calculation. To calculate the CRC value, It will have two options:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. To perform an invariable memory check, the library uses CRC (Cyclic Redundancy Check) calculations for Flash memory. If the user calculates using hardware, the user will need to initialize the GPCRC module to support the calculation. Users can also enable #define SL_IEC60730_CRC_USE_SW_ENABLE for software calculation. To calculate the CRC value, It will have two options:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-21-iar-define-checksum-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 21 IAR define checksum variable
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-configure-watchdog-test-this-configuration-determines-which-watchdog-unit-will-be-checkedthe-library-does-not-initialize-the-watchdog-units-the-user-should-do-the-initialization-we-support-configuration-for-watchdog-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Configure Watchdog Test: this configuration determines which watchdog unit will be checked.The library does not initialize the watchdog units, the user should do the initialization. We support configuration for watchdog module
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Configure Watchdog Test: this configuration determines which watchdog unit will be checked.The library does not initialize the watchdog units, the user should do the initialization. We support configuration for watchdog module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-22-configuration-for-watchdog-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 22 Configuration for watchdog module
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-before-calling-the-sl_iec60730_post-functionwe-need-to-do-the-following-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Before calling the sl_iec60730_post function,we need to do the following steps:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Before calling the sl_iec60730_post function,we need to do the following steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-23-configuration-for-system-clock-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 23 Configuration for system clock module
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-to-perform-a-variable-memory-check-the-library-uses-marchc-and-marchxc-algorithms-it-will-have-two-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. To perform a variable memory check, the library uses MarchC and MarchXC algorithms. It will have two options:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-before-calling-the-sl_iec60730_bist-function-we-should-set-the-flag-for-the-sl_iec60730_program_counter_check-variable-some-of-the-following-flags-are-set-by-the-library-iec60730-iec60730_vmc_completeiec60730_imc_completeiec60730_cpu_clocks_com-pleteand-iec60730_interrupt_complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Before calling the sl_iec60730_bist function, we SHOULD set the flag for the sl_iec60730_program_counter_check variable. Some of the following flags are set by the Library IEC60730: IEC60730_VMC_COMPLETE,IEC60730_IMC_COMPLETE,IEC60730_CPU_CLOCKS_COM PLETE,and IEC60730_INTERRUPT_COMPLETE.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-remember-to-increment-the-irq-counter-variable-every-time-the-interrupt-to-test-occurs-you-can-refer-to-the-oem_irq_exec_count_tick-function-in-our-demo-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Remember to increment the IRQ counter variable every time the interrupt to test occurs. You can refer to the oem_irq_exec_count_tick function in our demo examples.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-create-the-function-sl_iec60730_safe_state-the-purpose-of-this-function-is-to-handle-when-an-error-occurs-an-example-of-handling-of-this-function-refer-files-oem_iec60730_functionsc-after-generating-our-demo-example-successfully-you-also-could-add-your-code-in-file-appc-and-apph" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Create the function sl_iec60730_safe_state. The purpose of this function is to handle when an error occurs. An example of handling of this function refer files oem_iec60730_functions.c. After generating our demo example successfully, you also COULD add your code in file app.c and app.h
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-revision-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Revision history
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="support_calculate_crc.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Support calculate CRC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guideline_for_running_unit_test.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guideline for running unit test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guideline_for_running_integration_test.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guideline for running integration test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="coding_convention_tool.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Coding convention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="about.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="release_note.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Release Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-pictures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of pictures
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Background
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-install-the-required-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Install the required software.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-add-an-extension-to-simplicity-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Add an extension to Simplicity Studio
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Add an extension to Simplicity Studio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-1-adding-extension-to-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 1 Adding Extension to SDK
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-2-browse-to-extension-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 2 Browse to extension location
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-generate-an-example-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Generate an example project.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Generate an example project.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-3-create-new-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 3 Create new project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-4-target-sdk-and-toolchain-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 4 Target, SDK, and Toolchain Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-5-add-toolchains" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 5 Add toolchains
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-6-iar-toolchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 6 IAR toolchain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-7-example-project-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 7 Example Project Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-8-project-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 8 Project Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-9-project-generation-in-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 9 Project generation in workspace
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-10-build-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 10 Build Project
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-edit-the-linker-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Edit the Linker file.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Edit the Linker file.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-11-edit-the-linker-script-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 11 Edit the Linker Script Path
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-edit-the-post-build-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Edit the post-build steps.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Edit the post-build steps.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-12-crc-16-and-crc-32-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 12 CRC-16 and CRC-32 scripts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-13-add-the-command-to-post-build-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 13 Add the Command to Post-build steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-14-result-after-post-build-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 14 Result after Post-build complete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-edit-the-included-path-and-preprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Edit the included path and preprocessor.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Edit the included path and preprocessor.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-15-add-the-included-path-and-preprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 15 Add the included path and preprocessor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-add-the-source-code-to-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Add the source code to the project.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Add the source code to the project.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-16-components-support-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 16 Components support library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-17-add-source-code-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 17 Add source code library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-18-assembly-code-algorithm-marchc-for-gcc-compiler" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 18 Assembly code algorithm MARCHC for GCC compiler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-integrate-code-into-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Integrate code into the project.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Integrate code into the project.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-19-flow-chart-of-the-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 19 Flow chart of the library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figure-20-demo-oem-files-integrated-with-library-iec60730" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 20 Demo OEM files integrated with Library IEC60730
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-requires-declaration-and-initialize-variables-for-iec60730-library-with-constant-values-refer-function-oem_iec60730_init-in-file-oem_iec60730c" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Requires declaration and initialize variables for IEC60730 library with constant values. Refer function oem_iec60730_init in file oem_iec60730.c.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-to-perform-an-invariable-memory-check-the-library-uses-crc-cyclic-redundancy-check-calculations-for-flash-memory-if-the-user-calculates-using-hardware-the-user-will-need-to-initialize-the-gpcrc-module-to-support-the-calculation-users-can-also-enable-define-sl_iec60730_crc_use_sw_enable-for-software-calculation-to-calculate-the-crc-value-it-will-have-two-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. To perform an invariable memory check, the library uses CRC (Cyclic Redundancy Check) calculations for Flash memory. If the user calculates using hardware, the user will need to initialize the GPCRC module to support the calculation. Users can also enable #define SL_IEC60730_CRC_USE_SW_ENABLE for software calculation. To calculate the CRC value, It will have two options:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. To perform an invariable memory check, the library uses CRC (Cyclic Redundancy Check) calculations for Flash memory. If the user calculates using hardware, the user will need to initialize the GPCRC module to support the calculation. Users can also enable #define SL_IEC60730_CRC_USE_SW_ENABLE for software calculation. To calculate the CRC value, It will have two options:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-21-iar-define-checksum-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 21 IAR define checksum variable
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-configure-watchdog-test-this-configuration-determines-which-watchdog-unit-will-be-checkedthe-library-does-not-initialize-the-watchdog-units-the-user-should-do-the-initialization-we-support-configuration-for-watchdog-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Configure Watchdog Test: this configuration determines which watchdog unit will be checked.The library does not initialize the watchdog units, the user should do the initialization. We support configuration for watchdog module
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Configure Watchdog Test: this configuration determines which watchdog unit will be checked.The library does not initialize the watchdog units, the user should do the initialization. We support configuration for watchdog module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-22-configuration-for-watchdog-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 22 Configuration for watchdog module
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-before-calling-the-sl_iec60730_post-functionwe-need-to-do-the-following-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Before calling the sl_iec60730_post function,we need to do the following steps:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Before calling the sl_iec60730_post function,we need to do the following steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#figure-23-configuration-for-system-clock-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure 23 Configuration for system clock module
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-to-perform-a-variable-memory-check-the-library-uses-marchc-and-marchxc-algorithms-it-will-have-two-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. To perform a variable memory check, the library uses MarchC and MarchXC algorithms. It will have two options:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-before-calling-the-sl_iec60730_bist-function-we-should-set-the-flag-for-the-sl_iec60730_program_counter_check-variable-some-of-the-following-flags-are-set-by-the-library-iec60730-iec60730_vmc_completeiec60730_imc_completeiec60730_cpu_clocks_com-pleteand-iec60730_interrupt_complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Before calling the sl_iec60730_bist function, we SHOULD set the flag for the sl_iec60730_program_counter_check variable. Some of the following flags are set by the Library IEC60730: IEC60730_VMC_COMPLETE,IEC60730_IMC_COMPLETE,IEC60730_CPU_CLOCKS_COM PLETE,and IEC60730_INTERRUPT_COMPLETE.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-remember-to-increment-the-irq-counter-variable-every-time-the-interrupt-to-test-occurs-you-can-refer-to-the-oem_irq_exec_count_tick-function-in-our-demo-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Remember to increment the IRQ counter variable every time the interrupt to test occurs. You can refer to the oem_irq_exec_count_tick function in our demo examples.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-create-the-function-sl_iec60730_safe_state-the-purpose-of-this-function-is-to-handle-when-an-error-occurs-an-example-of-handling-of-this-function-refer-files-oem_iec60730_functionsc-after-generating-our-demo-example-successfully-you-also-could-add-your-code-in-file-appc-and-apph" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Create the function sl_iec60730_safe_state. The purpose of this function is to handle when an error occurs. An example of handling of this function refer files oem_iec60730_functions.c. After generating our demo example successfully, you also COULD add your code in file app.c and app.h
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-revision-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Revision history
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="user-guide-the-library-iec60730-integration">User Guide: The Library IEC60730 Integration<a class="headerlink" href="#user-guide-the-library-iec60730-integration" title="Permanent link">&para;</a></h1>
+<p>This document provides instructions for integrating the Library IEC60730 into a project.</p>
+<p>This will guide the developer to install the required software. Then guide the configuration of a project and integrate the source code into the project.</p>
+<p><img alt="Key Features" src="images/key_features.png" /></p>
+<p><img alt="Silicon Labs" src="images/silicon_lab_doc_integration_sdk.png" /></p>
+<p>SILICON LABS</p>
+<h2 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h2>
+<p><a href="#contents">Contents</a></p>
+<p><a href="#table-of-pictures">Table of pictures</a></p>
+<p><a href="#1-background">1. Background</a></p>
+<p><a href="#2-install-the-required-software">2. Install the required software</a></p>
+<p><a href="#3-add-an-extension-to-simplicity-studio">3. Add an extension to Simplicity Studio</a></p>
+<p><a href="#4-generate-an-example-project">4. Generate an example project</a></p>
+<p><a href="#5-edit-the-linker-file">5. Edit the Linker file</a></p>
+<p><a href="#6-edit-the-post-build-steps">6. Edit the post-build steps</a></p>
+<p><a href="#7-edit-the-included-path-and-preprocessor">7. Edit the included path and preprocessor</a></p>
+<p><a href="#8-add-the-source-code-to-the-project">8. Add the source code to the project</a></p>
+<p><a href="#9-integrate-code-into-the-project">9. Integrate code into the project</a></p>
+<p><a href="#10-revision-history">10. Revision history</a></p>
+<h2 id="table-of-pictures">Table of pictures<a class="headerlink" href="#table-of-pictures" title="Permanent link">&para;</a></h2>
+<p><a href="#figure-1-adding-extension-to-sdk">Figure 1 Adding Extension to SDK</a></p>
+<p><a href="#figure-2-browse-to-extension-location">Figure 2 Browse to extension location</a></p>
+<p><a href="#figure-3-create-new-project">Figure 3 Create new project</a></p>
+<p><a href="#figure-4-target-sdk-and-toolchain-selection">Figure 4 Target, SDK, and Toolchain Selection</a></p>
+<p><a href="#figure-5-add-toolchains">Figure 5 Add toolchains</a></p>
+<p><a href="#figure-6-iar-toolchain">Figure 6 IAR toolchain</a></p>
+<p><a href="#figure-7-example-project-selection">Figure 7 Example Project Selection</a></p>
+<p><a href="#figure-8-project-configuration">Figure 8 Project Configuration</a></p>
+<p><a href="#figure-9-project-generation-in-workspace">Figure 9 Project generation in workspace</a></p>
+<p><a href="#figure-10-build-project">Figure 10 Build Project</a></p>
+<p><a href="#figure-11-edit-the-linker-script-path">Figure 11 Edit the Linker Script Path</a></p>
+<p><a href="#figure-12-crc-16-and-crc-32-scripts">Figure 12 CRC-16 and CRC-32 script</a></p>
+<p><a href="#figure-13-add-the-command-to-post-build-steps">Figure 13 Add the Command to Post-build steps</a></p>
+<p><a href="#figure-14-result-after-post-build-complete">Figure 14 Result after Post-build complete</a></p>
+<p><a href="#figure-15-add-the-included-path-and-preprocessor">Figure 15 Add the included path and preprocessor</a></p>
+<p><a href="#figure-16-components-support-library-iec60730">Figure 16 Components support library IEC60730</a></p>
+<p><a href="#figure-17-add-source-code-library-iec60730">Figure 17 Add source code library IEC60730</a></p>
+<p><a href="#figure-18-assembly-code-algorithm-marchc-for-gcc-compiler">Figure 18 Assembly code algorithm MARCHC for GCC compiler</a></p>
+<p><a href="#figure-19-flow-chart-of-the-library-iec60730">Figure 19 Flow chart of the library IEC60730</a></p>
+<p><a href="#figure-20-demo-oem-files-integrated-with-library-iec60730">Figure 20 Demo OEM files integrated with Library IEC60730</a></p>
+<p><a href="#figure-21-iar-define-checksum-variable">Figure 21 IAR define check_sum variable</a></p>
+<p><a href="#figure-22-configuration-for-watchdog-module">Figure 22 Configuration for watchdog module</a></p>
+<p><a href="#figure-23-configuration-for-system-clock-module">Figure 23 Configuration for system clock module</a></p>
+<h2 id="1-background">1. Background<a class="headerlink" href="#1-background" title="Permanent link">&para;</a></h2>
+<p>The IEC60730 is a safety standard used in household applications. It defines the test and diagnostic method that ensures the safe operation of devices. We provide the test of the following components: CPU registers, variable memory check, invariable memory check, program counter check, clock check, and interrupt check.</p>
+<p>At the time of this writing, the library IEC60730 has been tested on two devices EFR32xG12, and EFR32xG24 on Simplicity Studio 5 (SS5)with toolchain GNU ARM v12.2.1 and SDK version 4.4.2.</p>
+<h2 id="2-install-the-required-software">2. Install the required software.<a class="headerlink" href="#2-install-the-required-software" title="Permanent link">&para;</a></h2>
+<p>We use the third-party software <a href="http://srecord.sourceforge.net/">SRecord</a> to calculate CRC value. Firstly, you need to install this software. If you're using Windows OS, you can go to the link of this software (link above), download the installation, and run the installer to install. If you're using Ubuntu OS, please follow the installation instructions below.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>srecord
+</code></pre></div>
+<h2 id="3-add-an-extension-to-simplicity-studio">3. Add an extension to Simplicity Studio<a class="headerlink" href="#3-add-an-extension-to-simplicity-studio" title="Permanent link">&para;</a></h2>
+<p>The safety library IEC60730 is supported by adding the IEC60730 extension, which is built using the software environment.:</p>
+<ul>
+<li>
+<p>OS-Ubuntu 20.04</p>
+</li>
+<li>
+<p>Simplicity Studio 5</p>
+</li>
+</ul>
+<p>This project is organized as an extension of Simplicity Studio. This project is built upon GSDK version 4.4.2, GNU toolchain V12.2.1. The user can download the same version of GSDK from GitHub <a href="https://github.com/SiliconLabs/gecko_sdk">GSDK</a> and Simplicity Studio V5 download link <a href="https://www.silabs.com/developers/simplicity-studio">Simplicity Studio V5</a>.</p>
+<p>To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be <code>Window &gt; Preferences &gt; Simplicity Studio &gt;  SDKs &gt; Gecko SDK Suite v4.4.2 &gt; Add Extension</code>.</p>
+<p><img alt="Figure 1 Adding Extension to SDK" src="images/integration_doc_figure_1_adding_extension_to_sdk.png" /></p>
+<h6 id="figure-1-adding-extension-to-sdk">Figure 1 Adding Extension to SDK<a class="headerlink" href="#figure-1-adding-extension-to-sdk" title="Permanent link">&para;</a></h6>
+<p>Press <code>Browse</code> to find the directory of this extension. Then choose the folder that has the file name <code>iec60730.slce</code>. Simplicity Studio will detect SDK extensions automatically. Click <code>OK</code> then <code>Apply and Close</code></p>
+<p><img alt=" Figure 2 Browse to extension location" src="images/integration_doc_figure_2_browse_to_extension_location.png" /></p>
+<h6 id="figure-2-browse-to-extension-location">Figure 2 Browse to extension location<a class="headerlink" href="#figure-2-browse-to-extension-location" title="Permanent link">&para;</a></h6>
+<h2 id="4-generate-an-example-project">4. Generate an example project.<a class="headerlink" href="#4-generate-an-example-project" title="Permanent link">&para;</a></h2>
+<p>Before using Simplicity Studio to generate the project, you need to add the IEC60730 extension. Please remember the following text:</p>
+<blockquote>
+<p><code>"This extension supports a demo example for EFR32MG families"</code></p>
+</blockquote>
+<p>Start a Project. Select <code>Files &gt; New &gt; Project</code> to open the New Project Wizards dialog. Choose <code>Silicon Labs Project Wizard &gt; Finish</code>.</p>
+<p><img alt="Figure 3 Create new project" src="images/integration_doc_figure_3_create_new_project.png" /></p>
+<h6 id="figure-3-create-new-project">Figure 3 Create new project<a class="headerlink" href="#figure-3-create-new-project" title="Permanent link">&para;</a></h6>
+<p>To create a new Simplicity Studio® 5 (SSv5) project, follow these three dialog steps:</p>
+<ul>
+<li>
+<p>Target, SDK, and Toolchain</p>
+</li>
+<li>
+<p>Examples</p>
+</li>
+<li>
+<p>Configuration</p>
+</li>
+</ul>
+<p>An indicator at the top of the dialog will show you your current position in the process. You can click <code>Back</code> at any time to return to a previous dialog if you need to make changes.</p>
+<p>For the radio board, in the <code>Target, SDK, and Toolchain Selection</code> dialog, if you have connected to or selected a target, all relevant information will be pre-populated. If no target is selected, you can choose the target parts here. For example, you can select <code>EFR32MG12 2.4GHz 10 dBm Radio Board (Rev A02)</code> in the Target Boards section, with the Target Device set to <code>EFR32MG12P332F1024GL125</code> as shown in the image below.</p>
+<p><img alt="Figure 4 Target, SDK, and Toolchain Selection" src="images/integration_doc_figure_4_target_sdk_and_toolchain_selection.png" /></p>
+<h6 id="figure-4-target-sdk-and-toolchain-selection">Figure 4 Target, SDK, and Toolchain Selection<a class="headerlink" href="#figure-4-target-sdk-and-toolchain-selection" title="Permanent link">&para;</a></h6>
+<p>Next, choose the SDK you installed, such as <code>Gecko SDK v4.4.2</code>. For the <code>IDE/Toolchain</code> select the toolchain version, such as <code>GNU ARM v12.2.1.</code> Finally, click <code>NEXT</code>.</p>
+<p>If you have installed the IAR toolchain and want to use it to build the demo project. For adding the IAR toolchain in Simplicity Studio: <code>Preferences &gt; Toolchains &gt; Add &gt; Browse go to the folder containing the toolchain then click OK &gt; Apply and Close</code></p>
+<p><img alt="Figure 5 Add toolchains" src="images/integration_doc_figure_5_add_toolchain.png" /></p>
+<h6 id="figure-5-add-toolchains">Figure 5 Add toolchains<a class="headerlink" href="#figure-5-add-toolchains" title="Permanent link">&para;</a></h6>
+<p>After you add your IAR toolchains, in the selection <code>IDE/Toolchain</code> choose toolchain <code>IAR ARM vn.n.n.n</code>. For example,Simplicity <code>IDE/IAR ARM v9.20.4.327</code>.</p>
+<p><img alt="Figure 6 IAR toolchain" src="images/integration_doc_figure_6_IAR_toolchain.png" /></p>
+<h6 id="figure-6-iar-toolchain">Figure 6 IAR toolchain<a class="headerlink" href="#figure-6-iar-toolchain" title="Permanent link">&para;</a></h6>
+<p>In <code>Example Project Selection</code>, use the checkboxes or keywords to find the example of interest. To create a radio board example IEC60730 Demo, search the keyword <code>iec60730</code> in the search box, related examples will show. Choose <code>IEC60730 Example Demo</code>. Click <code>NEXT</code></p>
+<p><img alt="Figure 7 Example Project Selection" src="images/integration_doc_figure_7_example_project_selection.png" /></p>
+<h6 id="figure-7-example-project-selection">Figure 7 Example Project Selection<a class="headerlink" href="#figure-7-example-project-selection" title="Permanent link">&para;</a></h6>
+<p>In <code>Project Configuration Selection</code>, rename and location your project if you want. For the three selections under <code>With project files</code>, you can choose any of the selections you want.</p>
+<p><img alt="Figure 8 Project Configuration" src="images/integration_doc_figure_8_project_configuration.png" /></p>
+<h6 id="figure-8-project-configuration">Figure 8 Project Configuration<a class="headerlink" href="#figure-8-project-configuration" title="Permanent link">&para;</a></h6>
+<p>Once you finish project creation, the Simplicity IDE perspective opens. There may be a slight delay in the initial configuration.</p>
+<p>The project typically opens <code>README tab</code>, which contains an example project description, and <code>OVERVIEW tab</code>.</p>
+<p><img alt="Figure 9 Project generation in workspace" src="images/integration_doc_figure_9_project_generation_in_workspace.png" /></p>
+<h6 id="figure-9-project-generation-in-workspace">Figure 9 Project generation in workspace<a class="headerlink" href="#figure-9-project-generation-in-workspace" title="Permanent link">&para;</a></h6>
+<p>For the building project, choose the project you want to build and click on the icon hammer to build, or click the right mouse and choose <code>Build Project</code>.</p>
+<p><img alt="Figure 10 Build Project" src="images/integration_doc_figure_10_build_project.png" /></p>
+<h6 id="figure-10-build-project">Figure 10 Build Project<a class="headerlink" href="#figure-10-build-project" title="Permanent link">&para;</a></h6>
+<h2 id="5-edit-the-linker-file">5. Edit the Linker file.<a class="headerlink" href="#5-edit-the-linker-file" title="Permanent link">&para;</a></h2>
+<p>We will base on the example extension project above and edit this project to a new linker file that meets the requirements of the library IEC60730.</p>
+<p>Some points for editing the linker file are described in IEC 60730's document. You can refer to the modified linker file in our demo example by checking sections 3 and 4 to create our demo. In our demo, the path to the linker file is automated and set to our linker. You should copy the linker file to another location on your PC and start editing it.</p>
+<p>After editing the linker file, you need to edit the path pointing to this new linker file. Figure 11 Edit the Linker Script Path shows how to edit the Linker Script Path in Simplicity Studio.</p>
+<p>You SHOULD follow these steps: <code>C/C++Build &gt; Settings &gt; Tool Settings &gt; Memory Layout &gt; Browse</code>.</p>
+<p><img alt="Figure 11 Edit the Linker Script Path" src="images/integration_doc_figure_11_edit_the_linker_script_path.png" /></p>
+<h6 id="figure-11-edit-the-linker-script-path">Figure 11 Edit the Linker Script Path<a class="headerlink" href="#figure-11-edit-the-linker-script-path" title="Permanent link">&para;</a></h6>
+<h2 id="6-edit-the-post-build-steps">6. Edit the post-build steps.<a class="headerlink" href="#6-edit-the-post-build-steps" title="Permanent link">&para;</a></h2>
+<p>By default, after building the project, files in <code>*.bin</code>, <code>*.hex</code>, and <code>*.s37</code> formats will be created. If you want to create another format, you SHOULD follow these steps: <code>C/C++Build  &gt;  Settings  &gt;  Build Steps  &gt; Post-build steps &gt; Command</code>.</p>
+<p>In this context, we need to modify the command in the <code>Post-build</code> steps to generate new firmware files with a CRC value appended at the end of the FLASH area. Currently, we support two scripts that calculate CRC16 and CRC32, which can be executed on PCs running Windows or Ubuntu OS. You can find these scripts in the <code>lib/crc</code> folder.</p>
+<p><img alt="Figure 12 CRC-16 and CRC-32 scripts" src="images/integration_doc_figure_12_crc16_and_crc32_scripts.png" /></p>
+<h6 id="figure-12-crc-16-and-crc-32-scripts">Figure 12 CRC-16 and CRC-32 scripts<a class="headerlink" href="#figure-12-crc-16-and-crc-32-scripts" title="Permanent link">&para;</a></h6>
+<p>The scripts have suffixes of <code>_crc16</code> and <code>_crc32</code> respectively. We will use the suffix <code>_crcNN</code> for both cases.</p>
+<p>Detailed parameters of the <code>sl_iec60730_cal_crcNN</code> script can refer to can refer to the document <a href="support_calculate_crc.html">Support calculate CRC</a>. In our example, two script files supporting CRC-16 and CRC-32 are automatically copied into the project. For a demo example, you can use this command below to calculate the CRC value for file build <code>*.bin</code>, <code>*.hex</code>, and <code>*.s37</code> and file <code>*.lst</code> with GCC toolchain :</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>arm-none-eabi-objdump<span class="w"> </span>-t<span class="w"> </span>-h<span class="w"> </span>-d<span class="w"> </span>-S<span class="w"> </span><span class="s1">&#39;${BuildArtifactFileBaseName}.axf&#39;</span><span class="w"> </span>&gt;<span class="s1">&#39;${BuildArtifactFileBaseName}.lst&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>bash<span class="w"> </span><span class="si">${</span><span class="nv">ProjDirPath</span><span class="si">}</span>/iec60730_1.1.0/lib/crc/sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="s2">&quot;C:\srecord\bin&quot;</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">&quot;0x8000000&quot;</span>
+</code></pre></div>
+<p><img alt="Figure 13 Add the Command to Post-build steps" src="images/integration_doc_figure_13_add_the_command_to_post_build_steps.png" /></p>
+<h6 id="figure-13-add-the-command-to-post-build-steps">Figure 13 Add the Command to Post-build steps<a class="headerlink" href="#figure-13-add-the-command-to-post-build-steps" title="Permanent link">&para;</a></h6>
+<p>Or with IAR toolchains:</p>
+<div class="highlight"><pre><span></span><code>ielfdumparm<span class="w"> </span>--all<span class="w"> </span>--source<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span>.out<span class="w"> </span>&gt;<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span>.lst<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>bash<span class="w"> </span><span class="si">${</span><span class="nv">ProjDirPath</span><span class="si">}</span>/iec60730_1.1.0/lib/crc/sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="s2">&quot;C:\srecord\bin&quot;</span><span class="w"> </span>IAR<span class="w"> </span><span class="s2">&quot;0x8000000&quot;</span>
+</code></pre></div>
+<blockquote>
+<p>[!NOTE]
+In the default configuration, <code>SL_IEC60730_CRC_DEBUG_ENABLE</code> support debugging the CRC test module invariable memory
+calculations on demo project is enabled. If you want to disable this configuration, you should copy either <code>sl_iec60730_cal_crc32.sh</code> or
+<code>sl_iec60730_cal_crc16.sh</code> in the path: <code>lib/crc/</code> which helps a CRC-calculated image file for testing.
+You must flash the image with the corresponding image file suffixes _crc16 and _crc32.</p>
+<p>If, during the project configuration step, you choose an option in the <code>With Project File</code> section either <code>Link to SDK and Copy Project Structures</code> or <code>Link to Source</code>,
+you will need to copy <code>sl_iec60730_cal_crc32.sh</code> or <code>sl_iec60730_cal_crc16.sh</code> to <code>lib/crc</code> folder of your current project directory.</p>
+<p>After the build of a project is complete, it will call the command in the Post-build steps to create <project_name>_crc16 or <project_name >_crc32 files with the extension <code>*.bin</code>, <code>*.hex</code>, and <code>*.s37</code>.</p>
+</blockquote>
+<p><img alt="Figure 14 Result after Post-build complete" src="images/integration_doc_figure_14_result_after_post_build_complete.png" /></p>
+<h6 id="figure-14-result-after-post-build-complete">Figure 14 Result after Post-build complete<a class="headerlink" href="#figure-14-result-after-post-build-complete" title="Permanent link">&para;</a></h6>
+<h2 id="7-edit-the-included-path-and-preprocessor">7. Edit the included path and preprocessor.<a class="headerlink" href="#7-edit-the-included-path-and-preprocessor" title="Permanent link">&para;</a></h2>
+<p>Edit the Include paths (-l) to the location of the source code of the Library IEC60730.</p>
+<p>You <code>SHOULD</code> follow these steps: <code>C/C++Build &gt; Settings &gt; Tool Settings &gt; GNU ARM C Compiler</code> choose <code>Include</code> or <code>Preprocessor</code> for include header files and add definitions to your project.</p>
+<p><img alt="Figure 15 Add the included path and preprocessor" src="images/integration_doc_figure_15_add_the_included_path_and%20preprocessor.png" /></p>
+<h6 id="figure-15-add-the-included-path-and-preprocessor">Figure 15 Add the included path and preprocessor<a class="headerlink" href="#figure-15-add-the-included-path-and-preprocessor" title="Permanent link">&para;</a></h6>
+<p>Edit preprocessor, the user needs definitions as below.</p>
+<ul>
+<li>SL_IEC60730_BOARD_HEADER="sl_iec60730_board.h"</li>
+</ul>
+<p>By default, the demo example has the definitions above. You can refer to our demo example of these settings.</p>
+<h2 id="8-add-the-source-code-to-the-project">8. Add the source code to the project.<a class="headerlink" href="#8-add-the-source-code-to-the-project" title="Permanent link">&para;</a></h2>
+<p>In our example, after adding the SDK extension, the software component will have a few components that support adding code files (*.c, *. s) of Library IEC60730 to the project:</p>
+<p><img alt="Figure 16 Components support library IEC60730" src="images/integration_doc_figure_16_components_support_library_iec60730.png" /></p>
+<h6 id="figure-16-components-support-library-iec60730">Figure 16 Components support library IEC60730<a class="headerlink" href="#figure-16-components-support-library-iec60730" title="Permanent link">&para;</a></h6>
+<p>When you install these components, the source code library IEC60730 will be added. For example:</p>
+<p><img alt="Figure 17 Add source code library IEC60730" src="images/integration_doc_figure_17_add_source_code_library_iec60730.png" /></p>
+<h6 id="figure-17-add-source-code-library-iec60730">Figure 17 Add source code library IEC60730<a class="headerlink" href="#figure-17-add-source-code-library-iec60730" title="Permanent link">&para;</a></h6>
+<p>Component <code>IEC60730 VMC MarchC</code>(see <a href="#figure-16-components-support-library-iec60730">Figure 16</a>) support for adding assembly code algorithm <code>MarchC</code> and <code>MarchXC</code>. If you use the IAR compiler, this component will add to assembly files <code>sl_iec60730_vmc_marchc_iar.S</code> and <code>sl_iec60730_vmc_marchxc_iar.S</code>. If you use the GCC compiler, this component will add <code>sl_iec60730_vmc_marchc.S</code> and <code>sl_iec60730_vmc_marchxc.S</code> for the test VMC module.</p>
+<p><img alt="Figure 18 Assembly code algorithm MARCHC for GCC compiler" src="images/integration_doc_figure_18_assembly_code_algorithm_marchc_for_gcc_compiler.png" /></p>
+<h6 id="figure-18-assembly-code-algorithm-marchc-for-gcc-compiler">Figure 18 Assembly code algorithm MARCHC for GCC compiler<a class="headerlink" href="#figure-18-assembly-code-algorithm-marchc-for-gcc-compiler" title="Permanent link">&para;</a></h6>
+<h2 id="9-integrate-code-into-the-project">9. Integrate code into the project.<a class="headerlink" href="#9-integrate-code-into-the-project" title="Permanent link">&para;</a></h2>
+<p>The library IEC60730 has been divided into 2 main test phases: Power on Self-Test (POST) and Build In Self-Test (BIST). <a href="#figure-19-flow-chart-of-the-library-iec60730">Figure 19 Flow chart of the library IEC60730</a> shows the basics of the library IEC60730 integration into a user software solution.</p>
+<p><img alt="Figure 19 Flow chart of the library IEC60730" src="images/integration_doc_figure_19_flow_chart_of_the_library_iec60730.png" /></p>
+<h6 id="figure-19-flow-chart-of-the-library-iec60730">Figure 19 Flow chart of the library IEC60730<a class="headerlink" href="#figure-19-flow-chart-of-the-library-iec60730" title="Permanent link">&para;</a></h6>
+<p>In our example, we have added a demo <code>oem</code> foler  (Original equipment manufacturer) to integrate with the library IEC60730 to test steps such as flow charts fully.</p>
+<p><img alt="Figure 20 Demo OEM files integrated with Library IEC60730" src="images/integration_doc_figure_20_demo_oem_files_integrated_with_library_iec60730.png" /></p>
+<h6 id="figure-20-demo-oem-files-integrated-with-library-iec60730">Figure 20 Demo OEM files integrated with Library IEC60730<a class="headerlink" href="#figure-20-demo-oem-files-integrated-with-library-iec60730" title="Permanent link">&para;</a></h6>
+<p>If you want to add your OEM code and don't want to use our OEM files demo, you COULD add your OEM code via the following steps below:</p>
+<h3 id="1-requires-declaration-and-initialize-variables-for-iec60730-library-with-constant-values-refer-function-oem_iec60730_init-in-file-oem_iec60730c">1. Requires declaration and initialize variables for IEC60730 library with constant values. Refer function <code>oem_iec60730_init</code> in file <code>oem_iec60730.c</code>.<a class="headerlink" href="#1-requires-declaration-and-initialize-variables-for-iec60730-library-with-constant-values-refer-function-oem_iec60730_init-in-file-oem_iec60730c" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sl_iec60730_vmc_test_multiple_regions_t<span class="w"> </span>oem_vmc_test<span class="p">;</span>
+sl_iec60730_imc_test_multiple_regions_t<span class="w"> </span>oem_imc_test<span class="w"> </span>__CLASSB_RAM<span class="p">;</span>
+sl_iec60730_irq_cfg_t<span class="w"> </span>oem_irq_config<span class="p">;</span>
+</code></pre></div>
+<p>These three variables are used for interrupt, invariable memory check and variable memory check.</p>
+<h3 id="2-to-perform-an-invariable-memory-check-the-library-uses-crc-cyclic-redundancy-check-calculations-for-flash-memory-if-the-user-calculates-using-hardware-the-user-will-need-to-initialize-the-gpcrc-module-to-support-the-calculation-users-can-also-enable-define-sl_iec60730_crc_use_sw_enable-for-software-calculation-to-calculate-the-crc-value-it-will-have-two-options">2. To perform an invariable memory check, the library uses CRC (Cyclic Redundancy Check) calculations for Flash memory. If the user calculates using hardware, the user will need to initialize the GPCRC module to support the calculation. Users can also enable <code>#define SL_IEC60730_CRC_USE_SW_ENABLE</code> for software calculation. To calculate the CRC value, It will have two options:<a class="headerlink" href="#2-to-perform-an-invariable-memory-check-the-library-uses-crc-cyclic-redundancy-check-calculations-for-flash-memory-if-the-user-calculates-using-hardware-the-user-will-need-to-initialize-the-gpcrc-module-to-support-the-calculation-users-can-also-enable-define-sl_iec60730_crc_use_sw_enable-for-software-calculation-to-calculate-the-crc-value-it-will-have-two-options" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Start from the user's specified address and continue to the end of the Flash region.</p>
+</li>
+<li>
+<p>Calculate multiple regions by providing the starting and ending addresses for each one. For additional details, refer to the file <code>oem_iec60730.c</code>.</p>
+</li>
+</ul>
+<p>And then store the calculated CRC value in the designated end-flash variable. Currently, the <code>check_sum</code> variable is set to the end address of the user code that utilizes the IEC Library.</p>
+<p>In the case of the GCC toolchain, the <code>check_sum</code> variable is defined in the linker file. For the IAR toolchain, you can find it in the demo example. Right-click on the project and navigate to Properties &gt; C/C++ Build &gt; Settings &gt; IAR Linker for ARM. In the Extra Options section, you can add the option for CRC_16.</p>
+<div class="highlight"><pre><span></span><code><span class="o">--</span><span class="n">keep</span><span class="w"> </span><span class="n">check_sum</span><span class="w"> </span><span class="o">--</span><span class="n">place_holder</span><span class="w"> </span><span class="n">check_sum</span><span class="p">,</span><span class="mi">2</span><span class="p">,.</span><span class="n">checksum</span><span class="p">,</span><span class="mi">64</span>
+</code></pre></div>
+<p>Or for CRC_32:</p>
+<div class="highlight"><pre><span></span><code><span class="o">--</span><span class="n">keep</span><span class="w"> </span><span class="n">check_sum</span><span class="w"> </span><span class="o">--</span><span class="n">place_holder</span><span class="w"> </span><span class="n">check_sum</span><span class="p">,</span><span class="mi">4</span><span class="p">,.</span><span class="n">checksum</span><span class="p">,</span><span class="mi">64</span>
+</code></pre></div>
+<p>By default, the demo project uses option CRC_16</p>
+<p><img alt="Figure 21 IAR define checksum variable" src="images/integration_doc_figure_21_iar_define_checksum_variable.png" /></p>
+<h6 id="figure-21-iar-define-checksum-variable">Figure 21 IAR define checksum variable<a class="headerlink" href="#figure-21-iar-define-checksum-variable" title="Permanent link">&para;</a></h6>
+<h3 id="3-configure-watchdog-test-this-configuration-determines-which-watchdog-unit-will-be-checkedthe-library-does-not-initialize-the-watchdog-units-the-user-should-do-the-initialization-we-support-configuration-for-watchdog-module">3. Configure Watchdog Test: this configuration determines which watchdog unit will be checked.The library does not initialize the watchdog units, the user should do the initialization. We support configuration for watchdog module<a class="headerlink" href="#3-configure-watchdog-test-this-configuration-determines-which-watchdog-unit-will-be-checkedthe-library-does-not-initialize-the-watchdog-units-the-user-should-do-the-initialization-we-support-configuration-for-watchdog-module" title="Permanent link">&para;</a></h3>
+<p><img alt="Figure 22 Configuration for watchdog module" src="images/integration_doc_figure_22_configuration_for_watchdog_module.png" /></p>
+<h6 id="figure-22-configuration-for-watchdog-module">Figure 22 Configuration for watchdog module<a class="headerlink" href="#figure-22-configuration-for-watchdog-module" title="Permanent link">&para;</a></h6>
+<p>The two define used to enable watchdog testing are used in the application:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define SL_IEC60730_WDOG0_ENABLE</span>
+<span class="cp">#define SL_IEC60730_WDOG1_ENABL</span>
+</code></pre></div>
+<p>If these macros are not enabled, it will show an error saying watchdog checking is not enabled.</p>
+<ul>
+<li>
+<p>To clear reset cause flags in the RSTCASUES register after watchdog testing is completed. Enable configuration of the definition of macro <code>#define SL_IEC60730_RSTCAUSES_CLEAR_ENABLE</code>. In our demo, this feature is enabled.</p>
+</li>
+<li>
+<p>The static variable <code>iec60730_watchdog_count</code> must be located at a memory location that is not cleared when system startup <code>(section".ram_no_clear")</code>.</p>
+</li>
+<li>
+<p>The global variable <code>iec60730_watchdog_state</code> must be located at a memory location that is not cleared when system startup <code>(section ".ram_no_clear")</code>. To enable saving <code>iec60730_watchdog_state</code> to backup RAM on Series 2, enable the macro <code>#define SL_IEC60730_SAVE_STAGE_ENABLE</code>. By default, it will be disabled.Define macro <code>SL_IEC60730_BURAM_IDX</code> to select which register of the BURAM will be used. The default value is <code>0x0UL</code>.</p>
+</li>
+</ul>
+<h3 id="4-before-calling-the-sl_iec60730_post-functionwe-need-to-do-the-following-steps">4. Before calling the <code>sl_iec60730_post</code> function,we need to do the following steps:<a class="headerlink" href="#4-before-calling-the-sl_iec60730_post-functionwe-need-to-do-the-following-steps" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Configure the clock for the timers. You can refer to these configurations in our demo examples, file <code>oem_iec60730_init_device.c</code>.</p>
+</li>
+<li>
+<p>Create two timers with 10 milliseconds (ms) and 100 milliseconds (ms) interrupt periods (parameters 10ms and 100ms are recommended values) to test the clock and the clock switch. You can refer our demo example, file <code>oem_iec60730_timer.c</code> for more details. Note that adjusting the 10ms and 100ms values will require adjusting other configuration <code>IEC60730_SYS_CLK</code>:</p>
+</li>
+</ul>
+<p><img alt="Figure 23 Configuration for system clock module" src="images/integration_doc_figure_23_configuration_for_system_clock_module_.png" /></p>
+<h6 id="figure-23-configuration-for-system-clock-module">Figure 23 Configuration for system clock module<a class="headerlink" href="#figure-23-configuration-for-system-clock-module" title="Permanent link">&para;</a></h6>
+<h3 id="5-to-perform-a-variable-memory-check-the-library-uses-marchc-and-marchxc-algorithms-it-will-have-two-options">5. To perform a variable memory check, the library uses MarchC and MarchXC algorithms. It will have two options:<a class="headerlink" href="#5-to-perform-a-variable-memory-check-the-library-uses-marchc-and-marchxc-algorithms-it-will-have-two-options" title="Permanent link">&para;</a></h3>
+<p>- Start from the user's specified address in RAM and continue to the end of the RAM region.</p>
+<p>- Calculate multiple RAM regions by providing the starting and ending addresses for each one. For additional details, refer to the file <code>oem_iec60730.c</code>.</p>
+<h3 id="6-before-calling-the-sl_iec60730_bist-function-we-should-set-the-flag-for-the-sl_iec60730_program_counter_check-variable-some-of-the-following-flags-are-set-by-the-library-iec60730-iec60730_vmc_completeiec60730_imc_completeiec60730_cpu_clocks_com-pleteand-iec60730_interrupt_complete">6. Before calling the <code>sl_iec60730_bist</code> function, we <code>SHOULD</code> set the flag for the <code>sl_iec60730_program_counter_check</code> variable. Some of the following flags are set by the Library IEC60730: <code>IEC60730_VMC_COMPLETE,IEC60730_IMC_COMPLETE,IEC60730_CPU_CLOCKS_COM PLETE,and IEC60730_INTERRUPT_COMPLETE</code>.<a class="headerlink" href="#6-before-calling-the-sl_iec60730_bist-function-we-should-set-the-flag-for-the-sl_iec60730_program_counter_check-variable-some-of-the-following-flags-are-set-by-the-library-iec60730-iec60730_vmc_completeiec60730_imc_completeiec60730_cpu_clocks_com-pleteand-iec60730_interrupt_complete" title="Permanent link">&para;</a></h3>
+<p>Other flags (IEC60730_GPIO_COMPLETE, IEC60730_ANALOG_COMPLETE,etc.) are up to you to develop additional test functions. The <code>sl_iec60730_program_counter_check</code> variable <code>SHOULD</code> set the flags corresponding to the unavailable test to ensure that the Program Counter Check is guaranteed.</p>
+<p>In the demo examples,you will often see the following code.</p>
+<div class="highlight"><pre><span></span><code><span class="n">sl_iec60730_program_counter_check</span><span class="w">   </span><span class="o">|=</span><span class="n">IEC60730_GPIO_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_ANALOG_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM0_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM1_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM2_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM3_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM4_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM5_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM6_COMPLETE</span>
+<span class="w">                                    </span><span class="o">|</span><span class="w"> </span><span class="n">IEC60730_OEM7_COMPLETE</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>
+<p>On demo eample, executes the external communication test that sets the <code>IEC60730_COMMS_COMPLETE</code> flag by itself.</p>
+</li>
+<li>
+<p>The function <code>sl_iec60730_bist</code> SHOULD be called in periodical task or a supper loop while(1).</p>
+</li>
+</ul>
+<h3 id="7-remember-to-increment-the-irq-counter-variable-every-time-the-interrupt-to-test-occurs-you-can-refer-to-the-oem_irq_exec_count_tick-function-in-our-demo-examples">7.  Remember to increment the IRQ counter variable every time the interrupt to test occurs. You can refer to the <code>oem_irq_exec_count_tick</code> function in our demo examples.<a class="headerlink" href="#7-remember-to-increment-the-irq-counter-variable-every-time-the-interrupt-to-test-occurs-you-can-refer-to-the-oem_irq_exec_count_tick-function-in-our-demo-examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">TIMERO_IRQHandler</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="p">...</span>
+
+<span class="n">oem_irq_exec_count_tick</span><span class="p">();</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">oem_irq_exec_count_tick</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+
+<span class="n">oem_irq_exec_count</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="8-create-the-function-sl_iec60730_safe_state-the-purpose-of-this-function-is-to-handle-when-an-error-occurs-an-example-of-handling-of-this-function-refer-files-oem_iec60730_functionsc-after-generating-our-demo-example-successfully-you-also-could-add-your-code-in-file-appc-and-apph">8. Create the function <code>sl_iec60730_safe_state</code>. The purpose of this function is to handle when an error occurs. An example of handling of this function refer files <code>oem_iec60730_functions.c</code>. After generating our demo example successfully, you also <code>COULD</code> add your code in file app.c and app.h<a class="headerlink" href="#8-create-the-function-sl_iec60730_safe_state-the-purpose-of-this-function-is-to-handle-when-an-error-occurs-an-example-of-handling-of-this-function-refer-files-oem_iec60730_functionsc-after-generating-our-demo-example-successfully-you-also-could-add-your-code-in-file-appc-and-apph" title="Permanent link">&para;</a></h3>
+<h2 id="10-revision-history">10. Revision history<a class="headerlink" href="#10-revision-history" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Revision</th>
+<th>Date</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1.0</td>
+<td>Oct 2021</td>
+<td>Initial Revision</td>
+</tr>
+<tr>
+<td>0.2.0</td>
+<td>Nov 2021</td>
+<td>Section 7: Added description for Watchdog</td>
+</tr>
+<tr>
+<td>0.3.0</td>
+<td>Mar 2023</td>
+<td>Remove Section 8.</td>
+</tr>
+<tr>
+<td>0.4.0</td>
+<td>Apr 2023</td>
+<td>Update document</td>
+</tr>
+<tr>
+<td>1.0.0</td>
+<td>Sep 2023</td>
+<td>Section 1: Added mention aboutEFM32PG22 and EFR32xG22devices.</td>
+</tr>
+<tr>
+<td>1.1.0</td>
+<td>June 2024</td>
+<td>Adding Section 3 and Section 4 for support creates a Library ExtensionUpdated other sections for suit withthe released package EFR32xG12and EFR32xG24 devices.</td>
+</tr>
+<tr>
+<td>2.0.0</td>
+<td>Nov 2024</td>
+<td>Rewrite the documentation by the re-factory code of the library support device EFR32MG families.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.expand"], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

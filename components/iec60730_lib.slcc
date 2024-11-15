@@ -1,0 +1,86 @@
+package: iec60730
+description: >
+  This component adds a source library component to the project and creates linker file support by adding a dependency. Some actions need to be followed to build it:
+
+  1) Go to C/C++ Build > Settings > Tool Settings > Memory Layout and browse to edit the linker file. The default linker file name is linkerfile.ld. See description IEC60730 Custom Linker.
+
+  2) In the default configuration, SL_IEC60730_CRC_DEBUG_ENABLE can support debugging the CRC test module invariable memory calculations. If you want to disable this configuration, you should copy either sl_iec60730_cal_crc32.sh or sl_iec60730_cal_crc16.sh in the path: "lib/crc/" which helps a CRC-calculated image file for testing.
+  You must flash the image with the corresponding image file suffixes _crc16 and _crc32.
+
+  To support CRC image calculation, follow these steps: Go to C/C++ Build > Settings > Build Steps > Post-build steps > Command and use the appropriate command for the toolchain, for instance:
+
+  If you want to calculate from the start address to the end address of flash, for example (brd4187c):
+
+    - With GCC: arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_1.1.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "" "C:\srecord\bin" GCC "0x8000000"
+
+    - With IAR: ielfdumparm --all --source ${BuildArtifactFileBaseName}.out > ${BuildArtifactFileBaseName}.lst && bash ${ProjDirPath}/iec60730_1.1.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "" "C:\srecord\bin" IAR "0x8000000"
+
+  Or if you want to calculate multiple regions, for example (brd4187c):
+
+    - With GCC: arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_1.1.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "" "C:\srecord\bin" GCC "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
+
+    - With IAR: ielfdumparm --all --source ${BuildArtifactFileBaseName}.out > ${BuildArtifactFileBaseName}.lst && bash ${ProjDirPath}/iec60730_1.1.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "" "C:\srecord\bin" IAR "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
+
+  For the IAR toolchain, it is necessary to add the linker option in C/C++ Build > Settings > Tool Settings > IAR Linker for ARM > Extra Options: "--keep check_sum --place_holder check_sum,2,.checksum,64" (CRC16) or "--keep check_sum --place_holder check_sum,4,.checksum,64" (CRC32)
+
+label: IEC60730 Lib
+quality: production
+id: iec60730_lib
+category: Library
+provides:
+  - name: "iec60730_lib"
+requires:
+  - name: iec60730_vmc_march
+  - name: iec60730_custom_linker
+  - name: emlib_wdog
+  - name: emlib_gpcrc
+  - name: emlib_timer
+  - name: emlib_letimer
+config_file:
+  - path: ./lib/config/sl_iec60730_config.h
+include:
+  - path: ./lib/inc
+    file_list:
+      - path: sl_iec60730_toolchain.h
+      - path: sl_iec60730_board.h
+      - path: sl_iec60730_comm.h
+      - path: sl_iec60730_cpu_registers.h
+      - path: sl_iec60730_internal.h
+      - path: sl_iec60730_invariable_memory.h
+      - path: sl_iec60730_irq.h
+      - path: sl_iec60730_library_documentation.h
+      - path: sl_iec60730_program_counter.h
+      - path: sl_iec60730_system_clock.h
+      - path: sl_iec60730_variable_memory.h
+      - path: sl_iec60730_watchdog.h
+      - path: sl_iec60730.h
+source:
+  - path: ./lib/src/sl_iec60730_bist.c
+  - path: ./lib/src/sl_iec60730_cpu_registers.c
+  - path: ./lib/src/sl_iec60730_cpu_registers_ns.c
+  - path: ./lib/src/sl_iec60730_cpu_registers_s.c
+  - path: ./lib/src/sl_iec60730_invariable_memory.c
+  - path: ./lib/src/sl_iec60730_irq.c
+  - path: ./lib/src/sl_iec60730_post.c
+  - path: ./lib/src/sl_iec60730_program_counter.c
+  - path: ./lib/src/sl_iec60730_system_clock.c
+  - path: ./lib/src/sl_iec60730_variable_memory.c
+  - path: ./lib/src/sl_iec60730_watchdog.c
+  - path: ./lib/crc/sl_iec60730_cal_crc16.sh
+  - path: ./lib/crc/sl_iec60730_cal_crc32.sh
+define:
+  - name: SL_IEC60730_BOARD_HEADER
+    value: "\"sl_iec60730_board.h\""
+toolchain_settings:
+  - option: linkerfile
+    value: autogen/linkerfile_iec60730.ld
+    unless:
+      - toolchain_iar
+  - option: linkerfile
+    value: autogen/linkerfile_iec60730.icf
+    condition:
+      - toolchain_iar
+  - option: iar_linker_option
+    value: "--keep check_sum --place_holder check_sum,2,.checksum,64"
+    condition:
+      - toolchain_iar
