@@ -94,19 +94,16 @@ jobs:
         git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
         cd gecko_sdk_$SDK_VER
         git checkout tags/$SDK_VER
-        echo "Check workspace after clone GECKO_SDK_REPO"
-        ls -la
-        mkdir extension/IEC60730-Library/
-        cd -p extension/IEC60730-Library/
+        mkdir -p extension/IEC60730-Library/
+        cd extension/IEC60730-Library/
         cp -r ${{ github.workspace }}/* ./
         #echo "REPO_URL=$REPO_URL"
         #git clone $REPO_URL
         #cd IEC60730-Library
         #echo "Curent REPO_BRANCH is $REPO_BRANCH"
         #git checkout $REPO_BRANCH
+        echo "List file in /extension/IEC60730-Library folfer"
         ls -la
-        echo "List file in simplicity_sdk folfer"
-        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install Amazon Corretto 17
       if: always()
       run: |
