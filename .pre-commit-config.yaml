@@ -1,0 +1,27 @@
+
+exclude: ^(docs|site|assets|pictures|simplicity_sdk|test/test_script|log|sample|cmake|components|lib/inc/coding_standard.h|lib/inc/silabs_license_agreement.h|lib/inc/sl_iec60730_library_documentation.h|README.md)
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/codespell-project/codespell
+    rev: v2.2.4
+    hooks:
+    -   id: codespell
+        args: [-w,--config,./tools/.codespell/.codespellrc]
+-   repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+    -   id: uncrustify
+        args: [-c,./tools/uncrustify.cfg,-lC,--no-backup,--replace]
+    -   id: clang-tidy
+        args:
+            - --config-file=./tools/.clang-tidy
+            - --use-color
+            - --extra-arg=-Iusr/include
+            - --header-filter:'^((?!test).)*$'
+            - -p=./build
+    -   id: cppcheck
+        args: [--language=c,--std=c99,--check-config,-DSL_IEC60730_BOARD_HEADER="sl_iec60730_board.h",--suppress=missingInclude,--suppress=unmatchedSuppression]
