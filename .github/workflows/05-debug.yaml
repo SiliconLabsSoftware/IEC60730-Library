@@ -79,7 +79,7 @@ jobs:
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
-        git clone https://$GH_TOKEN@github.com/SiliconLabsSoftware/IEC60730-Library.git
+        git clone https://${{ secrets.SILABS_THIEUVU_PAT }}@github.com/SiliconLabsSoftware/IEC60730-Library.git
         cd IEC60730-Library
         echo "Curent REPO_BRANCH is $REPO_BRANCH"
         git checkout $REPO_BRANCH
