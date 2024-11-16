@@ -8,7 +8,7 @@ on:
       branch: 
         description: 'Branch to test'
         type: string
-        default: 'main'
+        default: 'dev'
       ADAPTER_SN_MG12: 
         description: 'Adapter serial number of MG12'
         type: string
@@ -19,7 +19,6 @@ on:
         default: '440133193'
     
 env:
-  REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
   AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
   SLC_CLI_URL: https://www.silabs.com/documents/login/software/slc_cli_linux.zip
   COMMANDER_URL: https://www.silabs.com/documents/login/software/SimplicityCommander-Linux.zip
@@ -81,65 +80,68 @@ jobs:
         cd simplicity_studio
         git clone $SIM_REPO
         cd simplicity_sdk
-        # ls -la
-        cd ..
-        # ls -la
         echo "Current directory: $PWD"
+        echo "List file in current folfer:"
         ls -la
-        echo "List file in simplicity_sdk folfer"
-        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install Gecko SDK
       if: always()
       run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
         git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
         cd gecko_sdk_$SDK_VER
         git checkout tags/$SDK_VER
-        mkdir -p extension/IEC60730-Library/
-        cd extension/IEC60730-Library/
-        cp -r ${{ github.workspace }}/* ./
-        #echo "REPO_URL=$REPO_URL"
-        #git clone $REPO_URL
-        #cd IEC60730-Library
-        #echo "Curent REPO_BRANCH is $REPO_BRANCH"
-        #git checkout $REPO_BRANCH
-        echo "List file in /extension/IEC60730-Library folfer"
+        mkdir extension
+        cd extension
+        git clone https://github.com/SiliconLabsSoftware/IEC60730-Library.git
+        cd IEC60730-Library
+        echo "Curent REPO_BRANCH is $REPO_BRANCH"
+        git checkout $REPO_BRANCH
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
         ls -la
     - name: Install Amazon Corretto 17
       if: always()
       run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
         wget $AM_CORRETTO_17
         tar -xzf amazon-corretto-17-x64-linux-jdk.tar.gz
-        # ls -la
         echo "Current directory: $PWD"
+        echo "List file in current folfer:"
         ls -la
-        echo "List file in simplicity_sdk folfer"
-        ls -la "${{ github.workspace }}/simplicity_sdk"
     - name: Install SLC CLI
       if: always()
       run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
         wget $SLC_CLI_URL
         unzip slc_cli_linux.zip
-        # ls -la
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
     - name: Install Simplicity Commander
       if: always()
       run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
         wget $COMMANDER_URL
         unzip SimplicityCommander-Linux.zip
-        cd SimplicityCommander-Linux
-        # ls -la
-        cd ..
         mkdir commander
         tar -xf SimplicityCommander-Linux/Commander_linux_x86_64_*.tar.bz commander
-        cd commander
-        # ls -la
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
     - name: Install GCC
       if: always()
       run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
         wget $GCC_URL
         tar -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
-        # ls -la
-        cd arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi
-        # ls -la
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
     - name: Install Ninja build
       run: |
         sudo apt update
@@ -167,6 +169,7 @@ jobs:
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
+        echo "List file in current folfer:"
         ls -la
         echo "List file in simplicity_sdk folfer"
         ls -la "${{ github.workspace }}/simplicity_sdk"
