@@ -22,19 +22,19 @@ Once OEMs have completed integrating their system with the IEC60730 Library, the
 
 ## Supported Families
 
-- Refer section [Supported Families](./docs/html/EFR32_IEC60730_Libraries/group__efr32__iec60730.html)
+- Refer section [Supported Families](./docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## Software Requirements
 
-- Refer section [Software Requirements](./docs/html/EFR32_IEC60730_Libraries/group__efr32__iec60730.html)
+- Refer section [Software Requirements](./docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## Building the IEC60730 Demo
 
-- Refer section [Building the IEC60730 Demo](./docs/html/EFR32_IEC60730_Libraries/group__efr32__iec60730.html)
+- Refer section [Building the IEC60730 Demo](./docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## Generate document API
 
-- Refer section [Generate document API](./docs/html/EFR32_IEC60730_Libraries/group__efr32__iec60730.html)
+- Refer section [Generate document API](./docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## Coding convention tool
 
@@ -42,11 +42,11 @@ Once OEMs have completed integrating their system with the IEC60730 Library, the
 
 ## Compiler specifications
 
-- Refer section [Compiler specifications](./docs/html/EFR32_IEC60730_Libraries/group__efr32__iec60730.html)
+- Refer section [Compiler specifications](./docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## System Architecture
 
-- Refer section [System Architecture](./docs/html/EFR32_IEC60730_Libraries/group__efr32__iec60730.html)
+- Refer section [System Architecture](./docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## CMake
 
