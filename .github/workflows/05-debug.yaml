@@ -85,4 +85,36 @@ jobs:
           ls -la
           echo "File in extention: "
           ls extention
-    
+    - name: Update package list
+      run: sudo apt-get update -y
+    - name: Install prerequisites
+      run: |
+        sudo apt-get install -y \
+          software-properties-common \
+          build-essential \
+          checkinstall \
+          zlib1g-dev \
+          libncurses5-dev \
+          libgdbm-dev \
+          libnss3-dev \
+          libssl-dev \
+          libreadline-dev \
+          libffi-dev \
+          libsqlite3-dev \
+          wget \
+          curl \
+          llvm \
+          libbz2-dev \
+          liblzma-dev \
+          tk-dev \
+          libdb-dev \
+          libgdbm-compat-dev
+
+    - name: Add deadsnakes PPA and install Python 3.11
+      run: |
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update -y
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+
+    - name: Verify Python version
+      run: python3.11 --version
