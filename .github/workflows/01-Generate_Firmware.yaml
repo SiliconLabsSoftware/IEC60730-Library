@@ -147,33 +147,7 @@ jobs:
         sudo apt update
         sudo apt -y install ninja-build
         ninja --version
-    - name: Install python3.11
-      run: |
-        sudo apt-get install -y \
-        software-properties-common \
-        build-essential \
-        checkinstall \
-        zlib1g-dev \
-        libncurses5-dev \
-        libgdbm-dev \
-        libnss3-dev \
-        libssl-dev \
-        libreadline-dev \
-        libffi-dev \
-        libsqlite3-dev \
-        wget \
-        curl \
-        llvm \
-        libbz2-dev \
-        liblzma-dev \
-        tk-dev \
-        libdb-dev \
-        libgdbm-compat-dev
-        sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt-get update -y
-        sudo apt-get install -y python3.11-full
-        python3 --version
-        sudo apt install python3-pip
+    
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
