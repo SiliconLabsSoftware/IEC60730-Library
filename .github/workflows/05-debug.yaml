@@ -88,29 +88,20 @@ jobs:
     
     - name: Install python3.11
       run: |
-        sudo apt-get install -y \
-        software-properties-common \
-        build-essential \
-        checkinstall \
-        zlib1g-dev \
-        libncurses5-dev \
-        libgdbm-dev \
-        libnss3-dev \
-        libssl-dev \
-        libreadline-dev \
-        libffi-dev \
-        libsqlite3-dev \
-        wget \
-        curl \
-        llvm \
-        libbz2-dev \
-        liblzma-dev \
-        tk-dev \
-        libdb-dev \
-        libgdbm-compat-dev
+        sudo apt update
+        sudo apt upgrade
         sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt-get update -y
-        sudo apt-get install -y python3.11-full
+        sudo apt update
+        sudo apt install python3.11
+        python3.11 --version
+        which python3.11
+        cat ~/.bashrc
+        echo "alias python3=python3.11" >> ~/.bashrc
+        echo "alias python3=python3.11" >> ~/.bash_profile
+        cat ~/.bashrc
+        source ~/.bash_profile
+        source ~/.bashrc
         python3 --version
-        sudo apt install -y python3-pip
+        sudo apt install python3.11-full
+        sudo apt install python3-pip
 
