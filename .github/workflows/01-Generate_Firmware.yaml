@@ -93,7 +93,7 @@ jobs:
       uses: actions/checkout@v4.1.7
       with:
         ref: ${{env.REPO_BRANCH}}
-        path: gecko_sdk_${{env.SDK_VER}}/extension
+        path: gecko_sdk_${{env.SDK_VER}}/extension/IEC60730-Library
     - name: Check files
       run: |
         echo "Current directory: $PWD"
