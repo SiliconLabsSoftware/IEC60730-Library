@@ -77,11 +77,11 @@ jobs:
     
     - name: Update package list
       run: |
-        sudo apt update
-        sudo apt upgrade
+        sudo apt update -y
+        sudo apt upgrade -y
         sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt update
-        sudo apt install python3.11
+        sudo apt update -y
+        sudo apt install -y python3.11
         python3.11 --version
         which python3.11
         cat ~/.bashrc
@@ -91,6 +91,6 @@ jobs:
         source ~/.bash_profile
         source ~/.bashrc
         python3 --version
-        sudo apt install python3.11-full
-        sudo apt install python3-pip
+        sudo apt install -y python3.11-full
+        sudo apt install -y python3-pip
 
