@@ -44,7 +44,7 @@ env:
 jobs:
   job1:
     name: Generate Firmware
-    runs-on: [self-hosted, DS_SQA_HN_01]
+    runs-on: [self-hosted, DS_SQA_HN_02]
     permissions:
       contents: read
       pull-requests: write
