@@ -44,7 +44,7 @@ env:
 jobs:
   job1:
     name: Generate Firmware
-    runs-on: [self-hosted, DS_SQA_HN_01]
+    runs-on: [self-hosted, silabs-internal]
     permissions:
       contents: read
       pull-requests: write
@@ -91,15 +91,21 @@ jobs:
         git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
         cd gecko_sdk_$SDK_VER
         git checkout tags/$SDK_VER
-        mkdir extension
-        cd extension
-        git clone https://github.com/SiliconLabsSoftware/IEC60730-Library.git
-        cd IEC60730-Library
-        echo "Curent REPO_BRANCH is $REPO_BRANCH"
-        git checkout $REPO_BRANCH
+    - name: Install Gecko SDK extension
+      uses: actions/checkout@v4.1.7
+      with:
+        ref: $REPO_BRANCH
+        path: gecko_sdk_$SDK_VER/extension
+    - name: Check files
+      run: |
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
+        echo " List file in gecko_sdk_$SDK_VER"
+        ls gecko_sdk_$SDK_VER
+        echo " List file in gecko_sdk_$SDK_VER/extension"
+        ls gecko_sdk_$SDK_VER/extension
+        
     - name: Install Amazon Corretto 17
       if: always()
       run: |
