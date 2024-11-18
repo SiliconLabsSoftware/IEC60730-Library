@@ -74,7 +74,6 @@ jobs:
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit: $(git rev-parse HEAD)" 
     - name: Install Simplicity SDK
-      if: always()
       run: |
         mkdir simplicity_studio
         cd simplicity_studio
@@ -84,7 +83,6 @@ jobs:
         echo "List file in current folfer:"
         ls -la
     - name: Install Gecko SDK
-      if: always()
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -94,20 +92,19 @@ jobs:
     - name: Install Gecko SDK extension
       uses: actions/checkout@v4.1.7
       with:
-        ref: $REPO_BRANCH
-        path: gecko_sdk_$SDK_VER/extension
+        ref: ${{env.REPO_BRANCH}}
+        path: gecko_sdk_${{env.SDK_VER}}/extension
     - name: Check files
       run: |
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
-        echo " List file in gecko_sdk_$SDK_VER"
+        echo " List file in gecko_sdk_${{env.SDK_VER}}"
         ls gecko_sdk_$SDK_VER
-        echo " List file in gecko_sdk_$SDK_VER/extension"
-        ls gecko_sdk_$SDK_VER/extension
+        echo " List file in gecko_sdk_${{env.SDK_VER}}/extension"
+        ls gecko_sdk_${{env.SDK_VER}}/extension
         
     - name: Install Amazon Corretto 17
-      if: always()
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -117,7 +114,6 @@ jobs:
         echo "List file in current folfer:"
         ls -la
     - name: Install SLC CLI
-      if: always()
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -127,7 +123,6 @@ jobs:
         echo "List file in current folfer:"
         ls -la
     - name: Install Simplicity Commander
-      if: always()
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -139,7 +134,6 @@ jobs:
         echo "List file in current folfer:"
         ls -la
     - name: Install GCC
-      if: always()
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -154,7 +148,6 @@ jobs:
         sudo apt -y install ninja-build
         ninja --version
     - name: Install python3.11
-      if: always()
       run: |
         sudo apt update
         sudo apt upgrade
