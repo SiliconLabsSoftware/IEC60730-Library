@@ -44,7 +44,7 @@ env:
 jobs:
   job1:
     name: Generate Firmware
-    runs-on: [self-hosted, DS_SQA_HN_01]
+    runs-on: [self-hosted, DS_SQA_HN_02]
     permissions:
       contents: read
       pull-requests: write
@@ -74,47 +74,23 @@ jobs:
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit: $(git rev-parse HEAD)" 
     
-    - name: Install Gecko SDK
-      uses: actions/checkout@v4.1.7
-      with:
-        ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}"
-        path: extention
-    - name: Check file
-      run: |
-          echo "Current path: $PWD"
-          ls -la
-          echo "File in extention: "
-          ls extention
     
     - name: Update package list
-      run: sudo apt-get update -y
-    - name: Install prerequisites
       run: |
-        sudo apt-get install -y \
-          software-properties-common \
-          build-essential \
-          checkinstall \
-          zlib1g-dev \
-          libncurses5-dev \
-          libgdbm-dev \
-          libnss3-dev \
-          libssl-dev \
-          libreadline-dev \
-          libffi-dev \
-          libsqlite3-dev \
-          wget \
-          curl \
-          llvm \
-          libbz2-dev \
-          liblzma-dev \
-          tk-dev \
-          libdb-dev \
-          libgdbm-compat-dev
-    - name: Add deadsnakes PPA and install Python 3.11
-      run: |
+        sudo apt update
+        sudo apt upgrade
         sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt-get update -y
-        sudo apt-get install -y python3.11
-    - name: Verify Python version
-      run: python3.11 --version
+        sudo apt update
+        sudo apt install python3.11
+        python3.11 --version
+        which python3.11
+        cat ~/.bashrc
+        echo "alias python3=python3.11" >> ~/.bashrc
+        echo "alias python3=python3.11" >> ~/.bash_profile
+        cat ~/.bashrc
+        source ~/.bash_profile
+        source ~/.bashrc
+        python3 --version
+        sudo apt install python3.11-full
+        sudo apt install python3-pip
 
