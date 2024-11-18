@@ -17,6 +17,10 @@ on:
         description: 'Adapter serial number of MG24'
         type: string
         default: '440133193'
+      RUNNER_BUILD:
+        description: 'Runner to generate firmware'
+        type: string
+        default: 'ubuntu-latest'
     
 env:
   AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
@@ -44,7 +48,7 @@ env:
 jobs:
   job1:
     name: Generate Firmware
-    runs-on: [self-hosted, silabs-internal]
+    runs-on: ${{ inputs.RUNNER_BUILD }}
     permissions:
       contents: read
       pull-requests: write
