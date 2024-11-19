@@ -158,7 +158,6 @@ jobs:
         sudo add-apt-repository ppa:deadsnakes/ppa -y
         sudo apt update -y
         sudo apt install -y python3.11
-        sudo apt install -y cmake
         python3.11 --version
         which python3.11
         USER_NAME=$(whoami)
@@ -182,6 +181,10 @@ jobs:
         fi
         python3 --version
         sudo apt install -y python3.11-full
+        sudo apt install -y wget build-essential libssl-dev
+        wget https://cmake.org/files/v3.25/cmake-3.25.0-linux-x86_64.sh
+        sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
+        cmake --version
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
