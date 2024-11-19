@@ -199,11 +199,11 @@ jobs:
         ./slc configuration --sdk=${SDK_PATH}
         ./slc signature trust --sdk $SDK_PATH
         ./slc configuration -gcc=$TOOL_DIRS
+        ./slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
         cd ${{ github.workspace }}
         make prepare
         echo "Generate MG12 image"
         cd build
-        ./slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make integration_test_info -j4
@@ -223,7 +223,6 @@ jobs:
         rm -rf build
         make prepare
         cd build
-        ./slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make integration_test_info -j4
