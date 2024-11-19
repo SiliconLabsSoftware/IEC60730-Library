@@ -77,48 +77,16 @@ jobs:
       run: |
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit: $(git rev-parse HEAD)" 
-    
-    
-    - name: Update package list
+   
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install -y wget build-essential zlib1g-dev libncurses5-dev \
-        libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl
-        wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
-        tar -xf Python-3.11.0.tgz
-        cd Python-3.11.0
-        ./configure --enable-optimizations
-        make -j 4
-        sudo make altinstall
-        sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.11 1
-        sudo update-alternatives --config python3
-        python3.11 --version
-        which python3.11
-        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        python3.11 get-pip.py
-        pip3.11 --version
-        USER_NAME=$(whoami)
-        if [ ! -f /home/$USER_NAME/.bashrc ]; then
-          cp /etc/skel/.bashrc /home/$USER_NAME/.bashrc
-          chown $USER_NAME:$USER_NAME /home/$USER_NAME/.bashrc
-          chmod 644 /home/$USER_NAME/.bashrc
-          cat ~/.bashrc
-          echo "alias python3=python3.11" >> ~/.bashrc
-          source ~/.bashrc
-        fi
-        if [ ! -f /home/$USER_NAME/.bash_profile ]; then
-          if [ -f /etc/skel/.bash_profile ]; then
-            cp /etc/skel/.bash_profile /home/$USER_NAME/.bash_profile
-            chown $USER_NAME:$USER_NAME /home/$USER_NAME/.bash_profile
-            chmod 644 /home/$USER_NAME/.bash_profile
-            cat ~/.bash_profile
-            echo "alias python3=python3.11" >> ~/.bash_profile
-            source ~/.bash_profile
-          fi
-        fi
+        sudo apt-get update
+        sudo apt-get install -y python3-apt
         python3 --version
-        echo "Install CMake"
-        wget https://cmake.org/files/v3.25/cmake-3.25.0-linux-x86_64.sh
-        sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
-        cmake --version
+
+
 
