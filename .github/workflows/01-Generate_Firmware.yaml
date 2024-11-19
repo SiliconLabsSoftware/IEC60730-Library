@@ -169,6 +169,7 @@ jobs:
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         python3.11 get-pip.py
         pip3.11 --version
+        sudo apt-get install -y --reinstall python3-apt
         USER_NAME=$(whoami)
         if [ ! -f /home/$USER_NAME/.bashrc ]; then
           cp /etc/skel/.bashrc /home/$USER_NAME/.bashrc
