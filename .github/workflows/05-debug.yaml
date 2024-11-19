@@ -81,10 +81,9 @@ jobs:
     
     - name: Update package list
       run: |
-        sudo apt update -y
-        sudo apt upgrade -y
-        sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt update -y
-        sudo apt install -y cmake
+        sudo apt update
+        sudo apt install -y wget build-essential libssl-dev
+        wget https://cmake.org/files/v3.25/cmake-3.25.0-linux-x86_64.sh
+        sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
         cmake --version
 
