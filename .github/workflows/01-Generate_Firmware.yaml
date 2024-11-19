@@ -182,12 +182,15 @@ jobs:
         export PATH=$PATH:/usr/bin/
         export SDK_PATH=$PWD/gecko_sdk_$SDK_VER
         export PATH=$PATH:$PWD/amazon-corretto-17.0.12.7.1-linux-x64/bin
-        echo $PATH
+        echo "Current PATH:"
+        echo $PATH | tr ':' '\n'
         echo 2 | 
         sudo apt update -y
         sudo apt install -y openjdk-17-jdk
         sudo update-alternatives --config java
+        echo "Version Java: "
         java --version
+        echo "Version SLC: "
         slc --version
         slc configuration --sdk=${SDK_PATH}
         ninja --version
