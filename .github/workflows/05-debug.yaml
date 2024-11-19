@@ -90,6 +90,8 @@ jobs:
         ./configure --enable-optimizations
         make -j 4
         sudo make altinstall
+        sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.11 1
+        sudo update-alternatives --config python3
         python3.11 --version
         which python3.11
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
@@ -99,7 +101,7 @@ jobs:
         if [ ! -f /home/$USER_NAME/.bashrc ]; then
           cp /etc/skel/.bashrc /home/$USER_NAME/.bashrc
           chown $USER_NAME:$USER_NAME /home/$USER_NAME/.bashrc
-          chmod 777 /home/$USER_NAME/.bashrc
+          chmod 644 /home/$USER_NAME/.bashrc
           cat ~/.bashrc
           echo "alias python3=python3.11" >> ~/.bashrc
           source ~/.bashrc
@@ -108,7 +110,7 @@ jobs:
           if [ -f /etc/skel/.bash_profile ]; then
             cp /etc/skel/.bash_profile /home/$USER_NAME/.bash_profile
             chown $USER_NAME:$USER_NAME /home/$USER_NAME/.bash_profile
-            chmod 777 /home/$USER_NAME/.bash_profile
+            chmod 644 /home/$USER_NAME/.bash_profile
             cat ~/.bash_profile
             echo "alias python3=python3.11" >> ~/.bash_profile
             source ~/.bash_profile
