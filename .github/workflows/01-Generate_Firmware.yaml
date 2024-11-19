@@ -169,6 +169,17 @@ jobs:
         sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
         echo "CMake version: "
         cmake --version
+    - name: Install Java 17
+      run: |
+        sudo apt update
+        sudo apt install -y openjdk-17-jdk
+    - name: Set JAVA_HOME and update PATH
+      run: |
+        echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" | sudo tee -a /etc/environment
+        echo "PATH=\$JAVA_HOME/bin:\$PATH" | sudo tee -a /etc/environment
+        source /etc/environment
+        echo "Version Java: "
+        java --version
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
@@ -185,21 +196,16 @@ jobs:
         echo "Current PATH:"
         echo $PATH | tr ':' '\n'
         echo 2 | 
-        sudo apt update -y
-        sudo apt install -y openjdk-17-jdk
-        sudo update-alternatives --config java
-        echo "Version Java: "
-        java --version
         echo "Version SLC: "
-        slc --version
-        slc configuration --sdk=${SDK_PATH}
+        ./slc --version
+        ./slc configuration --sdk=${SDK_PATH}
         ninja --version
-        slc signature trust --sdk $SDK_PATH
-        slc configuration -gcc=$TOOL_DIRS
+        ./slc signature trust --sdk $SDK_PATH
+        ./slc configuration -gcc=$TOOL_DIRS
         make prepare
         echo "Generate MG12 image"
         cd build
-        slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
+        ./slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make integration_test_info -j4
@@ -219,7 +225,7 @@ jobs:
         rm -rf build
         make prepare
         cd build
-        slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
+        ./slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make integration_test_info -j4
