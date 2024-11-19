@@ -170,17 +170,11 @@ jobs:
         sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
         echo "CMake version: "
         cmake --version
-    - name: Install Java 17
-      run: |
-        sudo apt update
-        sudo apt install -y openjdk-17-jdk
-    - name: Set JAVA_HOME and update PATH
-      run: |
-        echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" | sudo tee -a /etc/environment
-        echo "PATH=\$JAVA_HOME/bin:\$PATH" | sudo tee -a /etc/environment
-        source /etc/environment
-        echo "Version Java: "
-        java --version
+    - name: Set up Java 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adoptopenjdk'
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
@@ -198,6 +192,8 @@ jobs:
         echo $PATH | tr ':' '\n'
         cd ${{ github.workspace }}/slc_cli
         echo 2 | 
+        echo "Version Java: "
+        java --version
         echo "Version SLC: "
         ./slc --version
         ./slc configuration --sdk=${SDK_PATH}
