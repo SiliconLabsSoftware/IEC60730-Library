@@ -392,7 +392,7 @@ jobs:
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
         mkdir log_MG12
         echo "bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Unit_Test_MG12.txt
+        bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Integration_Test_MG12.txt
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_2.txt
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON"' > log/Test_integration_$BOARD_NAME_GCC_3.txt
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"' > log/Test_integration_$BOARD_NAME_GCC_4.txt
@@ -419,7 +419,7 @@ jobs:
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
         mkdir log_MG24
         echo "bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Unit_Test_MG24.txt
+        bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Integration_Test_MG24.txt
     - name: Upload artifact MG12
       uses: actions/upload-artifact@v4.3.4
       with:
@@ -432,3 +432,17 @@ jobs:
         name: unit_test_log_mg24_gcc
         path: ${{ github.workspace }}/test/log_MG24/
         retention-days: 90
+    - name: Check log file to set status of the job
+      run: |
+        keywords=("(Failed round)")
+        files=("log_MG12/Integration_Test_MG12.txt" "log_MG24/Integration_Test_MG24.txt")
+        for file in "${files[@]}"; do
+          for keyword in "${keywords[@]}"; do
+            if grep -q "$keyword" "$file"; then
+              echo "Keyword '$keyword' found in $file."
+              exit 1
+            else
+              echo "Keyword '$keyword' not found in $file."
+            fi
+          done
+        done
