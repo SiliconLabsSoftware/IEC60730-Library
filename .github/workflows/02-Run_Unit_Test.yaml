@@ -357,13 +357,12 @@ jobs:
             echo "Download failed"
             exit 1
           fi
-    #- name: Install GCC
-      #run: |
-       #wget $GCC_URL
-        #tar -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
-        # ls -la
-        #cd arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi
-        # ls -la
+    - name: Install GCC
+      run: |
+       wget $GCC_URL
+        tar -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
+        cd arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi
+        ls -la
     - name: Run test
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
