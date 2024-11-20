@@ -357,22 +357,13 @@ jobs:
             echo "Download failed"
             exit 1
           fi
-    #- name: Install GCC
-     # if: always()#
-      # run: |
-       # wget $GCC_URL
-        # tar -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
-        # ls -la
-        # cd arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi
-        # ls -la
-    - name: Install CMake
+    - name: Install GCC
       run: |
-        sudo apt update
-        sudo apt install -y wget build-essential libssl-dev
-        wget https://cmake.org/files/v3.25/cmake-3.25.0-linux-x86_64.sh
-        sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
-        echo "CMake version: "
-        cmake --version
+       wget $GCC_URL
+        tar -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
+        # ls -la
+        cd arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi
+        # ls -la
     - name: Run test
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
@@ -382,9 +373,9 @@ jobs:
         export TOOL_DIRS=$TOOL_DIRS_RUN
         export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME}/integration_test_iec60730_watchdog/S
         ninja --version
-        #slc configuration --sdk=${SDK_PATH_RUN}
-        #slc signature trust --sdk $SDK_PATH_RUN
-        #slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
+        slc configuration --sdk=${SDK_PATH_RUN}
+        slc signature trust --sdk $SDK_PATH_RUN
+        slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
         echo "TOOL_DIRS=$TOOL_DIRS"
         #slc configuration -gcc=$TOOL_DIRS
         # make prepare
