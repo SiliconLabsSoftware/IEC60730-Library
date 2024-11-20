@@ -54,7 +54,7 @@ jobs:
     - name: Run test
       run: |
         pre-commit install
-        pre-commit run --all-files > CodingConventionTool.txt
+        pre-commit run --all-files | tee CodingConventionTool.txt
           
     - name: Upload Result
       if: always()
