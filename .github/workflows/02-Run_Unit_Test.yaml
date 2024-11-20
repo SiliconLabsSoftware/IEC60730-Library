@@ -432,3 +432,17 @@ jobs:
         name: unit_test_log_mg24_gcc
         path: ${{ github.workspace }}/test/log_MG24/
         retention-days: 90
+    - name: Check log file to set status of the job
+      run: |
+        keywords=("(Failed round)")
+        files=("log_MG12/Unit_Test_MG12.txt" "log_MG24/Unit_Test_MG24.txt")
+        for file in "${files[@]}"; do
+          for keyword in "${keywords[@]}"; do
+            if grep -q "$keyword" "$file"; then
+              echo "Keyword '$keyword' found in $file."
+              exit 1
+            else
+              echo "Keyword '$keyword' not found in $file."
+            fi
+          done
+        done
