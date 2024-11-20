@@ -365,6 +365,14 @@ jobs:
         # ls -la
         # cd arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi
         # ls -la
+    - name: Install CMake
+      run: |
+        sudo apt update
+        sudo apt install -y wget build-essential libssl-dev
+        wget https://cmake.org/files/v3.25/cmake-3.25.0-linux-x86_64.sh
+        sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
+        echo "CMake version: "
+        cmake --version
     - name: Run test
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
