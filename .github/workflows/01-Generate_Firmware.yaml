@@ -203,6 +203,7 @@ jobs:
         cd ${{ github.workspace }}
         make prepare
         echo "Generate MG12 image"
+        mkdir log_MG12
         cd build
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
@@ -216,6 +217,7 @@ jobs:
         echo "Run bash script"
         bash execute_integration_test.sh $BOARD_NAME_MG12 $TASK $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
         echo "Generate MG24 image"
+        mkdir log_MG24
         cd ${{ github.workspace }}
         ls -la
         mv -v build build_MG12
