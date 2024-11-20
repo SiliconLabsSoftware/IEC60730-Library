@@ -375,7 +375,7 @@ jobs:
         ninja --version
         slc configuration --sdk=${SDK_PATH_RUN}
         slc signature trust --sdk $SDK_PATH_RUN
-        slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
+        #slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
         echo "TOOL_DIRS=$TOOL_DIRS"
         #slc configuration -gcc=$TOOL_DIRS
         # make prepare
