@@ -312,7 +312,7 @@ jobs:
     - name: Download output for MG12 from Job 1
       run: |
           export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-          export REPO_OWNER="SiliconLabs"
+          export REPO_OWNER="SiliconLabsSoftware"
           export REPO_NAME="IEC60730-Library"
           export RUN_ID="${{ github.run_id }}" 
           export ARTIFACT_NAME="firmware_mg12_gcc"  
@@ -338,7 +338,7 @@ jobs:
     - name: Download output for MG24 from Job 1
       run: |
           export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-          export REPO_OWNER="SiliconLabs"
+          export REPO_OWNER="SiliconLabsSoftware"
           export REPO_NAME="IEC60730-Library"
           export RUN_ID="${{ github.run_id }}" 
           export ARTIFACT_NAME="firmware_mg24_gcc"  
