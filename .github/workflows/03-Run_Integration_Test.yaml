@@ -235,7 +235,7 @@ jobs:
             ADAPTER_SN_MG12=440189400
         fi
         echo "Run bash script"
-        bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER
+        bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
         echo "Generate MG24 image"
         cd ${{ github.workspace }}
         ls -la
@@ -253,7 +253,7 @@ jobs:
             ADAPTER_SN_MG24=440133193
         fi  
         echo "Run bash script"
-        bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER
+        bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
     - name: Upload firmware MG12
       uses: actions/upload-artifact@v4.3.4
       with:
@@ -266,6 +266,20 @@ jobs:
         name: firmware_mg24_gcc
         path: ${{ github.workspace }}/build/
         retention-days: 90
+    - name: Check log file to set status of the job
+      run: |
+        keywords=("(Failed round)")
+        files=("log_MG12/Gen_log_MG12.txt" "log_MG24/Gen_log_MG24.txt")
+        for file in "${files[@]}"; do
+          for keyword in "${keywords[@]}"; do
+            if grep -q "$keyword" "$file"; then
+              echo "Keyword '$keyword' found in $file."
+              exit 1
+            else
+              echo "Keyword '$keyword' not found in $file."
+            fi
+          done
+        done
   job2:
     name: Run integration test
     runs-on: ${{ inputs.RUNNER_EXECUTE }}
