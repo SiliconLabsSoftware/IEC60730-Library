@@ -36,7 +36,7 @@ on:
       RUNNER_EXECUTE:
         description: 'Runner to execute the test'
         type: string
-        default: 'DS_SQA_HN_01'
+        default: 'DS_SQA_HN_02'
 env:
   REPO_URL: ${{ github.server_url }}/${{ github.repository }}/.git
   REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
@@ -409,8 +409,8 @@ jobs:
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make unit_test_info -j4
         cd ../test
-        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
-            ADAPTER_SN_MG12=440189400
+        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
+            ADAPTER_SN_MG24=440133193
         fi
         if [ -z "${{ github.event.inputs.HOST_IP_MG24 }}" ]; then
             HOST_IP_MG24=192.168.1.69
