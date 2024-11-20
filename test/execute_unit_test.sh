@@ -99,8 +99,8 @@ function gen_image
             printf "Build successfully component: $component\n"
             resultBuild+=("Success to build component: $component\n")
         else
-            printf "ERROR!!! Build component: $component fail\n"
-            resultBuild+=("Fail to build component: $component\n")
+            printf "ERROR!!! Build component: $component fail(Failed round)\n"
+            resultBuild+=("Fail to build component: $component(Failed round)\n")
         fi
     done
 
