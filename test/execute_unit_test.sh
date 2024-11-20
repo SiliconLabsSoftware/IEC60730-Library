@@ -224,8 +224,8 @@ function run
                         printf "\n= Finish run unit test $component - Success $numberTestCases/$numberTestCases - PASS\n"
                         resultBuild+=("Finish run unit test $component - Success $numberTestCases/$numberTestCases - PASS\n")
                     else
-                        printf "\n= Finish run unit test $component - Failures $numberFailureTestCases/$numberTestCases - FAIL\n"
-                        resultBuild+=("Finish run unit test $component - Failures $numberFailureTestCases/$numberTestCases - FAIL\n")
+                        printf "\n= Finish run unit test $component - Failures $numberFailureTestCases/$numberTestCases - FAIL (Failed round)\n"
+                        resultBuild+=("Finish run unit test $component - Failures $numberFailureTestCases/$numberTestCases - FAIL (Failed round)\n")
                     fi
                 else
                     echo "File ${component}.log is not found in path $LOG_PATH!"
