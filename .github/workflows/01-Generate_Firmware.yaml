@@ -203,13 +203,13 @@ jobs:
         cd ${{ github.workspace }}
         make prepare
         echo "Generate MG12 image"
-        mkdir log_MG12
         cd build
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make integration_test_info -j4
         export HOST_IP=192.168.1.69
         cd ../test/
+        mkdir log_MG12
         ls -la
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
             ADAPTER_SN_MG12=440189400
@@ -217,7 +217,6 @@ jobs:
         echo "Run bash script"
         bash execute_integration_test.sh $BOARD_NAME_MG12 $TASK $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
         echo "Generate MG24 image"
-        mkdir log_MG24
         cd ${{ github.workspace }}
         ls -la
         mv -v build build_MG12
@@ -229,6 +228,7 @@ jobs:
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make integration_test_info -j4
         cd ../test/
+        mkdir log_MG24
         ls -la
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
             ADAPTER_SN_MG24=440133193
@@ -250,7 +250,7 @@ jobs:
     - name: Check log file to set status of the job
       run: |
         keywords=("(Failed round)")
-        files=("log_MG12/Gen_log_MG12.txt" "log_MG24/Gen_log_MG24.txt")
+        files=("test/log_MG12/Gen_log_MG12.txt" "test/log_MG24/Gen_log_MG24.txt")
         for file in "${files[@]}"; do
           for keyword in "${keywords[@]}"; do
             if grep -q "$keyword" "$file"; then
