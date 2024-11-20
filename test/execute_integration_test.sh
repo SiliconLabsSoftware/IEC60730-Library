@@ -247,8 +247,8 @@ function run
                   echo "= Finish run integration test: $component - Success $successCount/$totalTestcase - PASS" >> $LOG_FILE
                   resultBuild+=("\n= Finish run integration test: $component - Success $successCount/$totalTestcase - PASS\n")
                 else
-                  echo "= Finish run integration test: $component - Success $successCount/$totalTestcase - FAIL" $LOG_FILE
-                  resultBuild+=("\n= Finish run integration test: $component - Success $successCount/$totalTestcase - FAIL\n")
+                  echo "= Finish run integration test: $component - Success $successCount/$totalTestcase - FAIL (Failed round)" $LOG_FILE
+                  resultBuild+=("\n= Finish run integration test: $component - Success $successCount/$totalTestcase - FAIL (Failed round)\n")
                 fi
 
             else
