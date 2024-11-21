@@ -234,7 +234,7 @@ function run
             else
                 if [ ! -f "$TEST_SCRIPT" ]; then
                   printf "File $$TEST_SCRIPT is not found in path $TEST_PATH!(Failed round)\n"
-                  resultBuild+=(File $$TEST_SCRIPT is not found in path $TEST_PATH!(Failed round)\n)
+                  resultBuild+=("File $$TEST_SCRIPT is not found in path $TEST_PATH!(Failed round)\n")
                 elif [ ! -d "$LST_PATH" ]; then
                   printf "File ${component}.lst is not found in path $LST_PATH!(Failed round)\n"
                   resultBuild+=("File ${component}.lst is not found in path $LST_PATH!(Failed round)")
