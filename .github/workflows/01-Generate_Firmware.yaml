@@ -48,7 +48,7 @@ env:
 jobs:
   job1:
     name: Generate Firmware
-    runs-on: ${{ inputs.RUNNER_BUILD }}
+    runs-on: ${{ inputs.RUNNER_BUILD || 'ubuntu-latest' }}
     permissions:
       contents: read
       pull-requests: write
