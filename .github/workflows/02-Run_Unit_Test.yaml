@@ -260,6 +260,7 @@ jobs:
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
             ADAPTER_SN_MG24=440133193
         fi  
+        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
         echo "Run bash script"
         bash execute_unit_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
     - name: Upload firmware MG12
