@@ -1,9 +1,8 @@
 name: 03-Run Integration Test
 on:
-  workflow_run:
-    workflows: ["02-Run Unit Test"]
-    types:
-      - completed  
+  pull_request:
+    branches:
+      - 'main'       
   workflow_dispatch:
     inputs:
       Contribute_branch: 
@@ -71,9 +70,6 @@ jobs:
   job1:
     name: Generate Firmware
     runs-on: ${{ inputs.RUNNER_BUILD || 'ubuntu-latest' }}
-    concurrency:
-      group: "IEC-workflows"
-      cancel-in-progress: false
     permissions:
       contents: read
       pull-requests: write
@@ -297,6 +293,9 @@ jobs:
   job2:
     name: Run integration test
     runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_02' }}
+    concurrency:
+      group: "RUN-ON-DS_SQA_HN"
+      cancel-in-progress: false
     needs: job1
     permissions:
       contents: read
