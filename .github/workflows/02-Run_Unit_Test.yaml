@@ -453,15 +453,20 @@ jobs:
     - name: Check log file to set status of the job
       run: |
         keywords=("(Failed round)")
-        files=("log_MG12/Unit_Test_MG12.txt" "log_MG24/Unit_Test_MG24.txt")
+        files=("test/log_MG12/Unit_Test_MG12.txt" "test/log_MG24/Unit_Test_MG24.txt")
         for file in "${files[@]}"; do
-          for keyword in "${keywords[@]}"; do
-            if grep -q "$keyword" "$file"; then
-              echo "Keyword '$keyword' found in $file."
-              cat $file
-              exit 1
-            else
-              echo "Keyword '$keyword' not found in $file."
-            fi
-          done
+          if [ -f "${files[@]}" ]; then
+            echo "${files[@]} not found."
+            exit 1
+          else
+            for keyword in "${keywords[@]}"; do
+              if grep -q "$keyword" "$file"; then
+                echo "Keyword '$keyword' found in $file."
+                cat $file
+                exit 1
+              else
+                echo "Keyword '$keyword' not found in $file."
+              fi
+            done
+          fi
         done
