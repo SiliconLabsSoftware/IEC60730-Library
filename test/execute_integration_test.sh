@@ -253,16 +253,16 @@ function run
 
             else
                 if [ ! -f "$TEST_PATH/$component.py" ]; then
-                  printf "File $TEST_PATH/$component.py is not found in path $TEST_PATH!\n"
-                  resultBuild+=("File $TEST_PATH/$component.py is not found in path $TEST_PATH!\n")
+                  printf "File $TEST_PATH/$component.py is not found in path $TEST_PATH!(Failed round)\n"
+                  resultBuild+=("File $TEST_PATH/$component.py is not found in path $TEST_PATH!(Failed round)\n")
                 elif [ ! -d "$LST_PATH" ]; then
-                  printf "File ${component}.lst is not found in path $LST_PATH!\n"
-                  resultBuild+=("File ${component}.lst is not found in path $LST_PATH!")
+                  printf "File ${component}.lst is not found in path $LST_PATH!(Failed round)\n"
+                  resultBuild+=("File ${component}.lst is not found in path $LST_PATH!(Failed round)")
                 fi
             fi
         else
-            echo "Flash result ${component} failed!"
-            resultBuild+=("Flash Result ${component} failed!")
+            echo "Flash result ${component} failed!(Failed round)"
+            resultBuild+=("Flash Result ${component} failed!(Failed round)")
         fi
     done
 
