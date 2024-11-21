@@ -196,6 +196,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: Install srecord
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y srecord
+        srec_cat --version
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
@@ -235,6 +240,7 @@ jobs:
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
             ADAPTER_SN_MG12=440189400
         fi
+        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
         echo "Run bash script"
         bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
         echo "Generate MG24 image"
@@ -254,6 +260,7 @@ jobs:
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
             ADAPTER_SN_MG24=440133193
         fi  
+        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
         echo "Run bash script"
         bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
     - name: Upload firmware MG12
