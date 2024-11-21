@@ -1,5 +1,5 @@
 
-exclude: ^(docs|site|assets|pictures|simplicity_sdk|test/test_script|log|sample|cmake|components|lib/inc/coding_standard.h|lib/inc/silabs_license_agreement.h|lib/inc/sl_iec60730_library_documentation.h|README.md)
+exclude: ^(docs|site|assets|pictures|simplicity_sdk|test/test_script|log|sample|cmake|components|lib/inc/coding_standard.h|lib/inc/silabs_license_agreement.h|lib/inc/sl_iec60730_library_documentation.h|README.md|.github)
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
