@@ -1,9 +1,8 @@
 name: 03-Run Integration Test
 on:
-  workflow_run:
-    workflows: ["02-Run Unit Test"]
-    types:
-      - completed  
+  pull_request:
+    branches:
+      - 'main' 
   workflow_dispatch:
     inputs:
       Contribute_branch: 
