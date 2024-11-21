@@ -97,8 +97,8 @@ jobs:
         ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Contribute_branch || github.ref }}"
     - name: Log Current Branch and Commit
       run: |
-          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-          echo "Current commit: $(git rev-parse HEAD)" 
+        echo "Current branch: $(echo ${{ github.ref }} | sed 's/refs\/heads\///')"
+        echo "Current commit: ${{ github.sha }}"  
     - name: Install Simplicity SDK
       run: |
         mkdir simplicity_studio
