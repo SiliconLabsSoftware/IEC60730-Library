@@ -293,6 +293,9 @@ jobs:
   job2:
     name: Run unit test
     runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_02' }}
+    concurrency:
+      group: "RUN-ON-DS_SQA_HN"
+      cancel-in-progress: false
     needs: job1
     permissions:
       contents: read
