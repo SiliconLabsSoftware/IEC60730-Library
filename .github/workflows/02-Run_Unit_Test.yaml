@@ -356,30 +356,8 @@ jobs:
             echo "Download failed"
             exit 1
           fi
-          
-    - name: Download output for MG24 from Job 1
-      run: |
-          export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-          export REPO_OWNER="SiliconLabsSoftware"
-          export REPO_NAME="IEC60730-Library"
-          export RUN_ID="${{ github.run_id }}" 
-          export ARTIFACT_NAME="firmware_mg24_gcc"  
-          
-          ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
-            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
-            jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
-          if [ -z "$ARTIFACT_URL" ]; then
-            echo "Artifact not found for run ID $RUN_ID."
-            exit 1
-          fi
-          curl -L -o firmware_mg24_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
-          if [ $? -eq 0 ] && [ -f "firmware_mg24_gcc.zip" ]; then
-            echo "Download successful"
-          else
-            echo "Download failed"
-            exit 1
-          fi
-    - name: Run test
+   
+    - name: Run test MG12
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
         export PATH=$PATH:~/slc_cli
@@ -415,6 +393,57 @@ jobs:
         #echo 'bash execute_unit_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"' > log/Test_integration_$BOARD_NAME_GCC_4.txt
         #echo 'bash execute_unit_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
         #echo 'bash execute_unit_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON  -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
+    - name: Upload artifact MG12
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: unit_test_log_mg12_gcc
+        path: ${{ github.workspace }}/test/log_MG12/
+        retention-days: 90
+    - name: Check log file to set status of the job MG12
+      run: |
+        keywords=("(Failed round)")
+        files=("test/log_MG12/Unit_Test_MG12.txt")
+        for file in "${files[@]}"; do
+          if [ -f "${files[@]}" ]; then
+            echo "${files[@]} not found."
+            exit 1
+          else
+            for keyword in "${keywords[@]}"; do
+              if grep -q "$keyword" "$file"; then
+                echo "Keyword '$keyword' found in $file."
+                cat $file
+                exit 1
+              else
+                echo "Keyword '$keyword' not found in $file."
+              fi
+            done
+          fi
+        done
+        
+    - name: Download output for MG24 from Job 1
+      run: |
+          export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
+          export REPO_OWNER="SiliconLabsSoftware"
+          export REPO_NAME="IEC60730-Library"
+          export RUN_ID="${{ github.run_id }}" 
+          export ARTIFACT_NAME="firmware_mg24_gcc"  
+          
+          ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
+            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
+            jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
+          if [ -z "$ARTIFACT_URL" ]; then
+            echo "Artifact not found for run ID $RUN_ID."
+            exit 1
+          fi
+          curl -L -o firmware_mg24_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
+          if [ $? -eq 0 ] && [ -f "firmware_mg24_gcc.zip" ]; then
+            echo "Download successful"
+          else
+            echo "Download failed"
+            exit 1
+          fi
+    - name: Run test MG24
+      run: |
         echo "Run unit test for MG24"
         cd ${{ github.workspace }}
         ls -la
@@ -438,22 +467,16 @@ jobs:
         mkdir log_MG24
         echo "bash execute_unit_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER"
         bash execute_unit_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Unit_Test_MG24.txt
-    - name: Upload artifact MG12
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: unit_test_log_mg12_gcc
-        path: ${{ github.workspace }}/test/log_MG12/
-        retention-days: 90
     - name: Upload artifact MG24
       uses: actions/upload-artifact@v4.3.4
       with:
         name: unit_test_log_mg24_gcc
         path: ${{ github.workspace }}/test/log_MG24/
         retention-days: 90
-    - name: Check log file to set status of the job
+    - name: Check log file to set status of the job MG24
       run: |
         keywords=("(Failed round)")
-        files=("test/log_MG12/Unit_Test_MG12.txt" "test/log_MG24/Unit_Test_MG24.txt")
+        files=("test/log_MG24/Unit_Test_MG24.txt")
         for file in "${files[@]}"; do
           if [ -f "${files[@]}" ]; then
             echo "${files[@]} not found."
