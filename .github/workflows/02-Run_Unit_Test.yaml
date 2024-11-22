@@ -41,7 +41,7 @@ env:
   REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
   REPO_NAME: ${{ github.event.repository.name }}
   JLINK_PATH: /opt/SEGGER/JLink/libjlinkarm.so
-  SDK_PATH_RUN: /home/sqa/SimplicityStudio_v5/developer/sdks/gecko_sdk
+  SDK_PATH_RUN: /home/sqa/SimplicityStudio/SDKs/gecko_sdk
   AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
   SLC_CLI_URL: https://www.silabs.com/documents/login/software/slc_cli_linux.zip
   COMMANDER_URL: https://www.silabs.com/documents/login/software/SimplicityCommander-Linux.zip
