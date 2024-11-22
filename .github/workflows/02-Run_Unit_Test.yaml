@@ -38,7 +38,6 @@ on:
         type: string
         default: 'DS_SQA_HN_02'
 env:
-  REPO_URL: ${{ github.server_url }}/${{ github.repository }}/.git
   REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
   REPO_NAME: ${{ github.event.repository.name }}
   JLINK_PATH: /opt/SEGGER/JLink/libjlinkarm.so
@@ -56,7 +55,7 @@ env:
   BOARD_NAME_MG12: brd4161a
   BOARD_NAME_MG24: brd4187c
   ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
-  ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440133193
+  ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
   HOST_IP: 192.168.1.69
   TOOL_DIRS_BUILD: arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
   COMPILER: GCC
@@ -81,6 +80,7 @@ jobs:
         echo "Triggered by ${{github.event_name}} event"
         echo "Repo root directory: $GITHUB_WORKSPACE"
         echo "Current directory: $PWD"
+  
     - name: Check Branch Input
       run: |
             if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
@@ -91,14 +91,17 @@ jobs:
                 echo "REPO_BRANCH_BUILD=${{ github.event.inputs.Contribute_branch }}">> $GITHUB_ENV
               fi
             fi              
+  
     - name: Checkout
       uses: actions/checkout@v4.1.7
       with:
         ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Contribute_branch || github.ref }}"
+  
     - name: Log Current Branch and Commit
       run: |
         echo "Current branch: $(echo ${{ github.ref }} | sed 's/refs\/heads\///')"
         echo "Current commit: ${{ github.sha }}"  
+  
     - name: Install Simplicity SDK
       run: |
         mkdir simplicity_studio
@@ -108,6 +111,7 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
+  
     - name: Install Gecko SDK
       run: |
         cd ${{ github.workspace }}
@@ -115,11 +119,13 @@ jobs:
         git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
         cd gecko_sdk_$SDK_VER
         git checkout tags/$SDK_VER
+  
     - name: Install Gecko SDK extension
       uses: actions/checkout@v4.1.7
       with:
         ref: ${{env.REPO_BRANCH_BUILD}}
         path: gecko_sdk_${{env.SDK_VER}}/extension/IEC60730-Library
+  
     - name: Check files
       run: |
         echo "Current directory: $PWD"
@@ -139,6 +145,7 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
+  
     - name: Install SLC CLI
       run: |
         cd ${{ github.workspace }}
@@ -148,6 +155,7 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
+  
     - name: Install Simplicity Commander
       run: |
         cd ${{ github.workspace }}
@@ -159,6 +167,7 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
+  
     - name: Install GCC
       run: |
         cd ${{ github.workspace }}
@@ -168,22 +177,26 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
+  
     - name: Install Ninja build
       run: |
         sudo apt update
         sudo apt -y install ninja-build
         echo "Ninja version: "
         ninja --version
+  
     - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
         python-version: '3.11'
+  
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y python3-apt
         echo "Python version: "
         python3 --version
+  
     - name: Install CMake
       run: |
         sudo apt update
@@ -192,16 +205,19 @@ jobs:
         sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
         echo "CMake version: "
         cmake --version
+  
     - name: Set up Java 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Update apt-get and install srecord
+  
+    - name: Install srecord
       run: |
         sudo apt-get update
         sudo apt-get install -y srecord
         srec_cat --version
+  
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
@@ -241,6 +257,7 @@ jobs:
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
             ADAPTER_SN_MG12=440189400
         fi
+        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
         echo "Run bash script"
         bash execute_unit_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
         echo "Generate MG24 image"
@@ -263,18 +280,21 @@ jobs:
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
         echo "Run bash script"
         bash execute_unit_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
+  
     - name: Upload firmware MG12
       uses: actions/upload-artifact@v4.3.4
       with:
         name: firmware_mg12_gcc
         path: ${{ github.workspace }}/build_MG12/
         retention-days: 90
+  
     - name: Upload firmware MG24
       uses: actions/upload-artifact@v4.3.4
       with:
         name: firmware_mg24_gcc
         path: ${{ github.workspace }}/build/
         retention-days: 90
+  
     - name: Check log file to set status of the job
       run: |
         keywords=("(Failed round)")
@@ -293,9 +313,6 @@ jobs:
   job2:
     name: Run unit test
     runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_02' }}
-    concurrency:
-      group: "RUN-ON-DS_SQA_HN"
-      cancel-in-progress: false
     needs: job1
     permissions:
       contents: read
@@ -309,6 +326,7 @@ jobs:
         echo "Current directory: $PWD"
         rm -rf ${{ github.workspace }}
         mkdir ${{ github.workspace }}
+  
     - name: Check Branch Input
       run: |
             if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
@@ -319,22 +337,27 @@ jobs:
                 echo "REPO_BRANCH_RUN=${{ github.event.inputs.Validate_branch }}">> $GITHUB_ENV
               fi
             fi              
+  
     - name: Checkout
       uses: actions/checkout@v4.1.7
       with:
         ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Validate_branch || github.ref }}" 
+  
     - name: Log Current Branch and Commit
       run: |
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit: $(git rev-parse HEAD)" 
+  
     - name: Create build folder
       run: |
         make prepare
         #mkdir -p ${{ github.workspace }}/build/test/unit_test/build
+  
     - name: Install jq (if needed)
       run: |
         jq -V
         #sudo apt-get install jq -y
+  
     - name: Download output for MG12 from Job 1
       run: |
           export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
@@ -359,30 +382,8 @@ jobs:
             echo "Download failed"
             exit 1
           fi
-          
-    - name: Download output for MG24 from Job 1
-      run: |
-          export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-          export REPO_OWNER="SiliconLabsSoftware"
-          export REPO_NAME="IEC60730-Library"
-          export RUN_ID="${{ github.run_id }}" 
-          export ARTIFACT_NAME="firmware_mg24_gcc"  
-          
-          ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
-            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
-            jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
-          if [ -z "$ARTIFACT_URL" ]; then
-            echo "Artifact not found for run ID $RUN_ID."
-            exit 1
-          fi
-          curl -L -o firmware_mg24_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
-          if [ $? -eq 0 ] && [ -f "firmware_mg24_gcc.zip" ]; then
-            echo "Download successful"
-          else
-            echo "Download failed"
-            exit 1
-          fi
-    - name: Run test
+   
+    - name: Run test MG12
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
         export PATH=$PATH:~/slc_cli
@@ -392,7 +393,7 @@ jobs:
         export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME}/integration_test_iec60730_watchdog/S
         slc configuration --sdk=${SDK_PATH_RUN}
         slc signature trust --sdk $SDK_PATH_RUN
-        #slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
+        slc signature trust -extpath $SDK_PATH_RUN/extension/IEC60730-Library
         echo "TOOL_DIRS=$TOOL_DIRS"
         #slc configuration -gcc=$TOOL_DIRS
         # make prepare
@@ -418,10 +419,66 @@ jobs:
         #echo 'bash execute_unit_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"' > log/Test_integration_$BOARD_NAME_GCC_4.txt
         #echo 'bash execute_unit_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
         #echo 'bash execute_unit_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON  -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
+  
+    - name: Upload artifact MG12
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: unit_test_log_mg12_gcc
+        path: ${{ github.workspace }}/test/log_MG12/
+        retention-days: 90
+  
+    - name: Check log file to set status of the job MG12
+      run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
+        ls -la
+        keywords=("(Failed round)")
+        files=("${{ github.workspace }}/test/log_MG12/Unit_Test_MG12.txt")
+        for file in "${files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "$file not found."
+            exit 1
+          else
+            for keyword in "${keywords[@]}"; do
+              if grep -q "$keyword" "$file"; then
+                echo "Keyword '$keyword' found in $file."
+                cat $file
+                exit 1
+              else
+                echo "Keyword '$keyword' not found in $file."
+              fi
+            done
+          fi
+        done
+        
+    - name: Download output for MG24 from Job 1
+      run: |
+          export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
+          export REPO_OWNER="SiliconLabsSoftware"
+          export REPO_NAME="IEC60730-Library"
+          export RUN_ID="${{ github.run_id }}" 
+          export ARTIFACT_NAME="firmware_mg24_gcc"  
+          
+          ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
+            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
+            jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
+          if [ -z "$ARTIFACT_URL" ]; then
+            echo "Artifact not found for run ID $RUN_ID."
+            exit 1
+          fi
+          curl -L -o firmware_mg24_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
+          if [ $? -eq 0 ] && [ -f "firmware_mg24_gcc.zip" ]; then
+            echo "Download successful"
+          else
+            echo "Download failed"
+            exit 1
+          fi
+  
+    - name: Run test MG24
+      run: |
         echo "Run unit test for MG24"
         cd ${{ github.workspace }}
         ls -la
-        # rm -rf build
         make prepare
         mv firmware_mg24_gcc.zip ./build/
         unzip ./build/firmware_mg24_gcc.zip -d ./build/
@@ -441,25 +498,24 @@ jobs:
         mkdir log_MG24
         echo "bash execute_unit_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER"
         bash execute_unit_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Unit_Test_MG24.txt
-    - name: Upload artifact MG12
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: unit_test_log_mg12_gcc
-        path: ${{ github.workspace }}/test/log_MG12/
-        retention-days: 90
+  
     - name: Upload artifact MG24
       uses: actions/upload-artifact@v4.3.4
       with:
         name: unit_test_log_mg24_gcc
         path: ${{ github.workspace }}/test/log_MG24/
         retention-days: 90
-    - name: Check log file to set status of the job
+  
+    - name: Check log file to set status of the job MG24
       run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
+        ls -la
         keywords=("(Failed round)")
-        files=("test/log_MG12/Unit_Test_MG12.txt" "test/log_MG24/Unit_Test_MG24.txt")
+        files=("${{ github.workspace }}/test/log_MG24/Unit_Test_MG24.txt")
         for file in "${files[@]}"; do
-          if [ -f "${files[@]}" ]; then
-            echo "${files[@]} not found."
+          if [ ! -f "$file" ]; then
+            echo "$file not found."
             exit 1
           else
             for keyword in "${keywords[@]}"; do
