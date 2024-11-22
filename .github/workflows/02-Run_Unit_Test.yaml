@@ -63,7 +63,7 @@ env:
   COMPONENT: all
   CHIP_MG12: EFR32MG12
   CHIP_MG24: EFR32MG24BXXXF1536
-  TOOL_DIRS_RUN: /home/sqa/SimplicityStudio-v5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
+  TOOL_DIRS_RUN: /home/sqa/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
   START_ADDR_FLASH_M12: 0x0000000
   START_ADDR_FLASH_M24: 0x8000000
 jobs:
