@@ -24,11 +24,11 @@ on:
       ADAPTER_SN_MG24: 
         description: 'Adapter serial number of MG24'
         type: string
-        default: '440111030'
+        default: '440124027'
       HOST_TP_MG24: 
         description: 'Host IP of MG24'
         type: string
-        default: '192.168.1.69'
+        default: '192.168.1.104'
       RUNNER_BUILD:
         description: 'Runner to generate firmware'
         type: string
@@ -55,8 +55,8 @@ env:
   BOARD_NAME_MG12: brd4161a
   BOARD_NAME_MG24: brd4187c
   ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
-  ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
-  HOST_IP: 192.168.1.69
+  ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440124027
+  HOST_IP: 192.168.1.104
   TOOL_DIRS_BUILD: arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
   COMPILER: GCC
   TOOL_CHAINS: GCC
@@ -250,7 +250,7 @@ jobs:
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make unit_test_info -j4
-        export HOST_IP=192.168.1.69
+        export HOST_IP=192.168.1.104
         cd ../test/
         mkdir log_MG12
         ls -la
@@ -501,7 +501,7 @@ jobs:
             ADAPTER_SN_MG24=440133193
         fi
         if [ -z "${{ github.event.inputs.HOST_IP_MG24 }}" ]; then
-            HOST_IP_MG24=192.168.1.69
+            HOST_IP_MG24=192.168.1.104
         fi
         export HOST_IP=$HOST_IP_MG24
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
