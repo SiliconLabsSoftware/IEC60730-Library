@@ -56,7 +56,6 @@ env:
   BOARD_NAME_MG24: brd4187c
   ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
   ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440124027
-  HOST_IP: 192.168.1.104
   TOOL_DIRS_BUILD: arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
   COMPILER: GCC
   TOOL_CHAINS: GCC
