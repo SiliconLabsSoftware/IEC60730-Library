@@ -36,7 +36,7 @@ on:
       RUNNER_EXECUTE:
         description: 'Runner to execute the test'
         type: string
-        default: 'DS_SQA_HN_02'
+        default: 'DS_SQA_HN_01'
 env:
   REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
   REPO_NAME: ${{ github.event.repository.name }}
@@ -312,7 +312,7 @@ jobs:
         done
   job2:
     name: Run unit test
-    runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_02' }}
+    runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_01' }}
     needs: job1
     permissions:
       contents: read
@@ -390,7 +390,7 @@ jobs:
         export PATH=$PATH:/usr/bin/
         export PATH=$PATH:~/amazon-corretto-17.0.12.7.1-linux-x64/bin
         export TOOL_DIRS=$TOOL_DIRS_RUN
-        export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME}/integration_test_iec60730_watchdog/S
+        #export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME}/integration_test_iec60730_watchdog/S
         slc configuration --sdk=${SDK_PATH_RUN}
         slc signature trust --sdk $SDK_PATH_RUN
         slc signature trust -extpath $SDK_PATH_RUN/extension/IEC60730-Library
@@ -476,6 +476,16 @@ jobs:
   
     - name: Run test MG24
       run: |
+        export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
+        export PATH=$PATH:~/slc_cli
+        export PATH=$PATH:/usr/bin/
+        export PATH=$PATH:~/amazon-corretto-17.0.12.7.1-linux-x64/bin
+        export TOOL_DIRS=$TOOL_DIRS_RUN
+        #export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME}/integration_test_iec60730_watchdog/S
+        slc configuration --sdk=${SDK_PATH_RUN}
+        slc signature trust --sdk $SDK_PATH_RUN
+        slc signature trust -extpath $SDK_PATH_RUN/extension/IEC60730-Library
+        echo "TOOL_DIRS=$TOOL_DIRS"
         echo "Run unit test for MG24"
         cd ${{ github.workspace }}
         ls -la
