@@ -1,0 +1,1032 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="iec60730_safety_library_integration_to_sdk.html">
+      
+      
+      <link rel="icon" href="images/silabs-soc.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
+    
+    
+      
+        <title>IEC60730 Safety Library</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#guideline-using-iec60730-safety-library" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="IEC60730 Safety Library" class="md-header__button md-logo" aria-label="IEC60730 Safety Library" data-md-component="logo">
+      
+  <img src="images/silabs_banner.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IEC60730 Safety Library
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="IEC60730 Safety Library" class="md-nav__button md-logo" aria-label="IEC60730 Safety Library" data-md-component="logo">
+      
+  <img src="images/silabs_banner.png" alt="logo">
+
+    </a>
+    IEC60730 Safety Library
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="index.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      License
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release Notes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iec60730-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      IEC60730 Certificate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oem-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      OEM Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Families
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software Requirements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-the-iec60730-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building the IEC60730 Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-document-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate document API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coding-convention-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coding convention tool
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler specifications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      CMake
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CMake">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-iec60730-library-extension-to-the-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add the IEC60730 Library extension to the SDK
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install Dependencies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Install Dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-slc-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install slc-cli
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Install slc-cli">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-slc" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to use slc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      For example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-unit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run unit test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-integration-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run integration test
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    IEC60730 safety library integration to SDK
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            IEC60730 safety library integration to SDK
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="iec60730_safety_library_integration_to_sdk.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Integration to SDK
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="support_calculate_crc.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Support calculate CRC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guideline_for_running_unit_test.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guideline for running unit test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guideline_for_running_integration_test.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guideline for running integration test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="coding_convention_tool.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Coding convention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="about.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="release_note.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Release Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      License
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release Notes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iec60730-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      IEC60730 Certificate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oem-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      OEM Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Families
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software Requirements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-the-iec60730-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building the IEC60730 Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-document-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate document API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coding-convention-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coding convention tool
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler specifications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      CMake
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CMake">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-iec60730-library-extension-to-the-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add the IEC60730 Library extension to the SDK
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install Dependencies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Install Dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-slc-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install slc-cli
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Install slc-cli">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-slc" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to use slc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      For example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-unit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run unit test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-integration-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run integration test
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="guideline-using-iec60730-safety-library">Guideline using IEC60730 Safety Library<a class="headerlink" href="#guideline-using-iec60730-safety-library" title="Permanent link">&para;</a></h1>
+<p>Platform codes for EFR32 series chips which complies to IEC60730 safety standard</p>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>The IEC60730 library for EFR32 provides a basic implementation required to support the necessary requirements found in Table H.1 in the IEC60730 specification. It includes all the Power On Self Test (POST) functions executed when a device is first powered on, as well as Built In Self Test (BIST) functions that are called periodically to ensure correct operation. Certain portions of the requirements require a detailed understanding of the system under development. Callback functions must be completed by the developer to guarantee meeting the full specification. These include a Safe State function used when validation detects an anomaly, properly implemented communications channels (redundancy, error detection, periodic communications), and Plausibility functions to validate system state (internal variables and inputs/outputs).</p>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
+<p>Please refer <a href="../LICENSE.md">License</a></p>
+<h2 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h2>
+<p>Please refer document in <a href="release_note.html">release_note.md</a></p>
+<h2 id="iec60730-certificate">IEC60730 Certificate<a class="headerlink" href="#iec60730-certificate" title="Permanent link">&para;</a></h2>
+<p>The Silicon Labs Appliances homepage will contain the final certificate and detailed report when it is completed.</p>
+<h2 id="oem-testing">OEM Testing<a class="headerlink" href="#oem-testing" title="Permanent link">&para;</a></h2>
+<p>Once OEMs have completed integrating their system with the IEC60730 Library, they will need to certify their device with a qualified certification house.</p>
+<h2 id="supported-families">Supported Families<a class="headerlink" href="#supported-families" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Supported Families</a></li>
+</ul>
+<h2 id="software-requirements">Software Requirements<a class="headerlink" href="#software-requirements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Software Requirements</a></li>
+</ul>
+<h2 id="building-the-iec60730-demo">Building the IEC60730 Demo<a class="headerlink" href="#building-the-iec60730-demo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Building the IEC60730 Demo</a></li>
+</ul>
+<h2 id="generate-document-api">Generate document API<a class="headerlink" href="#generate-document-api" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Generate document API</a></li>
+</ul>
+<h2 id="coding-convention-tool">Coding convention tool<a class="headerlink" href="#coding-convention-tool" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refer file: <a href="coding_convention_tool.html">coding_convention_tool.md</a>.</li>
+</ul>
+<h2 id="compiler-specifications">Compiler specifications<a class="headerlink" href="#compiler-specifications" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Compiler specifications</a></li>
+</ul>
+<h2 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">System Architecture</a></li>
+</ul>
+<h2 id="cmake">CMake<a class="headerlink" href="#cmake" title="Permanent link">&para;</a></h2>
+<p>The project has a CMake template that supports running tests. Follow the steps below one by one to build and run tests.</p>
+<h3 id="add-the-iec60730-library-extension-to-the-sdk">Add the IEC60730 Library extension to the SDK<a class="headerlink" href="#add-the-iec60730-library-extension-to-the-sdk" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refer to the <a href="iec60730_safety_library_integration_to_sdk.html">IEC60730 safety library integration to SDK</a> in the <a href="">docs</a> folder for more details.</li>
+</ul>
+<h3 id="install-dependencies">Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permanent link">&para;</a></h3>
+<h4 id="install-slc-cli">Install slc-cli<a class="headerlink" href="#install-slc-cli" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Follow this link to Install slc: <a href="https://docs.silabs.com/simplicity-studio-5-users-guide/latest/ss-5-users-guide-tools-slc-cli/02-installation">Install slc</a></li>
+<li>Follow this link to <a href="https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html">Install Amazon Corretto 17 on Debian-Based Linux</a></li>
+</ul>
+<h5 id="how-to-use-slc">How to use slc<a class="headerlink" href="#how-to-use-slc" title="Permanent link">&para;</a></h5>
+<p>Add the path to the expanded slc-cli to your PATH sh export PATH=$PATH:~/SimplicityStudio/slc_cli_linux/slc_cli/</p>
+<p>Configure SDK. For example sh slc configuration --sdk ~/SimplicityStudio/SDKs/gecko_sdk/</p>
+<p>Run slc signature trust --sdk <path_to_the_gecko_sdk> if you have not yet trusted your SDK.</p>
+<p>For example your SDK locate at ~/SimplicityStudio/SDKs/gecko_sdk/. Run <code>slc signature trust --sdk ~/SimplicityStudio/SDKs/gecko_sdk/</code></p>
+<p>Set toolchain For example sh slc configuration -gcc=~/SimplicityStudio-5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/</p>
+<p>Generate the project sh slc generate \path\to\example.slcp -np -d <project_destination> -name=<new_name> --with <board_or_device_that_supports_project></p>
+<p>Choose one of the options below to generate the project</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>generate</td>
+<td>-cp, --copy-sources</td>
+<td>Copies all files referenced by this project, selected components, and any other running tools (Pin Tool, etc.). By default, no files are copied.</td>
+</tr>
+<tr>
+<td>^</td>
+<td>-cpproj, --copy-proj-sources</td>
+<td>Copies all files referenced by the project and links any SDK sources. This can be combined with -cpsdk.</td>
+</tr>
+<tr>
+<td>^</td>
+<td>-cpsdk, --copy-sdk-sources</td>
+<td>Copies all files referenced by the selected components and links any project sources. This can be combined with -cpproj.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!NOTE]: To be able to use the extension LibIEC60730. You need to add the LibIEC60730
+extension to your SDK in the extension folder and run the command: <code>slc signature trust -extpath &lt;path_to_your_extension_sdk&gt;</code></p>
+</blockquote>
+<h5 id="for-example">For example<a class="headerlink" href="#for-example" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">GSDK</span><span class="o">=</span>~/SimplicityStudio/SDKs/gecko_sdk
+$<span class="w"> </span>slc<span class="w"> </span>configuration<span class="w"> </span>--sdk<span class="o">=</span><span class="nv">$GSDK</span><span class="w"> </span>--gcc-toolchain<span class="o">=</span>/Applications/ARM
+$<span class="w"> </span>slc<span class="w"> </span>generate<span class="w"> </span><span class="nv">$GSDK</span>/app/common/example/blink_baremetal<span class="w"> </span>-np<span class="w"> </span>-d<span class="w"> </span>blinky<span class="w"> </span>-name<span class="o">=</span>blinky<span class="w"> </span>-o<span class="w"> </span>makefile
+<span class="w">   </span>--with<span class="w"> </span>brd4166a
+$<span class="w"> </span>slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>-extpath<span class="w"> </span><span class="nv">$GSDK</span>/extension/IEC60730_Libs
+</code></pre></div>
+<h3 id="run-unit-test">Run unit test<a class="headerlink" href="#run-unit-test" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refer to the guideline link: <a href="guideline_for_running_unit_test.html">guideline_for_running_unit_test.md</a></li>
+</ul>
+<h3 id="run-integration-test">Run integration test<a class="headerlink" href="#run-integration-test" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refer to the guideline link: <a href="guideline_for_running_integration_test.html">guideline_for_running_integration_test.md</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.expand"], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

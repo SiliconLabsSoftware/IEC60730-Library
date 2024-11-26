@@ -1,0 +1,897 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="guideline_for_running_unit_test.html">
+      
+      
+        <link rel="next" href="coding_convention_tool.html">
+      
+      
+      <link rel="icon" href="images/silabs-soc.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
+    
+    
+      
+        <title>Guideline for running integration test - IEC60730 Safety Library</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#guideline-for-running-integration-test" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="IEC60730 Safety Library" class="md-header__button md-logo" aria-label="IEC60730 Safety Library" data-md-component="logo">
+      
+  <img src="images/silabs_banner.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IEC60730 Safety Library
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Guideline for running integration test
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="IEC60730 Safety Library" class="md-nav__button md-logo" aria-label="IEC60730 Safety Library" data-md-component="logo">
+      
+  <img src="images/silabs_banner.png" alt="logo">
+
+    </a>
+    IEC60730 Safety Library
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    IEC60730 safety library integration to SDK
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            IEC60730 safety library integration to SDK
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="iec60730_safety_library_integration_to_sdk.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Integration to SDK
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="support_calculate_crc.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Support calculate CRC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guideline_for_running_unit_test.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guideline for running unit test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Guideline for running integration test
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="guideline_for_running_integration_test.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Guideline for running integration test
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#export-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export Variable
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-test-for-iar-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build test for IAR tool
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manually-run-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manually run integration tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatically-run-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatically run integration tests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automatically run integration tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      Note:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crc-calculation-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      CRC calculation options
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="coding_convention_tool.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Coding convention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="about.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="release_note.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Release Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#export-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export Variable
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-test-for-iar-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build test for IAR tool
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manually-run-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manually run integration tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatically-run-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatically run integration tests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automatically run integration tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      Note:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crc-calculation-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      CRC calculation options
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="guideline-for-running-integration-test">Guideline for running integration test<a class="headerlink" href="#guideline-for-running-integration-test" title="Permanent link">&para;</a></h1>
+<h2 id="export-variable">Export Variable<a class="headerlink" href="#export-variable" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>[!NOTE]
+Before running CMake, you need to export some variables first.</p>
+</blockquote>
+<p>Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH_REGIONS_TEST (flash start address support calculate CRC for module invariable memory), JLINK_PATH and path to <code>slc-cli</code> tool a before run config CMake.</p>
+<p>If you want to calculate from the start address to the end address of Flash:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>~/SimplicityStudio/SDKs/gecko_sdk
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>~/Downloads/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/media/slc_cli/slc_cli_linux_check/slc_cli
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
+</code></pre></div>
+<p>Or if you want to calculate multiple regions:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span><span class="s2">&quot;0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190&quot;</span>
+</code></pre></div>
+<p>with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4187c (chip EFR32MG24)</p>
+<p>To run integration tests manually, for the watchdog module, you need to connect the device to ethernet. Export CHIP, ADAPTER_SN, LST_PATH, JLINK_PATH, and the device's IP address and run the test script, for example:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32MG24BXXXF1536<span class="w"> </span><span class="nv">ADAPTER_SN</span><span class="o">=</span><span class="m">440111030</span>
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/S
+</code></pre></div>
+<p>If test secure peripherals or non-secure peripherals:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/NS
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span><span class="m">192</span>.168.1.69
+</code></pre></div>
+<blockquote>
+<p>[!NOTE]
+Environment variables need to be exported during test execution:</p>
+<blockquote>
+<p>export TOOL_CHAINS= (IAR or GCC)</p>
+<p>export TOOL_DIRS= <path_to_tool_chains></p>
+<p>export FLASH_REGIONS_TEST= <start_address_flash_board></p>
+<p>export HOST_IP= <ip_board></p>
+<p>export JLINK_PATH= <path_to_jlink></p>
+</blockquote>
+</blockquote>
+<h2 id="build-test-for-iar-tool">Build test for IAR tool<a class="headerlink" href="#build-test-for-iar-tool" title="Permanent link">&para;</a></h2>
+<p>To build tests for the IAR tool, if you run a manual test, you must run the pre-build command below.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>prepare
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DPRE_BUILD_IAR_TOOL<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span><span class="si">${</span><span class="nv">BOARD_NAME</span><span class="si">}</span><span class="w"> </span><span class="nv">$OPTION_PRE_BUILD_IAR_TOOL</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+$<span class="w"> </span>make<span class="w"> </span>prepare
+</code></pre></div>
+<blockquote>
+<p>[!NOTE]
+Keep <code>$OPTION_PRE_BUILD_IAR_TOOL</code> the same when running the integration test CMake config</p>
+</blockquote>
+<p>For example, build integration test:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>prepare
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w">  </span>-DPRE_BUILD_IAR_TOOL<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+$<span class="w"> </span>make<span class="w"> </span>prepare
+</code></pre></div>
+<p>or you can run bash script <code>pre_build_iar.sh</code> in path <a href="">./../simplicity_sdk/pre_build_iar.sh</a> with:</p>
+<ul>
+<li>$1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48</li>
+<li>$2: OPTION_INTEGRATION_TEST: -DENABLE_INTEGRATION_TESTING=ON, etc...</li>
+</ul>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>pre_build_iar.sh<span class="w"> </span><span class="nv">$BOARD_NAME</span><span class="w"> </span><span class="nv">$OPTION_INTEGRATION_TEST</span>
+</code></pre></div>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>pre_build_iar.sh<span class="w"> </span>brd4187c<span class="w"> </span><span class="s2">&quot;-DENABLE_INTEGRATION_TESTING=ON&quot;</span>
+</code></pre></div>
+<h2 id="manually-run-integration-tests">Manually run integration tests<a class="headerlink" href="#manually-run-integration-tests" title="Permanent link">&para;</a></h2>
+<p>CMake config</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>prepare
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c
+</code></pre></div>
+<p>CMake Build</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_info<span class="w"> </span>-j4
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>integration_test_info<span class="w"> </span>-j4
+</code></pre></div>
+<p>To support running integration tests for the watchdog module, there are 2 options when running the CMake config:</p>
+<ul>
+<li>
+<p>TEST_SECURE_PERIPHERALS_ENABLE: enable test secure peripherals</p>
+</li>
+<li>
+<p>INTEGRATION_TEST_WDOG1_ENABLE: enable watchdog 1 to test if the device supports</p>
+</li>
+</ul>
+<p>To support running integration tests for the variable memory module, there is 1 option when running CMake config:</p>
+<ul>
+<li>INTEGRATION_TEST_USE_MARCHX_DISABLE: disable using MarchX algorithm</li>
+</ul>
+<p>By default when testing the variable memory module, enable using the MarchX algorithm. For example:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c
+</code></pre></div>
+<p>For devices that have a Trust zone implemented, secure and non-secure peripherals need to be tested.
+Default enable checks non-secure peripherals. To check secure peripherals enable this option when running CMake config: TEST_SECURE_PERIPHERALS_ENABLE. For example:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c
+</code></pre></div>
+<p>For devices that support 2 watchdogs, if you want to test both watchdogs, enable option INTEGRATION_TEST_WDOG1_ENABLE to ON when running Cmake config:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c
+</code></pre></div>
+<p>To run integration tests for the watchdog module you need to connect the device to ethernet. Export CHIP, ADAPTER_SN, LST_PATH, JLINK_PATH, and the device's IP address and run the test script, for example:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32MG24BXXXF1536<span class="w"> </span><span class="nv">ADAPTER_SN</span><span class="o">=</span><span class="m">440111030</span>
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/S
+</code></pre></div>
+<p>If test secure peripherals or non-secure peripherals:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/NS
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span><span class="m">192</span>.168.1.69
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_irq.py<span class="w"> </span>GCC
+</code></pre></div>
+<p>By default, the device enables watchdog 0 and test watchdog 0. If you want to test Watchdog 1 use this command:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">INTEGRATION_TEST_WDOG1_ENABLE</span><span class="o">=</span><span class="nb">enable</span><span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_watchdog.py<span class="w"> </span>GCC
+</code></pre></div>
+<p>If you want to test the variable memory module with disable using the MarchX algorithm:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">INTEGRATION_TEST_USE_MARCHX_DISABLE</span><span class="o">=</span>disable<span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_variable_memory.py<span class="w"> </span>GCC
+</code></pre></div>
+<p>If you want to test the invariable memory module with calculate crc32:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">INTEGRATION_TEST_ENABLE_CAL_CRC_32</span><span class="o">=</span><span class="nb">enable</span><span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_variable_memory.py<span class="w"> </span>GCC
+</code></pre></div>
+<h2 id="automatically-run-integration-tests">Automatically run integration tests<a class="headerlink" href="#automatically-run-integration-tests" title="Permanent link">&para;</a></h2>
+<p>Command run</p>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>execute_test.sh<span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="nv">$2</span><span class="w"> </span><span class="nv">$3</span><span class="w"> </span><span class="nv">$4</span><span class="w"> </span><span class="nv">$5</span><span class="w"> </span><span class="nv">$6</span>
+</code></pre></div>
+<p>With the input arguments, there is the following information.</p>
+<ul>
+<li>$1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48</li>
+<li>$2: task: all, gen-only, run-only</li>
+<li>$3: components: all, unit_test_iec60730_bist, unit_test_iec60730_post, ...</li>
+<li>$4: ADAPTER_SN</li>
+<li>$5: compiler: GCC, IAR</li>
+<li>$6: OPTION_SUPPORT_INTEGRATION_TEST: "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON - INTEGRATION_TEST_USE_MARCHX_DISABLE=ON"</li>
+</ul>
+<p>Which, components list that support testing includes:</p>
+<ul>
+<li>
+<p>integration_test_iec60730_program_counter</p>
+</li>
+<li>
+<p>integration_test_iec60730_irq</p>
+</li>
+<li>
+<p>integration_test_iec60730_system_clock</p>
+</li>
+<li>
+<p>integration_test_iec60730_watchdog</p>
+</li>
+<li>
+<p>integration_test_iec60730_cpu_registers</p>
+</li>
+<li>
+<p>integration_test_iec60730_variable_memory</p>
+</li>
+<li>
+<p>integration_test_iec60730_invariable_memory</p>
+</li>
+</ul>
+<p>Before running the bash file, you need to install Jlink, Srecord, and slc tool, refer <a href="index.html">Overview</a> to set up some environment variables as follows:
+If the compiler is GCC
+- If the compiler is GCC:</p>
+<p>If you want to calculate from the start address to the end address of Flash:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>~/SimplicityStudio/SDKs/gecko_sdk
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>~/Downloads/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span><span class="m">192</span>.168.1.69
+</code></pre></div>
+<p>Or if you want to calculate multiple regions:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span><span class="s2">&quot;0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190&quot;</span>
+</code></pre></div>
+<blockquote>
+<p>[!NOTE]
+In the current integration test file, only enable computation of one region: from the start address of ​​the flash to the end of the flash. Therefore, export the flash's starting address. For example, chip EFR32MG24:</p>
+<blockquote>
+<p>$ export FLASH_REGIONS_TEST=0x8000000</p>
+</blockquote>
+</blockquote>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<ul>
+<li>With GCC toolchain:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4187c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC
+</code></pre></div>
+<ul>
+<li>With IAR toolchain:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4187c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>IAR
+</code></pre></div>
+<h3 id="note">Note:<a class="headerlink" href="#note" title="Permanent link">&para;</a></h3>
+<p>In case you want to build CRC32 run this command. For example:</p>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4187c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">&quot;-DENABLE_CAL_CRC_32=ON&quot;</span>
+</code></pre></div>
+<p>Or case you want to use the above integration test support options, run this command. For example:</p>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4187c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">&quot;-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON&quot;</span>
+</code></pre></div>
+<h2 id="crc-calculation-options">CRC calculation options<a class="headerlink" href="#crc-calculation-options" title="Permanent link">&para;</a></h2>
+<p>When running build CMake to run unit tests and integration tests for invariable memory modules, the CRC calculation image file will have the suffix _crc16 or _crc32, you must flash the image file with this suffix.</p>
+<p>With the commands above, the default value supports the calculation CRC-16. If you want to change to calculate for CRC-32 bits, use the CMake config command below:</p>
+<ul>
+<li>With integration test:</li>
+</ul>
+<p>by manually</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
+</code></pre></div>
+<p>or by automatically</p>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4187c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">&quot;-DENABLE_CAL_CRC_32=ON&quot;</span>
+</code></pre></div>
+<p>Here are some options to support running tests of invariable memory modules:</p>
+<ul>
+<li>
+<p>ENABLE_CAL_CRC_32</p>
+</li>
+<li>
+<p>ENABLE_CRC_USE_SW (if this option is ON, you can enable option: ENABLE_SW_CRC_TABLE for using the pre-defined table for calculating or not)</p>
+</li>
+</ul>
+<blockquote>
+<p>[!NOTE]
+Only use the ENABLE_SW_CRC_TABLE option when the ENABLE_CRC_USE_SW option is ON, otherwise, an error will be reported during the build process.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.expand"], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
