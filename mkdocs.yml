@@ -1,0 +1,84 @@
+site_name: IEC60730 Safety Library
+nav:
+  - Overview: index.md
+
+  - IEC60730 safety library integration to SDK:
+    - "Integration to SDK": iec60730_safety_library_integration_to_sdk.md
+    - "Support calculate CRC": support_calculate_crc.md
+
+  - Guideline for running unit test: guideline_for_running_unit_test.md
+
+  - Guideline for running integration test: guideline_for_running_integration_test.md
+
+  - Coding convention: coding_convention_tool.md
+
+  - About: about.md
+
+  - Release Notes: release_note.md
+
+## DO NOT CHANGE BELOW THIS LINE
+
+# Copyright
+# TBD
+
+# Theme
+theme:
+  name: material
+#  font:
+#    text: IBM Plex Sans
+#    code: IBM Plex Mono
+  icon:
+    logo: material/library
+  features:
+    # - navigation.tabs
+    - navigation.instant
+    - navigation.expand
+  palette:
+    scheme: default
+    primary: red
+    accent: red
+  favicon: images/silabs-soc.png
+  logo: images/silabs_banner.png
+# Plugins
+plugins:
+  - search
+
+# Customization
+# TBD
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde

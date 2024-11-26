@@ -1,0 +1,9 @@
+*.json
+GNU ARM */
+build
+test/test_script/__pycache__
+*.temp-stream*
+simplicity_sdk/src/*
+!simplicity_sdk/src/CMakeLists.txt
+cmake_build
+log/

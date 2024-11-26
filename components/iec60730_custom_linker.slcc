@@ -1,0 +1,25 @@
+package: iec60730
+description: >
+  This component generates a linker file to support lib IEC60730.
+  The linker file will be created in the autogen folder with linkerfile_iec60730.ld with GCC tool or linkerfile_iec60730.icf with IAR tool.
+  Users should follow these steps to edit the linker file:
+
+  1) Go to C/C++ Build > Settings > Tool Settings > Memory Layout.
+
+  2) Browse and edit the linker file.
+label: IEC60730 Custom Linker
+quality: production
+id: iec60730_custom_linker
+category: Linker File
+provides:
+  - name: "iec60730_custom_linker"
+template_contribution:
+  - name: iec60730_custom_linker_enable
+    value: 1
+template_file:
+  - path: ./lib/toolchain/template/GCC/linkerfile_iec60730.ld.jinja
+    unless:
+      - toolchain_iar
+  - path: ./lib/toolchain/template/IAR/linkerfile_iec60730.icf.jinja
+    condition:
+      - toolchain_iar

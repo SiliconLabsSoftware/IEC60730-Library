@@ -1,0 +1,90 @@
+project_name: "iec60730_example_demo"
+label: "IEC60730 Example Demo"
+package: "IEC60730"
+category: "IEC60730"
+quality: "production"
+
+description: >
+  This is a Safety Libraries IEC60730 Example Demo.
+author: "Silicon Laboratories, Inc."
+
+sdk: {id: gecko_sdk, version: 4.4.2}
+
+sdk_extension:
+  - {id: iec60730, version: 1.1.0}
+
+configuration:
+  - name: SL_DEVICE_INIT_HFRCO_BAND
+    value: cmuHFRCOFreq_19M0Hz
+    condition:
+     - device_series_1
+  - name: SL_IOSTREAM_USART_VCOM_PERIPHERAL
+    value: USART0
+    condition:
+     - device_series_2
+  - name: SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO
+    value: 0
+    condition:
+     - device_series_2
+
+define:
+  - name: HAL_CONFIG_HEADER
+    value: "\"oem_hal_config_board.h\""
+
+component:
+  - id: sl_system
+  - id: device_init
+  - id: uartdrv_core
+  - id: iostream_usart
+    instance: [vcom]
+  - id: iec60730_lib
+    from: iec60730
+  - id: device_init_hfrco
+  - id: udelay
+include:
+  - path: ./
+    file_list:
+      - path: app.h
+  - path: ./pictures/
+    file_list:
+      - path: test_fail.jpg
+      - path: test_pass.jpg
+  - path: ./oem/inc/
+    file_list:
+      - path: oem_hal_config_board.h
+      - path: oem_iec60730_timer.h
+      - path: oem_iec60730.h
+      - path: oem_iec60730_init_device.h
+      - path: oem_iec60730_comm.h
+source:
+  - path: main.c
+  - path: app.c
+  - path: ./oem/src/oem_iec60730_init_device.c
+  - path: ./oem/src/oem_iec60730.c
+  - path: ./oem/src/oem_iec60730_comm.c
+  - path: ./oem/src/oem_iec60730_functions.c
+  - path: ./oem/src/iec60730_stub_functions.c
+  - path: ./oem/src/oem_iec60730_timer.c
+readme:
+  - path: ./readme.html
+
+ui_hints:
+  highlight:
+    - path: readme.html
+      focus: false
+toolchain_settings:
+  - option: linkerfile
+    value: autogen/linkerfile_iec60730.ld
+    unless:
+      - toolchain_iar
+  - option: linkerfile
+    value: autogen/linkerfile_iec60730.icf
+    condition:
+      - toolchain_iar
+  - option: iar_linker_option
+    value: "--keep check_sum --place_holder check_sum,2,.checksum,64"
+    condition:
+      - toolchain_iar
+template_contribution:
+  - name: trustzone_secure
+    value: 1
