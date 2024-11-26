@@ -314,7 +314,7 @@ jobs:
   
   job2:
     name: Run integration test
-    runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_02' }}
+    runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_01' }}
     needs: job1
     permissions:
       contents: read
