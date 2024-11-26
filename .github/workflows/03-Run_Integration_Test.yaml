@@ -250,7 +250,7 @@ jobs:
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make integration_test_info -j4
-        export HOST_IP=192.168.1.69
+        export HOST_IP=192.168.1.118
         cd ../test/
         mkdir log_MG12
         ls -la
@@ -258,7 +258,7 @@ jobs:
             ADAPTER_SN_MG12=440189400
         fi
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
-        echo "Run bash script"
+        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER"
         bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
         echo "Generate MG24 image"
         cd ${{ github.workspace }}
@@ -271,14 +271,15 @@ jobs:
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make integration_test_info -j4
+        export HOST_IP=192.168.1.69
         cd ../test/
         mkdir log_MG24
         ls -la
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
-            ADAPTER_SN_MG24=440133193
+            ADAPTER_SN_MG24=440111030
         fi  
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
-        echo "Run bash script"
+        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER"
         bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
     
     - name: Upload firmware MG12
@@ -413,7 +414,7 @@ jobs:
         export HOST_IP=$HOST_IP_MG12
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
         mkdir log_MG12
-        echo "bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER"
+        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER"
         bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Integration_Test_MG12.txt
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_2.txt
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON"' > log/Test_integration_$BOARD_NAME_GCC_3.txt
@@ -499,7 +500,7 @@ jobs:
         make integration_test_info -j4
         cd ../test
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
-            ADAPTER_SN_MG24=440133193
+            ADAPTER_SN_MG24=440111030
         fi
         if [ -z "${{ github.event.inputs.HOST_IP_MG24 }}" ]; then
             HOST_IP_MG24=192.168.1.69
@@ -507,7 +508,7 @@ jobs:
         export HOST_IP=$HOST_IP_MG24
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
         mkdir log_MG24
-        echo "bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER"
+        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER"
         bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Integration_Test_MG24.txt
     
     - name: Upload artifact MG24
