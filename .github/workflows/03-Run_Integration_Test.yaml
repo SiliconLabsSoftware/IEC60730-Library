@@ -275,7 +275,7 @@ jobs:
         mkdir log_MG24
         ls -la
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
-            ADAPTER_SN_MG24=440133193
+            ADAPTER_SN_MG24=440124027
         fi  
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
         echo "Run bash script"
