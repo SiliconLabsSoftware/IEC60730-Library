@@ -65,6 +65,7 @@ env:
   ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
   HOST_IP: 192.168.1.69
   COMPONENT: all
+  COMPILER: GCC
   CHIP_MG12: EFR32MG12
   CHIP_MG24: EFR32MG24BXXXF1536
   START_ADDR_FLASH_M12: 0x0000000
@@ -133,7 +134,7 @@ jobs:
         echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
 
     - name: Install Simplicity SDK
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         mkdir simplicity_studio
         cd simplicity_studio
@@ -144,7 +145,7 @@ jobs:
         ls -la
   
     - name: Install Gecko SDK
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -156,14 +157,14 @@ jobs:
         echo "EXTENSION_CHECKOUT_PATH=$EXTENSION_CHECKOUT_PATH"
   
     - name: Install Gecko SDK extension
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/checkout@v4.1.7
       with:
         ref: ${{env.REPO_BRANCH_BUILD}}
         path: ${{ env.EXTENSION_CHECKOUT_PATH }}
   
     - name: Check files
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
@@ -174,7 +175,7 @@ jobs:
         ls gecko_sdk_${{env.SDK_VER}}/extension
         
     - name: Install Amazon Corretto 17
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -185,7 +186,7 @@ jobs:
         ls -la
   
     - name: Install SLC CLI
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -196,7 +197,7 @@ jobs:
         ls -la
   
     - name: Install Simplicity Commander
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -209,7 +210,7 @@ jobs:
         ls -la
   
     - name: Install GCC
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -220,7 +221,7 @@ jobs:
         ls -la
   
     - name: Install Ninja build
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt update
         sudo apt -y install ninja-build
@@ -228,13 +229,13 @@ jobs:
         ninja --version
   
     - name: Set up Python 3.11
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/setup-python@v2
       with:
         python-version: '3.11'
   
     - name: Install dependencies
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt-get update
         sudo apt-get install -y python3-apt
@@ -242,7 +243,7 @@ jobs:
         python3 --version
   
     - name: Install CMake
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt update
         sudo apt install -y wget build-essential libssl-dev
@@ -252,14 +253,14 @@ jobs:
         cmake --version
   
     - name: Set up Java 17
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
   
     - name: Install srecord
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt-get update
         sudo apt-get install -y srecord
@@ -395,8 +396,14 @@ jobs:
       pull-requests: write
     
     steps:
+    - name: Check compiler path
+      run: |
+        echo "Compiler: env.COMPILER"
+        echo "TOOL_DIRS_BUILD: $TOOL_DIRS_BUILD"
+        echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
+ 
     - name: Trigger
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         echo "Triggered by ${{github.event_name}} event"
         echo "Repo root directory: $GITHUB_WORKSPACE"
@@ -405,7 +412,7 @@ jobs:
         mkdir ${{ github.workspace }}
   
     - name: Check Branch Input
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
             if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
               if [ -z "${{ github.event.inputs.Validate_branch }}" ]; then
@@ -417,31 +424,31 @@ jobs:
             fi              
   
     - name: Checkout
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/checkout@v4.1.7
       with:
         ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Validate_branch || github.ref }}" 
   
     - name: Log Current Branch and Commit
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit: $(git rev-parse HEAD)" 
   
     - name: Create build folder
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         make prepare
         #mkdir -p ${{ github.workspace }}/build/test/unit_test/build
   
     - name: Install jq (if needed)
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         jq -V
         #sudo apt-get install jq -y
   
     - name: Download output for MG12 from Job 1
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
           export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
           export REPO_OWNER="SiliconLabsSoftware"
@@ -466,7 +473,7 @@ jobs:
           fi
    
     - name: Run test MG12
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
         export PATH=$PATH:~/slc_cli
@@ -508,7 +515,7 @@ jobs:
         #echo 'bash execute_unit_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON  -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
   
     - name: Upload artifact MG12
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/upload-artifact@v4.3.4
       with:
         name: unit_test_log_mg12_gcc
@@ -516,7 +523,7 @@ jobs:
         retention-days: 90
   
     - name: Check log file to set status of the job MG12
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -541,7 +548,7 @@ jobs:
         done
         
     - name: Download output for MG24 from Job 1
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
           export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
           export REPO_OWNER="SiliconLabsSoftware"
@@ -564,7 +571,7 @@ jobs:
           fi
   
     - name: Run test MG24
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
         export PATH=$PATH:~/slc_cli
@@ -604,7 +611,7 @@ jobs:
         bash execute_unit_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Unit_Test_MG24.txt
   
     - name: Upload artifact MG24
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/upload-artifact@v4.3.4
       with:
         name: unit_test_log_mg24_gcc
@@ -612,7 +619,7 @@ jobs:
         retention-days: 90
   
     - name: Check log file to set status of the job MG24
-      if: ${{ $COMPILER == 'GCC' }}
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
