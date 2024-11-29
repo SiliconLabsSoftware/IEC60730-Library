@@ -122,13 +122,13 @@ jobs:
           echo "TOOL_DIRS_BUILD=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV
           echo "TOOL_DIRS_RUN=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV          
         fi
-        echo "Compiler: $COMPILER"
-        echo "TOOL_DIRS_BUILD: $TOOL_DIRS_BUILD"
-        echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
         
     - name: Install Simplicity SDK
       if: ${{ env.COMPILER == 'GCC' }}
       run: |
+        echo "Compiler: $COMPILER"
+        echo "TOOL_DIRS_BUILD: $TOOL_DIRS_BUILD"
+        echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
         mkdir simplicity_studio
         cd simplicity_studio
         git clone $SIM_REPO
