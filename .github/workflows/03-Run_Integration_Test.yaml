@@ -64,7 +64,6 @@ env:
   ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
   ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
   HOST_IP: 192.168.1.69
-  COMPILER: ${{ github.event.inputs.COMPILER }}
   COMPONENT: all
   CHIP_MG12: EFR32MG12
   CHIP_MG24: EFR32MG24BXXXF1536
@@ -112,8 +111,13 @@ jobs:
     - name: Check compiler
       run: |
         if [ -z "${{ github.event.inputs.COMPILER }}" ]; then
-          COMPILER=GCC
+          echo "COMPILER=GCC" >> $GITHUB_ENV
+        else
+          echo "COMPILER=${{ github.event.inputs.COMPILER }}" >> $GITHUB_ENV
         fi
+
+    - name: Add compiler path
+      run: |
         if [ "$COMPILER" == "GCC" ]; then
           echo "TOOL_DIRS_BUILD=arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin" >> $GITHUB_ENV
           echo "TOOL_DIRS_RUN=/home/sqa/SimplicityStudio-5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin" >> $GITHUB_ENV 
@@ -121,6 +125,9 @@ jobs:
           echo "TOOL_DIRS_BUILD=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV
           echo "TOOL_DIRS_RUN=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV          
         fi
+
+    - name: Check compiler path
+      run: |
         echo "Compiler: $COMPILER"
         echo "TOOL_DIRS_BUILD: $TOOL_DIRS_BUILD"
         echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
