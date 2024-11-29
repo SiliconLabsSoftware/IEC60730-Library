@@ -75,7 +75,7 @@ For example, build integration test:
 ```sh
 $ make prepare
 $ cd build
-$ cmake --toolchain ../cmake/toolchain.cmake ..  -DPRE_BUILD_IAR_TOOL=ON -DBOARD_NAME=brd4187c -DINTEGRATION_TEST_WDOG1_ENABLE=ON  -DENABLE_INTEGRATION_TESTING=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_CAL_CRC_32=ON
+$ cmake --toolchain ../cmake/toolchain.cmake ..  -DPRE_BUILD_IAR_TOOL=ON -DBOARD_NAME=brd4187c -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_CAL_CRC_32=ON
 $ cd ..
 $ make prepare
 ```
@@ -83,7 +83,7 @@ $ make prepare
 or you can run bash script `pre_build_iar.sh` in path [./../simplicity_sdk/pre_build_iar.sh]() with:
 
 - $1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48
-- $2: OPTION_INTEGRATION_TEST: -DENABLE_INTEGRATION_TESTING=ON, etc...
+- $2: OPTION_INTEGRATION_TEST: -DINTEGRATION_TEST_WDOG1_ENABLE=ON, etc...
 
 ```sh
 $ bash pre_build_iar.sh $BOARD_NAME $OPTION_INTEGRATION_TEST
@@ -92,8 +92,11 @@ $ bash pre_build_iar.sh $BOARD_NAME $OPTION_INTEGRATION_TEST
 For example:
 
 ```sh
-$ bash pre_build_iar.sh brd4187c "-DENABLE_INTEGRATION_TESTING=ON"
+$ bash pre_build_iar.sh brd4187c "-DINTEGRATION_TEST_WDOG1_ENABLE=ON"
 ```
+
+> [!NOTE]
+> Do not use option -DENABLE_UNIT_TESTING=ON or -DENABLE_INTEGRATION_TESTING=ON when running pre-build IAR toolchain with option -DPRE_BUILD_IAR_TOOL=ON
 
 ## Manually run integration tests
 
