@@ -631,20 +631,24 @@ Keep <code>$OPTION_PRE_BUILD_IAR_TOOL</code> the same when running unit test CMa
 <p>For example, build unit test:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>prepare
 $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DPRE_BUILD_IAR_TOOL<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
+$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DPRE_BUILD_IAR_TOOL<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
 $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
 $<span class="w"> </span>make<span class="w"> </span>prepare
 </code></pre></div>
 <p>or you can run bash script <code>pre_build_iar.sh</code> in path <a href="">./../simplicity_sdk/pre_build_iar.sh</a> with:</p>
 <ul>
 <li>$1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48</li>
-<li>$2: OPTION_UNIT_TEST: -DENABLE_UNIT_TESTING=ON, etc...</li>
+<li>$2: OPTION_UNIT_TEST: -DENABLE_CRC_USE_SW=ON , etc...</li>
 </ul>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>pre_build_iar.sh<span class="w"> </span><span class="nv">$BOARD_NAME</span><span class="w"> </span><span class="nv">$OPTION_UNIT_TEST</span>
 </code></pre></div>
 <p>For example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>pre_build_iar.sh<span class="w"> </span>brd4187c<span class="w"> </span><span class="s2">&quot;-DENABLE_UNIT_TESTING=ON&quot;</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>pre_build_iar.sh<span class="w"> </span>brd4187c<span class="w"> </span><span class="s2">&quot;-DENABLE_CRC_USE_SW=ON&quot;</span>
 </code></pre></div>
+<blockquote>
+<p>[!NOTE]
+Do not use option -DENABLE_UNIT_TESTING=ON or -DENABLE_INTEGRATION_TESTING=ON when running pre-build IAR toolchain with option -DPRE_BUILD_IAR_TOOL=ON</p>
+</blockquote>
 <h2 id="manually-run-unit-tests">Manually run unit tests<a class="headerlink" href="#manually-run-unit-tests" title="Permanent link">&para;</a></h2>
 <p>CMake config</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>prepare
