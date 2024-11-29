@@ -29,7 +29,7 @@ on:
       RUNNER_BUILD:
         description: 'Runner to generate firmware'
         type: string
-        default: 'ubuntu-latest'
+        default: 'DS_SQA_HN_01'
       RUNNER_EXECUTE:
         description: 'Runner to execute the test'
         type: string
@@ -40,7 +40,7 @@ on:
         options:
           - GCC
           - IAR
-        default: GCC
+        default: IAR
 env:
   REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
   REPO_NAME: ${{ github.repository }}
