@@ -2,7 +2,7 @@ name: 03-Run Integration Test
 on:
   pull_request:
     branches:
-      - 'main' 
+      - 'main'       
   workflow_dispatch:
     inputs:
       Contribute_branch: 
@@ -37,35 +37,39 @@ on:
         description: 'Runner to execute the test'
         type: string
         default: 'DS_SQA_HN_01'
+      COMPILER:
+        description: 'Compiler'
+        type: choice
+        options:
+          - GCC
+          - IAR
+        default: GCC
 env:
-    REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
-    REPO_NAME: ${{ github.event.repository.name }}
-    JLINK_PATH: /opt/SEGGER/JLink/libjlinkarm.so
-    SDK_PATH_RUN: /home/sqa/SimplicityStudio/SDKs/gecko_sdk
-    AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
-    SLC_CLI_URL: https://www.silabs.com/documents/login/software/slc_cli_linux.zip
-    COMMANDER_URL: https://www.silabs.com/documents/login/software/SimplicityCommander-Linux.zip
-    GCC_URL: https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
-    SIM_REPO: https://github.com/SiliconLabs/simplicity_sdk.git
-    GECKO_SDK_REPO: https://github.com/SiliconLabs/gecko_sdk.git
-    SDK_VER: v4.4.2
-    JLINK_SEGGER_URL: https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.tgz
-    TASK: gen-only
-    REPO_BRANCH_RUN: main    
-    BOARD_NAME_MG12: brd4161a
-    BOARD_NAME_MG24: brd4187c
-    ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
-    ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
-    HOST_IP: 192.168.1.69
-    TOOL_DIRS_BUILD: arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-    COMPILER: GCC
-    TOOL_CHAINS: GCC
-    COMPONENT: all
-    CHIP_MG12: EFR32MG12
-    CHIP_MG24: EFR32MG24BXXXF1536
-    TOOL_DIRS_RUN: /home/sqa/SimplicityStudio-5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
-    START_ADDR_FLASH_M12: 0x0000000
-    START_ADDR_FLASH_M24: 0x8000000
+  REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
+  REPO_NAME: ${{ github.repository }}
+  JLINK_PATH: /opt/SEGGER/JLink/libjlinkarm.so
+  SDK_PATH_RUN: /home/sqa/SimplicityStudio/SDKs/gecko_sdk
+  AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
+  SLC_CLI_URL: https://www.silabs.com/documents/login/software/slc_cli_linux.zip
+  COMMANDER_URL: https://www.silabs.com/documents/login/software/SimplicityCommander-Linux.zip
+  GCC_URL: https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
+  SIM_REPO: https://github.com/SiliconLabs/simplicity_sdk.git
+  GECKO_SDK_REPO: https://github.com/SiliconLabs/gecko_sdk.git
+  SDK_VER: v4.4.2
+  JLINK_SEGGER_URL: https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.tgz
+  TASK: gen-only
+  REPO_BRANCH_RUN: main    
+  BOARD_NAME_MG12: brd4161a
+  BOARD_NAME_MG24: brd4187c
+  ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
+  ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
+  HOST_IP: 192.168.1.69
+  COMPILER: ${{ github.event.inputs.COMPILER }}
+  COMPONENT: all
+  CHIP_MG12: EFR32MG12
+  CHIP_MG24: EFR32MG24BXXXF1536
+  START_ADDR_FLASH_M12: 0x0000000
+  START_ADDR_FLASH_M24: 0x8000000
 jobs:
   job1:
     name: Generate Firmware
@@ -80,29 +84,49 @@ jobs:
         echo "Triggered by ${{github.event_name}} event"
         echo "Repo root directory: $GITHUB_WORKSPACE"
         echo "Current directory: $PWD"
-    
+        REPO_NAME=${REPO_NAME##*/}
+        echo "Repo name: $REPO_NAME"
+        echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+  
     - name: Check Branch Input
       run: |
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          if [ -z "${{ github.event.inputs.Contribute_branch }}" ]; then
-            echo "Branch input is required for manual trigger."
-            exit 1
-          else
-            echo "REPO_BRANCH_BUILD=${{ github.event.inputs.Contribute_branch }}">> $GITHUB_ENV
-          fi
-        fi              
-    
+            if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+              if [ -z "${{ github.event.inputs.Contribute_branch }}" ]; then
+                echo "Branch input is required for manual trigger."
+                exit 1
+              else
+                echo "REPO_BRANCH_BUILD=${{ github.event.inputs.Contribute_branch }}">> $GITHUB_ENV
+              fi
+            fi              
+  
     - name: Checkout
       uses: actions/checkout@v4.1.7
       with:
         ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Contribute_branch || github.ref }}"
-    
+  
     - name: Log Current Branch and Commit
       run: |
         echo "Current branch: $(echo ${{ github.ref }} | sed 's/refs\/heads\///')"
-        echo "Current commit: ${{ github.sha }}" 
-    
+        echo "Current commit: ${{ github.sha }}"  
+
+    - name: Check compiler
+      run: |
+        if [ -z "${{ github.event.inputs.COMPILER }}" ]; then
+          COMPILER=GCC
+        fi
+        if [ "$COMPILER" == "GCC" ]; then
+          echo "TOOL_DIRS_BUILD=arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin" >> $GITHUB_ENV
+          echo "TOOL_DIRS_RUN=/home/sqa/SimplicityStudio-5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin" >> $GITHUB_ENV 
+        else
+          echo "TOOL_DIRS_BUILD=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV
+          echo "TOOL_DIRS_RUN=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV          
+        fi
+        echo "Compiler: $COMPILER"
+        echo "TOOL_DIRS_BUILD: $TOOL_DIRS_BUILD"
+        echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
+        
     - name: Install Simplicity SDK
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         mkdir simplicity_studio
         cd simplicity_studio
@@ -111,22 +135,28 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
-    
+  
     - name: Install Gecko SDK
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
         git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
         cd gecko_sdk_$SDK_VER
         git checkout tags/$SDK_VER
-    
+        echo "REPO_NAME=$REPO_NAME"
+        echo "EXTENSION_CHECKOUT_PATH=gecko_sdk_${{env.SDK_VER}}/extension/$REPO_NAME" >> $GITHUB_ENV
+        echo "EXTENSION_CHECKOUT_PATH=$EXTENSION_CHECKOUT_PATH"
+  
     - name: Install Gecko SDK extension
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/checkout@v4.1.7
       with:
         ref: ${{env.REPO_BRANCH_BUILD}}
-        path: gecko_sdk_${{env.SDK_VER}}/extension/IEC60730-Library
-    
+        path: ${{ env.EXTENSION_CHECKOUT_PATH }}
+  
     - name: Check files
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
@@ -137,6 +167,7 @@ jobs:
         ls gecko_sdk_${{env.SDK_VER}}/extension
         
     - name: Install Amazon Corretto 17
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -145,8 +176,9 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
-    
+  
     - name: Install SLC CLI
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -155,8 +187,9 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
-    
+  
     - name: Install Simplicity Commander
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -167,8 +200,9 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
-    
+  
     - name: Install GCC
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -177,27 +211,31 @@ jobs:
         echo "Current directory: $PWD"
         echo "List file in current folfer:"
         ls -la
-    
+  
     - name: Install Ninja build
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt update
         sudo apt -y install ninja-build
         echo "Ninja version: "
         ninja --version
-    
+  
     - name: Set up Python 3.11
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/setup-python@v2
       with:
         python-version: '3.11'
-    
+  
     - name: Install dependencies
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt-get update
         sudo apt-get install -y python3-apt
         echo "Python version: "
         python3 --version
-    
+  
     - name: Install CMake
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt update
         sudo apt install -y wget build-essential libssl-dev
@@ -205,19 +243,21 @@ jobs:
         sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
         echo "CMake version: "
         cmake --version
-    
+  
     - name: Set up Java 17
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
-    
+  
     - name: Install srecord
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         sudo apt-get update
         sudo apt-get install -y srecord
         srec_cat --version
-    
+  
     - name: Generate image
       run: |
         echo "Current directory: $PWD"
@@ -225,32 +265,50 @@ jobs:
         ls -la
         echo "List file in simplicity_sdk folfer"
         ls -la "${{ github.workspace }}/simplicity_sdk"
-        export TOOL_DIRS=$PWD/$TOOL_DIRS_BUILD
-        export SDK_PATH_BUILD=$PWD/gecko_sdk_$SDK_VER
-        export PATH=$PATH:$PWD/commander
-        export PATH=$PATH:$PWD/slc_cli
-        export PATH=$PATH:/usr/bin/
-        export PATH=$PATH:$PWD/amazon-corretto-17.0.12.7.1-linux-x64/bin
+        if [ "$COMPILER" == "GCC" ]; then
+          export TOOL_CHAINS=GCC
+          export TOOL_DIRS=$PWD/$TOOL_DIRS_BUILD
+          export SDK_PATH_BUILD=$PWD/gecko_sdk_$SDK_VER
+          export PATH=$PATH:$PWD/commander
+          export PATH=$PATH:$PWD/slc_cli
+          export PATH=$PATH:/usr/bin/
+          export PATH=$PATH:$PWD/amazon-corretto-17.0.12.7.1-linux-x64/bin
+          cd ${{ github.workspace }}/slc_cli
+          echo 2 | 
+          echo "Version Java: "
+          java --version
+          echo "Version SLC: "
+          ./slc --version
+          ./slc configuration --sdk=${SDK_PATH_BUILD}
+          ./slc signature trust --sdk $SDK_PATH_BUILD
+          ./slc configuration -gcc=$TOOL_DIRS_BUILD
+          ./slc signature trust -extpath $SDK_PATH_BUILD/extension/$REPO_NAME
+        else
+          export TOOL_CHAINS=IAR
+          export TOOL_DIRS=$TOOL_DIRS_BUILD
+          export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
+          export PATH=$PATH:~/slc_cli
+          export PATH=$PATH:/usr/bin/
+          export PATH=$PATH:~/amazon-corretto-17.0.12.7.1-linux-x64/bin
+        fi
         echo "Current PATH:"
         echo $PATH | tr ':' '\n'
-        cd ${{ github.workspace }}/slc_cli
-        echo 2 | 
-        echo "Version Java: "
-        java --version
-        echo "Version SLC: "
-        ./slc --version
-        ./slc configuration --sdk=${SDK_PATH_BUILD}
-        ./slc signature trust --sdk $SDK_PATH_BUILD
-        ./slc configuration -gcc=$TOOL_DIRS_BUILD
-        ./slc signature trust -extpath $SDK_PATH_BUILD/extension/IEC60730-Library
-        cd ${{ github.workspace }}
-        make prepare
         echo "Generate MG12 image"
+        cd ${{ github.workspace }}
+        if [ "$COMPILER" == "IAR" ]; then
+          TASK=all
+          make prepare
+          cd build
+          echo "TOOL_CHAINS: $TOOL_CHAINS"
+          echo "TOOL_DIRS: $TOOL_DIRS"
+          cmake --toolchain ../cmake/toolchain.cmake .. -DBOARD_NAME=$BOARD_NAME_MG12 -DPRE_BUILD_IAR_TOOL=ON
+          cd ..
+        fi  
+        make prepare
         cd build
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
         make integration_test_info -j4
-        export HOST_IP=192.168.1.118
         cd ../test/
         mkdir log_MG12
         ls -la
@@ -258,20 +316,28 @@ jobs:
             ADAPTER_SN_MG12=440189400
         fi
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
-        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
+        echo "Run bash script"
+        echo "Run bash script -> execute_integration_test.sh $BOARD_NAME_MG12 $TASK $COMPONENT $ADAPTER_SN_MG12 $COMPILER"
+        bash execute_integration_test.sh $BOARD_NAME_MG12 $TASK $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
         echo "Generate MG24 image"
         cd ${{ github.workspace }}
         ls -la
         mv -v build build_MG12
         ls -la
         rm -rf build
+        if [ "$COMPILER" == "IAR" ]; then
+          make prepare
+          cd build
+          echo "TOOL_CHAINS: $TOOL_CHAINS"
+          echo "TOOL_DIRS: $TOOL_DIRS"
+          cmake --toolchain ../cmake/toolchain.cmake .. -DBOARD_NAME=$BOARD_NAME_MG24 -DPRE_BUILD_IAR_TOOL=ON
+          cd ..
+        fi  
         make prepare
         cd build
         echo "Run Cmake"
         cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
         make integration_test_info -j4
-        export HOST_IP=192.168.1.69
         cd ../test/
         mkdir log_MG24
         ls -la
@@ -279,23 +345,23 @@ jobs:
             ADAPTER_SN_MG24=440111030
         fi  
         export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
-        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
-    
+        echo "Run bash script -> execute_integration_test.sh $BOARD_NAME_MG24 $TASK $COMPONENT $ADAPTER_SN_MG24 $COMPILER"
+        bash execute_integration_test.sh $BOARD_NAME_MG24 $TASK $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
+  
     - name: Upload firmware MG12
       uses: actions/upload-artifact@v4.3.4
       with:
         name: firmware_mg12_gcc
         path: ${{ github.workspace }}/build_MG12/
         retention-days: 90
-    
+  
     - name: Upload firmware MG24
       uses: actions/upload-artifact@v4.3.4
       with:
         name: firmware_mg24_gcc
         path: ${{ github.workspace }}/build/
         retention-days: 90
-    
+  
     - name: Check log file to set status of the job
       run: |
         keywords=("(Failed round)")
@@ -311,7 +377,8 @@ jobs:
             fi
           done
         done
-  
+    outputs:
+      compiler: ${{ steps.set_compiler.outputs.compiler }}
   job2:
     name: Run integration test
     runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_01' }}
@@ -322,70 +389,77 @@ jobs:
     
     steps:
     - name: Trigger
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         echo "Triggered by ${{github.event_name}} event"
         echo "Repo root directory: $GITHUB_WORKSPACE"
         echo "Current directory: $PWD"
         rm -rf ${{ github.workspace }}
         mkdir ${{ github.workspace }}
-        
+  
     - name: Check Branch Input
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          if [ -z "${{ github.event.inputs.Validate_branch }}" ]; then
-            echo "Validate branch input is required for manual trigger."
-            exit 1
-          else
-            echo "REPO_BRANCH_RUN=${{ github.event.inputs.Validate_branch }}">> $GITHUB_ENV
-          fi
-        fi              
-        
+            if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+              if [ -z "${{ github.event.inputs.Validate_branch }}" ]; then
+                echo "Validate branch input is required for manual trigger."
+                exit 1
+              else
+                echo "REPO_BRANCH_RUN=${{ github.event.inputs.Validate_branch }}">> $GITHUB_ENV
+              fi
+            fi              
+  
     - name: Checkout
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/checkout@v4.1.7
       with:
         ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Validate_branch || github.ref }}" 
-        
+  
     - name: Log Current Branch and Commit
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
-        echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-        echo "Current commit: $(git rev-parse HEAD)" 
-        
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current commit: $(git rev-parse HEAD)" 
+  
     - name: Create build folder
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         make prepare
         #mkdir -p ${{ github.workspace }}/build/test/unit_test/build
-        
+  
     - name: Install jq (if needed)
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         jq -V
         #sudo apt-get install jq -y
-        
+  
     - name: Download output for MG12 from Job 1
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
-        export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-        export REPO_OWNER="SiliconLabsSoftware"
-        export REPO_NAME="IEC60730-Library"
-        export RUN_ID="${{ github.run_id }}" 
-        export ARTIFACT_NAME="firmware_mg12_gcc"  
-        
-        ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
-          "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
-          jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
-        if [ -z "$ARTIFACT_URL" ]; then
-          echo "Artifact not found for run ID $RUN_ID."
-          exit 1
-        fi
-        curl -L -o firmware_mg12_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
-        if [ $? -eq 0 ] && [ -f "firmware_mg12_gcc.zip" ]; then
-          echo "Download successful"
-          mv firmware_mg12_gcc.zip ./build/
-          unzip ./build/firmware_mg12_gcc.zip -d ./build/
-        else
-          echo "Download failed"
-          exit 1
-        fi
-       
+          export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
+          export REPO_OWNER="SiliconLabsSoftware"
+          export RUN_ID="${{ github.run_id }}" 
+          export ARTIFACT_NAME="firmware_mg12_gcc"  
+          
+          ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
+            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
+            jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
+          if [ -z "$ARTIFACT_URL" ]; then
+            echo "Artifact not found for run ID $RUN_ID."
+            exit 1
+          fi
+          curl -L -o firmware_mg12_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
+          if [ $? -eq 0 ] && [ -f "firmware_mg12_gcc.zip" ]; then
+            echo "Download successful"
+            mv firmware_mg12_gcc.zip ./build/
+            unzip ./build/firmware_mg12_gcc.zip -d ./build/
+          else
+            echo "Download failed"
+            exit 1
+          fi
+   
     - name: Run test MG12
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
         export PATH=$PATH:~/slc_cli
@@ -402,7 +476,11 @@ jobs:
         echo "Run unit test for MG12"
         cd build
         rm -rf CMakeCache.txt
-        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
+        if [ "$COMPILER" == "GCC" ]; then
+          cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
+        else
+          cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12 -DENABLE_IAR=ON
+        fi 
         make integration_test_info -j4
         cd ../test
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
@@ -421,15 +499,17 @@ jobs:
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"' > log/Test_integration_$BOARD_NAME_GCC_4.txt
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
         #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON  -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
-    
+  
     - name: Upload artifact MG12
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/upload-artifact@v4.3.4
       with:
         name: unit_test_log_mg12_gcc
         path: ${{ github.workspace }}/test/log_MG12/
-        retention-days: 90   
-        
+        retention-days: 90
+  
     - name: Check log file to set status of the job MG12
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
@@ -454,35 +534,37 @@ jobs:
         done
         
     - name: Download output for MG24 from Job 1
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
-        export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-        export REPO_OWNER="SiliconLabsSoftware"
-        export REPO_NAME="IEC60730-Library"
-        export RUN_ID="${{ github.run_id }}" 
-        export ARTIFACT_NAME="firmware_mg24_gcc"  
-        
-        ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
-          "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
-          jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
-        if [ -z "$ARTIFACT_URL" ]; then
-          echo "Artifact not found for run ID $RUN_ID."
-          exit 1
-        fi
-        curl -L -o firmware_mg24_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
-        if [ $? -eq 0 ] && [ -f "firmware_mg24_gcc.zip" ]; then
-          echo "Download successful"
-        else
-          echo "Download failed"
-          exit 1
-        fi
-        
+          export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
+          export REPO_OWNER="SiliconLabsSoftware"
+          export RUN_ID="${{ github.run_id }}" 
+          export ARTIFACT_NAME="firmware_mg24_gcc"  
+          
+          ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
+            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
+            jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
+          if [ -z "$ARTIFACT_URL" ]; then
+            echo "Artifact not found for run ID $RUN_ID."
+            exit 1
+          fi
+          curl -L -o firmware_mg24_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
+          if [ $? -eq 0 ] && [ -f "firmware_mg24_gcc.zip" ]; then
+            echo "Download successful"
+          else
+            echo "Download failed"
+            exit 1
+          fi
+  
     - name: Run test MG24
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
         export PATH=$PATH:~/slc_cli
         export PATH=$PATH:/usr/bin/
         export PATH=$PATH:~/amazon-corretto-17.0.12.7.1-linux-x64/bin
         export TOOL_DIRS=$TOOL_DIRS_RUN
+        export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME_MG24}/integration_test_iec60730_watchdog/S
         slc configuration --sdk=${SDK_PATH_RUN}
         slc signature trust --sdk $SDK_PATH_RUN
         slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
@@ -493,10 +575,13 @@ jobs:
         make prepare
         mv firmware_mg24_gcc.zip ./build/
         unzip ./build/firmware_mg24_gcc.zip -d ./build/
-        export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME_MG24}/integration_test_iec60730_watchdog/S
         cd build
         rm -rf CMakeCache.txt
-        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
+        if [ "$COMPILER" == "GCC" ]; then
+          cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
+        else
+          cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24 -DENABLE_IAR=ON
+        fi 
         make integration_test_info -j4
         cd ../test
         if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
@@ -510,15 +595,17 @@ jobs:
         mkdir log_MG24
         echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER"
         bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Integration_Test_MG24.txt
-    
+  
     - name: Upload artifact MG24
+      if: ${{ env.COMPILER == 'GCC' }}
       uses: actions/upload-artifact@v4.3.4
       with:
         name: unit_test_log_mg24_gcc
         path: ${{ github.workspace }}/test/log_MG24/
         retention-days: 90
-        
+  
     - name: Check log file to set status of the job MG24
+      if: ${{ env.COMPILER == 'GCC' }}
       run: |
         cd ${{ github.workspace }}
         echo "Current directory: $PWD"
