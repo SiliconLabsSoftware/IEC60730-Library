@@ -65,6 +65,7 @@ env:
   ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
   HOST_IP: 192.168.1.69
   COMPONENT: all
+  COMPILER: GCC
   CHIP_MG12: EFR32MG12
   CHIP_MG24: EFR32MG24BXXXF1536
   START_ADDR_FLASH_M12: 0x0000000
@@ -392,8 +393,8 @@ jobs:
             fi
           done
         done
-    outputs:
-      compiler: ${{ steps.set_compiler.outputs.compiler }}
+
+        
   job2:
     name: Run integration test
     runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_01' }}
@@ -403,6 +404,12 @@ jobs:
       pull-requests: write
     
     steps:
+    - name: Check compiler path
+      run: |
+        echo "Compiler: $COMPILER"
+        echo "TOOL_DIRS_BUILD: $TOOL_DIRS_BUILD"
+        echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
+        
     - name: Trigger
       if: ${{ env.COMPILER == 'GCC' }}
       run: |
