@@ -115,6 +115,9 @@ jobs:
         else
           echo "COMPILER=${{ github.event.inputs.COMPILER }}" >> $GITHUB_ENV
         fi
+
+    - name: Add compiler path
+      run: |
         if [ "$COMPILER" == "GCC" ]; then
           echo "TOOL_DIRS_BUILD=arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin" >> $GITHUB_ENV
           echo "TOOL_DIRS_RUN=/home/sqa/SimplicityStudio-5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin" >> $GITHUB_ENV 
@@ -122,13 +125,16 @@ jobs:
           echo "TOOL_DIRS_BUILD=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV
           echo "TOOL_DIRS_RUN=/home/sqa/Downloads/EmbeddedWorkbench8.4/arm/bin" >> $GITHUB_ENV          
         fi
-        
-    - name: Install Simplicity SDK
-      if: ${{ env.COMPILER == 'GCC' }}
+
+    - name: Check compiler path
       run: |
         echo "Compiler: $COMPILER"
         echo "TOOL_DIRS_BUILD: $TOOL_DIRS_BUILD"
         echo "TOOL_DIRS_RUN: $TOOL_DIRS_RUN"
+
+    - name: Install Simplicity SDK
+      if: ${{ env.COMPILER == 'GCC' }}
+      run: |
         mkdir simplicity_studio
         cd simplicity_studio
         git clone $SIM_REPO
