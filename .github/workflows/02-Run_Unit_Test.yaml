@@ -1,8 +1,5 @@
 name: 02-Run Unit Test
-on:
-  pull_request:
-    branches:
-      - 'main'       
+on:      
   workflow_dispatch:
     inputs:
       Contribute_branch: 
