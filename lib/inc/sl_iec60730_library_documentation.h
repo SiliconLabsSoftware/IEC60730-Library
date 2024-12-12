@@ -53,8 +53,7 @@
  *
  * \subsection families_sec Supported Families
  *
- * This library supports all **EFR32MG** devices listed in the
- * <a href="https://www.silabs.com/wireless">Selector Guide</a>.
+ * This library supports **EFR32MG** families (confirmed devices included: EFR32MG12, EFR32MG21, EFR32MG22, EFR32MG24).
  *
  * @section software_requirements Software Requirements
  * The IEC60730 library dependencies:
