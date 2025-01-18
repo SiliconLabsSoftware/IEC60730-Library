@@ -54,7 +54,7 @@ jobs:
                     "ADAPTER_SN_MG12": "${{ env.ADAPTER_SN_MG12 }}",
                     "HOST_TP_MG12": "${{ env.HOST_TP_MG12 }}",
                     "ADAPTER_SN_MG24": "${{ env.ADAPTER_SN_MG24 }}",
-                    "HOST_TP_MG24": "${{ env.HOST_TP_MG24 }}"
+                    "HOST_TP_MG24": "${{ env.HOST_TP_MG24 }}",
                     "RUNNER_BUILD": "${{ env.RUNNER_BUILD }}",
                     "RUNNER_EXECUTE": "${{ env.RUNNER_EXECUTE }}"
                   }
