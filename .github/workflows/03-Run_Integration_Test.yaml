@@ -1,540 +1,109 @@
-name: 03-Run Integration Test
+name: 03-Trigger Workflow Run Integration Test
+
 on:
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
-      Contribute_branch: 
-        description: 'Branch to generate firmware'
-        type: string
+      Branch:
+        description: 'branch to checkout'
+        required: true
         default: 'main'
-      Validate_branch: 
-        description: 'Branch to execute the test'
-        type: string
-        default: 'main'
-      ADAPTER_SN_MG12: 
-        description: 'Adapter serial number of MG12'
-        type: string
-        default: '440189400'
-      HOST_TP_MG12: 
-        description: 'Host IP of MG12'
-        type: string
-        default: '192.168.1.118'
-      ADAPTER_SN_MG24: 
-        description: 'Adapter serial number of MG24'
-        type: string
-        default: '440111030'
-      HOST_TP_MG24: 
-        description: 'Host IP of MG24'
-        type: string
-        default: '192.168.1.69'
-      RUNNER_BUILD:
-        description: 'Runner to generate firmware'
-        type: string
-        default: 'ubuntu-latest'
-      RUNNER_EXECUTE:
-        description: 'Runner to execute the test'
-        type: string
-        default: 'DS_SQA_HN_01'
-env:
-    REPO_BRANCH_BUILD: ${{ github.head_ref || github.ref_name }}
-    REPO_NAME: ${{ github.event.repository.name }}
-    JLINK_PATH: /opt/SEGGER/JLink/libjlinkarm.so
-    SDK_PATH_RUN: /home/sqa/SimplicityStudio/SDKs/gecko_sdk
-    AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
-    SLC_CLI_URL: https://www.silabs.com/documents/login/software/slc_cli_linux.zip
-    COMMANDER_URL: https://www.silabs.com/documents/login/software/SimplicityCommander-Linux.zip
-    GCC_URL: https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
-    SIM_REPO: https://github.com/SiliconLabs/simplicity_sdk.git
-    GECKO_SDK_REPO: https://github.com/SiliconLabs/gecko_sdk.git
-    SDK_VER: v4.4.2
-    JLINK_SEGGER_URL: https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.tgz
-    TASK: gen-only
-    REPO_BRANCH_RUN: main    
-    BOARD_NAME_MG12: brd4161a
-    BOARD_NAME_MG24: brd4187c
-    ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
-    ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440111030
-    HOST_IP: 192.168.1.69
-    TOOL_DIRS_BUILD: arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-    COMPILER: GCC
-    TOOL_CHAINS: GCC
-    COMPONENT: all
-    CHIP_MG12: EFR32MG12
-    CHIP_MG24: EFR32MG24BXXXF1536
-    TOOL_DIRS_RUN: /home/sqa/SimplicityStudio-5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
-    START_ADDR_FLASH_M12: 0x0000000
-    START_ADDR_FLASH_M24: 0x8000000
 jobs:
-  job1:
-    name: Generate Firmware
-    runs-on: ${{ inputs.RUNNER_BUILD || 'ubuntu-latest' }}
-    permissions:
-      contents: read
-      pull-requests: write
-      
+  trigger-workflow:
+    runs-on: ubuntu-latest
+
     steps:
-    - name: Trigger
-      run: |
-        echo "Triggered by ${{github.event_name}} event"
-        echo "Repo root directory: $GITHUB_WORKSPACE"
-        echo "Current directory: $PWD"
-    
-    - name: Check Branch Input
-      run: |
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          if [ -z "${{ github.event.inputs.Contribute_branch }}" ]; then
-            echo "Branch input is required for manual trigger."
-            exit 1
+
+      - name: Set up environment variables
+        run: |
+          echo "REPO_B_OWNER=SiliconLabsInternal" >> $GITHUB_ENV
+          echo "REPO_B_NAME=DevS-SQA" >> $GITHUB_ENV
+          echo "DEFAULT_BRANCH=3-IEC60730-Library" >> $GITHUB_ENV
+          echo "REPO_TEST=${{ github.repository }}" >> $GITHUB_ENV
+          
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Contribute_branch=${{ github.event.inputs.Branch }}" >> $GITHUB_ENV 
           else
-            echo "REPO_BRANCH_BUILD=${{ github.event.inputs.Contribute_branch }}">> $GITHUB_ENV
+            echo "Contribute_branch=${{ github.head_ref }}" >> $GITHUB_ENV  # PR branch
           fi
-        fi              
-    
-    - name: Checkout
-      uses: actions/checkout@v4.1.7
-      with:
-        ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Contribute_branch || github.ref }}"
-    
-    - name: Log Current Branch and Commit
-      run: |
-        echo "Current branch: $(echo ${{ github.ref }} | sed 's/refs\/heads\///')"
-        echo "Current commit: ${{ github.sha }}" 
-    
-    - name: Install Simplicity SDK
-      run: |
-        mkdir simplicity_studio
-        cd simplicity_studio
-        git clone $SIM_REPO
-        cd simplicity_sdk
-        echo "Current directory: $PWD"
-        echo "List file in current folfer:"
-        ls -la
-    
-    - name: Install Gecko SDK
-      run: |
-        cd ${{ github.workspace }}
-        echo "Current directory: $PWD"
-        git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
-        cd gecko_sdk_$SDK_VER
-        git checkout tags/$SDK_VER
-    
-    - name: Install Gecko SDK extension
-      uses: actions/checkout@v4.1.7
-      with:
-        ref: ${{env.REPO_BRANCH_BUILD}}
-        path: gecko_sdk_${{env.SDK_VER}}/extension/IEC60730-Library
-    
-    - name: Check files
-      run: |
-        echo "Current directory: $PWD"
-        echo "List file in current folfer:"
-        ls -la
-        echo " List file in gecko_sdk_${{env.SDK_VER}}"
-        ls gecko_sdk_$SDK_VER
-        echo " List file in gecko_sdk_${{env.SDK_VER}}/extension"
-        ls gecko_sdk_${{env.SDK_VER}}/extension
-        
-    - name: Install Amazon Corretto 17
-      run: |
-        cd ${{ github.workspace }}
-        echo "Current directory: $PWD"
-        wget $AM_CORRETTO_17
-        tar -xzf amazon-corretto-17-x64-linux-jdk.tar.gz
-        echo "Current directory: $PWD"
-        echo "List file in current folfer:"
-        ls -la
-    
-    - name: Install SLC CLI
-      run: |
-        cd ${{ github.workspace }}
-        echo "Current directory: $PWD"
-        wget $SLC_CLI_URL
-        unzip slc_cli_linux.zip
-        echo "Current directory: $PWD"
-        echo "List file in current folfer:"
-        ls -la
-    
-    - name: Install Simplicity Commander
-      run: |
-        cd ${{ github.workspace }}
-        echo "Current directory: $PWD"
-        wget $COMMANDER_URL
-        unzip SimplicityCommander-Linux.zip
-        mkdir commander
-        tar -xf SimplicityCommander-Linux/Commander_linux_x86_64_*.tar.bz commander
-        echo "Current directory: $PWD"
-        echo "List file in current folfer:"
-        ls -la
-    
-    - name: Install GCC
-      run: |
-        cd ${{ github.workspace }}
-        echo "Current directory: $PWD"
-        wget $GCC_URL
-        tar -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
-        echo "Current directory: $PWD"
-        echo "List file in current folfer:"
-        ls -la
-    
-    - name: Install Ninja build
-      run: |
-        sudo apt update
-        sudo apt -y install ninja-build
-        echo "Ninja version: "
-        ninja --version
-    
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11'
-    
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-apt
-        echo "Python version: "
-        python3 --version
-    
-    - name: Install CMake
-      run: |
-        sudo apt update
-        sudo apt install -y wget build-essential libssl-dev
-        wget https://cmake.org/files/v3.25/cmake-3.25.0-linux-x86_64.sh
-        sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
-        echo "CMake version: "
-        cmake --version
-    
-    - name: Set up Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    
-    - name: Install srecord
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y srecord
-        srec_cat --version
-    
-    - name: Generate image
-      run: |
-        echo "Current directory: $PWD"
-        echo "List file in current folfer:"
-        ls -la
-        echo "List file in simplicity_sdk folfer"
-        ls -la "${{ github.workspace }}/simplicity_sdk"
-        export TOOL_DIRS=$PWD/$TOOL_DIRS_BUILD
-        export SDK_PATH_BUILD=$PWD/gecko_sdk_$SDK_VER
-        export PATH=$PATH:$PWD/commander
-        export PATH=$PATH:$PWD/slc_cli
-        export PATH=$PATH:/usr/bin/
-        export PATH=$PATH:$PWD/amazon-corretto-17.0.12.7.1-linux-x64/bin
-        echo "Current PATH:"
-        echo $PATH | tr ':' '\n'
-        cd ${{ github.workspace }}/slc_cli
-        echo 2 | 
-        echo "Version Java: "
-        java --version
-        echo "Version SLC: "
-        ./slc --version
-        ./slc configuration --sdk=${SDK_PATH_BUILD}
-        ./slc signature trust --sdk $SDK_PATH_BUILD
-        ./slc configuration -gcc=$TOOL_DIRS_BUILD
-        ./slc signature trust -extpath $SDK_PATH_BUILD/extension/IEC60730-Library
-        cd ${{ github.workspace }}
-        make prepare
-        echo "Generate MG12 image"
-        cd build
-        echo "Run Cmake"
-        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
-        make integration_test_info -j4
-        export HOST_IP=192.168.1.118
-        cd ../test/
-        mkdir log_MG12
-        ls -la
-        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
-            ADAPTER_SN_MG12=440189400
-        fi
-        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
-        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG12 gen-only $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
-        echo "Generate MG24 image"
-        cd ${{ github.workspace }}
-        ls -la
-        mv -v build build_MG12
-        ls -la
-        rm -rf build
-        make prepare
-        cd build
-        echo "Run Cmake"
-        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
-        make integration_test_info -j4
-        export HOST_IP=192.168.1.69
-        cd ../test/
-        mkdir log_MG24
-        ls -la
-        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
-            ADAPTER_SN_MG24=440111030
-        fi  
-        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
-        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG24 gen-only $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
-    
-    - name: Upload firmware MG12
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: firmware_mg12_gcc
-        path: ${{ github.workspace }}/build_MG12/
-        retention-days: 90
-    
-    - name: Upload firmware MG24
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: firmware_mg24_gcc
-        path: ${{ github.workspace }}/build/
-        retention-days: 90
-    
-    - name: Check log file to set status of the job
-      run: |
-        keywords=("(Failed round)")
-        files=("test/log_MG12/Gen_log_MG12.txt" "test/log_MG24/Gen_log_MG24.txt")
-        for file in "${files[@]}"; do
-          for keyword in "${keywords[@]}"; do
-            if grep -q "$keyword" "$file"; then
-              echo "Keyword '$keyword' found in $file."
-              cat $file
+          
+          echo "Validate_branch=main" >> $GITHUB_ENV
+          echo "ADAPTER_SN_MG12=440189400" >> $GITHUB_ENV
+          echo "HOST_TP_MG12=192.168.1.118" >> $GITHUB_ENV
+          echo "ADAPTER_SN_MG24=440111030" >> $GITHUB_ENV
+          echo "HOST_TP_MG24=192.168.1.69" >> $GITHUB_ENV
+          echo "RUNNER_BUILD=ubuntu-latest" >> $GITHUB_ENV
+          echo "RUNNER_EXECUTE=DS_SQA_HN_01" >> $GITHUB_ENV
+
+      - name: Trigger Workflow
+        run: |
+          response=$(curl -v -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.SILABS_THIEUVU_PAT }}" \
+            -d '{
+                  "ref": "refs/heads/${{ env.DEFAULT_BRANCH }}",
+                  "inputs": {
+                    "REPO_TEST": "${{ env.REPO_TEST }}",
+                    "Contribute_branch": "${{ env.Contribute_branch }}",
+                    "Validate_branch": "${{ env.Validate_branch }}",
+                    "ADAPTER_SN_MG12": "${{ env.ADAPTER_SN_MG12 }}",
+                    "HOST_TP_MG12": "${{ env.HOST_TP_MG12 }}",
+                    "ADAPTER_SN_MG24": "${{ env.ADAPTER_SN_MG24 }}",
+                    "HOST_TP_MG24": "${{ env.HOST_TP_MG24 }}",
+                    "RUNNER_BUILD": "${{ env.RUNNER_BUILD }}",
+                    "RUNNER_EXECUTE": "${{ env.RUNNER_EXECUTE }}"
+                  }
+                }' \
+            https://api.github.com/repos/${{ env.REPO_B_OWNER }}/${{ env.REPO_B_NAME }}/actions/workflows/03-Run_Integration_Test.yaml/dispatches)
+
+          echo "Triggered workflow: $response"
+          if echo "$response" | grep -q '"message": "Not Found"'; then
+            echo "Error: Workflow or repository not found. Please check the repository name, workflow file name, and branch name."
+            exit 1
+          fi
+
+
+      - name: Wait for Check-Time Workflow to Complete
+        id: wait
+        env:
+          TIMEOUT: 1800
+        run: |
+          sleep 30
+          run_id=$(curl -s \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.SILABS_THIEUVU_PAT }}" \
+            https://api.github.com/repos/SiliconLabsInternal/DevS-SQA/actions/runs \
+            | jq '.workflow_runs[] | select(.name=="03-Run Integration Test") | .id' | head -n 1)
+          echo "Run ID: $run_id"
+          start_time=$(date +%s)
+          while true; do
+            current_time=$(date +%s)
+            elapsed_time=$((current_time - start_time))
+            if [ $elapsed_time -ge $TIMEOUT ]; then
+              echo "Error: Workflow did not complete within $((TIMEOUT / 60)) minutes."
               exit 1
-            else
-              echo "Keyword '$keyword' not found in $file."
             fi
+            status=$(curl -s \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: token ${{ secrets.SILABS_THIEUVU_PAT }}" \
+              https://api.github.com/repos/SiliconLabsInternal/DevS-SQA/actions/runs/$run_id \
+              | jq -r '.status')
+            conclusion=$(curl -s \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: token ${{ secrets.SILABS_THIEUVU_PAT }}" \
+              https://api.github.com/repos/SiliconLabsInternal/DevS-SQA/actions/runs/$run_id \
+              | jq -r '.conclusion')
+            echo "Status: $status, Conclusion: $conclusion"
+            if [[ "$status" == "completed" ]]; then
+              if [[ "$conclusion" == "success" ]]; then
+                echo "Workflow completed successfully."
+                exit 0
+              else
+                echo "Workflow failed."
+                exit 1
+              fi
+            fi
+            sleep 30
           done
-        done
-  
-  job2:
-    name: Run integration test
-    runs-on: ${{ inputs.RUNNER_EXECUTE || 'DS_SQA_HN_01' }}
-    needs: job1
-    permissions:
-      contents: read
-      pull-requests: write
-    
-    steps:
-    - name: Trigger
-      run: |
-        echo "Triggered by ${{github.event_name}} event"
-        echo "Repo root directory: $GITHUB_WORKSPACE"
-        echo "Current directory: $PWD"
-        rm -rf ${{ github.workspace }}
-        mkdir ${{ github.workspace }}
-        
-    - name: Check Branch Input
-      run: |
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          if [ -z "${{ github.event.inputs.Validate_branch }}" ]; then
-            echo "Validate branch input is required for manual trigger."
-            exit 1
-          else
-            echo "REPO_BRANCH_RUN=${{ github.event.inputs.Validate_branch }}">> $GITHUB_ENV
-          fi
-        fi              
-        
-    - name: Checkout
-      uses: actions/checkout@v4.1.7
-      with:
-        ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.Validate_branch || github.ref }}" 
-        
-    - name: Log Current Branch and Commit
-      run: |
-        echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-        echo "Current commit: $(git rev-parse HEAD)" 
-        
-    - name: Create build folder
-      run: |
-        make prepare
-        #mkdir -p ${{ github.workspace }}/build/test/unit_test/build
-        
-    - name: Install jq (if needed)
-      run: |
-        jq -V
-        #sudo apt-get install jq -y
-        
-    - name: Download output for MG12 from Job 1
-      run: |
-        export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-        export REPO_OWNER="SiliconLabsSoftware"
-        export REPO_NAME="IEC60730-Library"
-        export RUN_ID="${{ github.run_id }}" 
-        export ARTIFACT_NAME="firmware_mg12_gcc"  
-        
-        ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
-          "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
-          jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
-        if [ -z "$ARTIFACT_URL" ]; then
-          echo "Artifact not found for run ID $RUN_ID."
-          exit 1
-        fi
-        curl -L -o firmware_mg12_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
-        if [ $? -eq 0 ] && [ -f "firmware_mg12_gcc.zip" ]; then
-          echo "Download successful"
-          mv firmware_mg12_gcc.zip ./build/
-          unzip ./build/firmware_mg12_gcc.zip -d ./build/
-        else
-          echo "Download failed"
-          exit 1
-        fi
-       
-    - name: Run test MG12
-      run: |
-        export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
-        export PATH=$PATH:~/slc_cli
-        export PATH=$PATH:/usr/bin/
-        export PATH=$PATH:~/amazon-corretto-17.0.12.7.1-linux-x64/bin
-        export TOOL_DIRS=$TOOL_DIRS_RUN
-        export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME_MG12}/integration_test_iec60730_watchdog/S
-        slc configuration --sdk=${SDK_PATH_RUN}
-        slc signature trust --sdk $SDK_PATH_RUN
-        slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
-        echo "TOOL_DIRS=$TOOL_DIRS"
-        #slc configuration -gcc=$TOOL_DIRS
-        # make prepare
-        echo "Run unit test for MG12"
-        cd build
-        rm -rf CMakeCache.txt
-        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
-        make integration_test_info -j4
-        cd ../test
-        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
-            ADAPTER_SN_MG12=440189400
-        fi
-        if [ -z "${{ github.event.inputs.HOST_IP_MG12 }}" ]; then
-            HOST_IP_MG12=192.168.1.118
-        fi
-        export HOST_IP=$HOST_IP_MG12
-        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M12
-        mkdir log_MG12
-        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG12 run-only all $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Integration_Test_MG12.txt
-        #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_2.txt
-        #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON"' > log/Test_integration_$BOARD_NAME_GCC_3.txt
-        #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"' > log/Test_integration_$BOARD_NAME_GCC_4.txt
-        #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
-        #echo 'bash execute_integration_test.sh $BOARD_NAME $TASK $COMPONENTS $ADAPTER_SN $COMPILER "-DENABLE_CRC_USE_SW=ON  -DENABLE_CAL_CRC_32=ON"' > log/Test_integration_$BOARD_NAME_GCC_5.txt
-    
-    - name: Upload artifact MG12
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: unit_test_log_mg12_gcc
-        path: ${{ github.workspace }}/test/log_MG12/
-        retention-days: 90   
-        
-    - name: Check log file to set status of the job MG12
-      run: |
-        cd ${{ github.workspace }}
-        echo "Current directory: $PWD"
-        ls -la
-        keywords=("(Failed round)")
-        files=("${{ github.workspace }}/test/log_MG12/Integration_Test_MG12.txt")
-        for file in "${files[@]}"; do
-          if [ ! -f "$file" ]; then
-            echo "$file not found."
-            exit 1
-          else
-            for keyword in "${keywords[@]}"; do
-              if grep -q "$keyword" "$file"; then
-                echo "Keyword '$keyword' found in $file."
-                cat $file
-                exit 1
-              else
-                echo "Keyword '$keyword' not found in $file."
-              fi
-            done
-          fi
-        done
-        
-    - name: Download output for MG24 from Job 1
-      run: |
-        export PAT="${{ secrets.SILABS_THIEUVU_PAT}}"  
-        export REPO_OWNER="SiliconLabsSoftware"
-        export REPO_NAME="IEC60730-Library"
-        export RUN_ID="${{ github.run_id }}" 
-        export ARTIFACT_NAME="firmware_mg24_gcc"  
-        
-        ARTIFACT_URL=$(curl -s -H "Authorization: token $PAT" \
-          "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/runs/$RUN_ID/artifacts" | \
-          jq -r ".artifacts[] | select(.name==\"$ARTIFACT_NAME\") | .archive_download_url")
-        if [ -z "$ARTIFACT_URL" ]; then
-          echo "Artifact not found for run ID $RUN_ID."
-          exit 1
-        fi
-        curl -L -o firmware_mg24_gcc.zip -H "Authorization: token $PAT" "$ARTIFACT_URL"
-        if [ $? -eq 0 ] && [ -f "firmware_mg24_gcc.zip" ]; then
-          echo "Download successful"
-        else
-          echo "Download failed"
-          exit 1
-        fi
-        
-    - name: Run test MG24
-      run: |
-        export PATH=$PATH:~/SimplicityStudio-5/SimplicityStudio_v5/developer/adapter_packs/commander
-        export PATH=$PATH:~/slc_cli
-        export PATH=$PATH:/usr/bin/
-        export PATH=$PATH:~/amazon-corretto-17.0.12.7.1-linux-x64/bin
-        export TOOL_DIRS=$TOOL_DIRS_RUN
-        slc configuration --sdk=${SDK_PATH_RUN}
-        slc signature trust --sdk $SDK_PATH_RUN
-        slc signature trust -extpath $SDK_PATH_RUN/extension/$REPO_NAME
-        echo "TOOL_DIRS=$TOOL_DIRS"
-        echo "Run unit test for MG24"
-        cd ${{ github.workspace }}
-        ls -la
-        make prepare
-        mv firmware_mg24_gcc.zip ./build/
-        unzip ./build/firmware_mg24_gcc.zip -d ./build/
-        export LST_PATH=$PWD/build/test/integration_test/build/${BOARD_NAME_MG24}/integration_test_iec60730_watchdog/S
-        cd build
-        rm -rf CMakeCache.txt
-        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
-        make integration_test_info -j4
-        cd ../test
-        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
-            ADAPTER_SN_MG24=440111030
-        fi
-        if [ -z "${{ github.event.inputs.HOST_IP_MG24 }}" ]; then
-            HOST_IP_MG24=192.168.1.69
-        fi
-        export HOST_IP=$HOST_IP_MG24
-        export FLASH_REGIONS_TEST=$START_ADDR_FLASH_M24
-        mkdir log_MG24
-        echo "Run bash script -> bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER"
-        bash execute_integration_test.sh $BOARD_NAME_MG24 run-only all $ADAPTER_SN_MG24 $COMPILER  2>&1 | tee log_MG24/Integration_Test_MG24.txt
-    
-    - name: Upload artifact MG24
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: unit_test_log_mg24_gcc
-        path: ${{ github.workspace }}/test/log_MG24/
-        retention-days: 90
-        
-    - name: Check log file to set status of the job MG24
-      run: |
-        cd ${{ github.workspace }}
-        echo "Current directory: $PWD"
-        ls -la
-        keywords=("(Failed round)")
-        files=("${{ github.workspace }}/test/log_MG24/Integration_Test_MG24.txt")
-        for file in "${files[@]}"; do
-          if [ ! -f "$file" ]; then
-            echo "$file not found."
-            exit 1
-          else
-            for keyword in "${keywords[@]}"; do
-              if grep -q "$keyword" "$file"; then
-                echo "Keyword '$keyword' found in $file."
-                cat $file
-                exit 1
-              else
-                echo "Keyword '$keyword' not found in $file."
-              fi
-            done
-          fi
-        done
