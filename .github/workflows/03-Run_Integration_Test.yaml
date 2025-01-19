@@ -59,7 +59,7 @@ jobs:
                     "RUNNER_EXECUTE": "${{ env.RUNNER_EXECUTE }}"
                   }
                 }' \
-            https://api.github.com/repos/${{ env.REPO_B_OWNER }}/${{ env.REPO_B_NAME }}/actions/workflows/02-Run_Integration_Test.yaml/dispatches)
+            https://api.github.com/repos/${{ env.REPO_B_OWNER }}/${{ env.REPO_B_NAME }}/actions/workflows/03-Run_Integration_Test.yaml/dispatches)
 
           echo "Triggered workflow: $response"
           if echo "$response" | grep -q '"message": "Not Found"'; then
