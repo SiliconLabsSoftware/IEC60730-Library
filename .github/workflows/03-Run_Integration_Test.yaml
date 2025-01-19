@@ -1,4 +1,4 @@
-name: 02-Trigger Workflow Run Integration Test
+name: 03-Trigger Workflow Run Integration Test
 
 on:
   pull_request:
@@ -78,7 +78,7 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.SILABS_THIEUVU_PAT }}" \
             https://api.github.com/repos/SiliconLabsInternal/DevS-SQA/actions/runs \
-            | jq '.workflow_runs[] | select(.name=="02-Run Integration Test") | .id' | head -n 1)
+            | jq '.workflow_runs[] | select(.name=="03-Run Integration Test") | .id' | head -n 1)
           echo "Run ID: $run_id"
           start_time=$(date +%s)
           while true; do
