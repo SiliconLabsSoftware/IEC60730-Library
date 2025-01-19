@@ -1,4 +1,4 @@
-name: Trigger Workflow Run Unit Test
+name: 02-Trigger Workflow Run Unit Test
 
 on:
   pull_request:
