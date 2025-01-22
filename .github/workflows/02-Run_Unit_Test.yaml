@@ -1,9 +1,6 @@
 name: 02-Trigger Workflow Run Unit Test
 
 on:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       Branch:
@@ -29,14 +26,6 @@ jobs:
             echo "Contribute_branch=${{ github.head_ref }}" >> $GITHUB_ENV  # PR branch
           fi
           
-          echo "Validate_branch=main" >> $GITHUB_ENV
-          echo "ADAPTER_SN_MG12=440189400" >> $GITHUB_ENV
-          echo "HOST_TP_MG12=192.168.1.118" >> $GITHUB_ENV
-          echo "ADAPTER_SN_MG24=440111030" >> $GITHUB_ENV
-          echo "HOST_TP_MG24=192.168.1.69" >> $GITHUB_ENV
-          echo "RUNNER_BUILD=ubuntu-latest" >> $GITHUB_ENV
-          echo "RUNNER_EXECUTE=DS_SQA_HN_01" >> $GITHUB_ENV
-
       - name: Trigger Workflow
         run: |
           response=$(curl -v -X POST \
@@ -46,14 +35,6 @@ jobs:
                   "ref": "refs/heads/${{ env.DEFAULT_BRANCH }}",
                   "inputs": {
                     "REPO_TEST": "${{ env.REPO_TEST }}",
-                    "Contribute_branch": "${{ env.Contribute_branch }}",
-                    "Validate_branch": "${{ env.Validate_branch }}",
-                    "ADAPTER_SN_MG12": "${{ env.ADAPTER_SN_MG12 }}",
-                    "HOST_TP_MG12": "${{ env.HOST_TP_MG12 }}",
-                    "ADAPTER_SN_MG24": "${{ env.ADAPTER_SN_MG24 }}",
-                    "HOST_TP_MG24": "${{ env.HOST_TP_MG24 }}",
-                    "RUNNER_BUILD": "${{ env.RUNNER_BUILD }}",
-                    "RUNNER_EXECUTE": "${{ env.RUNNER_EXECUTE }}"
                   }
                 }' \
             https://api.github.com/repos/${{ env.REPO_B_OWNER }}/${{ env.REPO_B_NAME }}/actions/workflows/02-Run_Unit_Test.yaml/dispatches)
