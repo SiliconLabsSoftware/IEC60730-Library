@@ -1,9 +1,6 @@
 name: 03-Trigger Workflow Run Integration Test
 
 on:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       Branch:
@@ -41,6 +38,7 @@ jobs:
                   "inputs": {
                     "REPO_TEST": "${{ env.REPO_TEST }}",
                     "Contribute_branch": "${{ env.Contribute_branch }}",
+                    "Validate_branch": "${{ env.Validate_branch }}"
                   }
                 }' \
             https://api.github.com/repos/${{ env.REPO_B_OWNER }}/${{ env.REPO_B_NAME }}/actions/workflows/03-Run_Integration_Test.yaml/dispatches)
