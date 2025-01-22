@@ -1,9 +1,6 @@
 name: 02-Trigger Workflow Run Unit Test
 
 on:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       Branch:
