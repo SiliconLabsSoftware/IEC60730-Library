@@ -1,2 +1,0 @@
-# This is a # Default codeowners for the repository
-* @AndrasZiegler @silabs-TiborL
