@@ -17,7 +17,7 @@
 # @{
 # Python script for the IEC60730 CPU Register Check Verification tests.
 #
-# For details on the tests, see iec60730_cpu_registers.iec60730_cpu_regs.
+# For details on the tests, see integration_test_iec60730_cpu_registers.iec60730_cpu_regs.
 #
 #@section cpu_registers_test_results Test Results
 #

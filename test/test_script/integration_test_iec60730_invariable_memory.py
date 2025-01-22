@@ -17,7 +17,7 @@
 # @{
 # Python script for the IEC60730 Invariable Memory plausibility verification tests.
 #
-# For details on the tests, see iec60730_invariable_memory.iec60730_invariable_memory.
+# For details on the tests, see integration_test_iec60730_invariable_memory.iec60730_imc.
 #
 #@section irq_test_results Test Results
 #

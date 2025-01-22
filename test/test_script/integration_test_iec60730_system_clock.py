@@ -17,7 +17,7 @@
 # @{
 # Python script for the IEC60730 system clock Verification tests.
 #
-# For details on the tests, see iec60730_system_clock.iec60730_system_clock.
+# For details on the tests, see integration_test_iec60730_system_clock.iec60730_system_clock.
 #
 #@section system_clock_test_results Test Results
 #
