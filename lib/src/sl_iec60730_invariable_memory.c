@@ -388,8 +388,8 @@ sl_iec60730_test_result_t sl_iec60730_imc_post(void)
   }
 
   while (current_test_region < iec60730_imc_test_config.number_of_test_regions) {
-    if ((iec60730_imc_test_config.region[current_test_region].start
-         >= iec60730_imc_test_config.region[current_test_region].end)) {
+    if (iec60730_imc_test_config.region[current_test_region].start
+        >= iec60730_imc_test_config.region[current_test_region].end) {
       goto IMC_POST_DONE;
     }
     current_test_region++;
@@ -427,7 +427,7 @@ sl_iec60730_test_result_t sl_iec60730_imc_post(void)
 #if (SL_IEC60730_CRC_DEBUG_ENABLE == 1)
   if (iec60730_ref_crc == 0) {
 #else /* SL_IEC60730_CRC_DEBUG_ENABLE */
-  if (iec60730_ref_crc != *(&SL_IEC60730_REF_CRC)) {
+  if (iec60730_ref_crc != *(SL_IEC60730_REF_CRC)) {
 #endif /* !SL_IEC60730_CRC_DEBUG_ENABLE */
     // Init CRC
     goto IMC_POST_DONE;
@@ -498,7 +498,7 @@ sl_iec60730_test_result_t sl_iec60730_imc_bist(void)
 #if (SL_IEC60730_CRC_DEBUG_ENABLE == 1)
               if (iec60730_cur_crc == iec60730_ref_crc) {
 #else /* SL_IEC60730_CRC_DEBUG_ENABLE */
-              if (iec60730_cur_crc == *(&SL_IEC60730_REF_CRC)) {
+              if (iec60730_cur_crc == *(SL_IEC60730_REF_CRC)) {
 #endif /* !SL_IEC60730_CRC_DEBUG_ENABLE */
                 sl_iec60730_program_counter_check |= (IEC60730_IMC_COMPLETE);
               } else {

@@ -119,7 +119,7 @@ static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* i
 #endif // UNIT_TEST_IEC60730_WATCHDOG_ENABLE
 }
 
-void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog)
+static void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog)
 {
   if (NULL == wdog) {
     return;
