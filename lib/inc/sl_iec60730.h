@@ -829,7 +829,7 @@ typedef struct {
  * Performs a initialization of global variables and hardware configuration in
  * case hardware support.
  *****************************************************************************/
-void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, sl_iec60730_imc_test_multiple_regions_t *test_config);
+void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, const sl_iec60730_imc_test_multiple_regions_t *test_config);
 
 /**************************************************************************/ /**
  * public IEC60730 Update CRC git pull with Data Buffer
@@ -851,7 +851,7 @@ void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, sl_iec60730_imc_test
 sl_iec60730_test_result_t
 sl_iec60730_update_crc_with_data_buffer(sl_iec60730_update_crc_params_t *params,
                                         sl_iec60730_crc_t *crc,
-                                        uint8_t *buffer,
+                                        const uint8_t *buffer,
                                         uint32_t size);
 
 /** @} (end addtogroup IEC60730_INVARIABLE_MEMORY_TEST) */
@@ -899,7 +899,7 @@ typedef struct {
  * Performs a initialization of global variables. This function SHOULD call
  * before calling #sl_iec60730_vmc_post()
  *****************************************************************************/
-void sl_iec60730_vmc_init(sl_iec60730_vmc_test_multiple_regions_t *test_config);
+void sl_iec60730_vmc_init(const sl_iec60730_vmc_test_multiple_regions_t *test_config);
 
 /** @} (end addtogroup IEC60730_VARIABLE_MEMORY_TEST) */
 

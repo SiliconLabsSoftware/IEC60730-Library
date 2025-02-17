@@ -68,14 +68,14 @@ static void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog);
  * private IEC60730 Set Watchdog Timeout Min
  *
  * @param  iec60730_wachdog input pointer point to watchdog want to set timeout min
- *
+ * f
  * @returns None.
  *
  * This function set config timeout for watchdog passing down the min value
  *****************************************************************************/
 static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730_wachdog);
 
-void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730_wachdog)
+static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730_wachdog)
 {
 #ifndef UNIT_TEST_IEC60730_WATCHDOG_ENABLE
 // Min value for PERSEL is zero
@@ -84,7 +84,7 @@ void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730
     while ((iec60730_wachdog->SL_WDOG->SYNCBUSY & WDOG_SYNCBUSY_CTRL) != 0U) {
       // wait syncbusy
     }
-    iec60730_wachdog->SL_WDOG->CTRL &= ~(uint32_t) _WDOG_CTRL_PERSEL_MASK;
+    iec60730_wachdog->SL_WDOG->CTRL &= ~_WDOG_CTRL_PERSEL_MASK;
   } while (0);
 #else // Series 2 devices
 #ifdef WDOG_HAS_SET_CLEAR
@@ -140,6 +140,7 @@ void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog)
   // Before writing to the WDOG_CMD register, make sure that
   // any previous write to the WDOG_CTRL is complete.
   while ((wdog->SYNCBUSY & WDOG_SYNCBUSY_CTRL) != 0U) {
+    // Waiting for watchdog syncbusy
   }
 
   wdog->CMD = WDOG_CMD_CLEAR;
@@ -190,7 +191,7 @@ void sl_iec60730_watchdog_count_set(uint8_t count)
 sl_iec60730_test_result_t sl_iec60730_watchdog_post(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_FAILED;
-  volatile uint32_t time_out;
+  uint32_t time_out;
   // Check for the power on reset and watchdog reset condition
   if (SL_IEC60730_RST_POR && !SL_IEC60730_RST_WDOGS) {
     LABEL_DEF(IEC60730_WATCHDOG_POST_POR_RESET_BKPT);

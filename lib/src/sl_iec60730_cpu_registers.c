@@ -27,21 +27,21 @@
 extern sl_iec60730_test_result_t unit_test_iec60730_cpu_registers_bist_mock(void);
 #endif // UNIT_TEST_IEC60730_CPU_REGISTERS_ENABLE
 
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_core(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_core(void);
 
 #if (IEC60370_CPU == IEC60370_CM4)
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_msp(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_psp(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_control(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_primask(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_basepri(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_faultmask(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_msp(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_psp(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_control(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_primask(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_basepri(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_faultmask(void);
 #endif //(IEC60370_CPU == IEC60370_CM4)
 
 #if ((defined(__FPU_PRESENT) && (__FPU_PRESENT == 1U)) \
   && (defined(__FPU_USED) && (__FPU_USED == 1U)))
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_fpu_fpscr(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_fpu_fpsx(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_fpu_fpscr(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_fpu_fpsx(void);
 #endif // ((defined (__FPU_PRESENT) && (__FPU_USED == 1U))
 
 /**************************************************************************/ /**
@@ -57,7 +57,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_bist(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_FAILED;
   /* Test core register: APSR, R0-R12, LR */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_core()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_core()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
@@ -82,43 +82,43 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_bist(void)
 
 #if (IEC60370_CPU == IEC60370_CM4)
   /* Test Main Stack Pointer */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_msp()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_msp()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
   /* Test Process Stack Pointer */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_psp()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_psp()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
   /* Test Control register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_control()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_control()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
   /* Test Primask register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_primask()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_primask()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
   /* Test BasePri register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_basepri()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_basepri()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
   /* Test FaultMask register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_faultmask()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_faultmask()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 #endif
 
   /* Test FPU FPSCR register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_fpu_fpscr()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_fpu_fpscr()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
   /* Test FPU So-S31 register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_fpu_fpsx()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_fpu_fpsx()) {
     goto CPU_REGISTERS_BIST_DONE;
   }
 
@@ -159,7 +159,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_post(void)
  * LR
  * Test patterns: R0�R12, LR: 0xAAAAAAAA, 0x55555555
  *****************************************************************************/
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_core(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_core(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -438,7 +438,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_core(void)
  * @warning This function cannot be interrupted.
  *****************************************************************************/
 #if (IEC60370_CPU == IEC60370_CM4)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_msp(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_msp(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -507,7 +507,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_msp(void)
  * @warning This function cannot be interrupted.
  *****************************************************************************/
 #if (IEC60370_CPU == IEC60370_CM4)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_psp(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_psp(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -575,7 +575,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_psp(void)
  * @warning This function cannot be interrupted.
  *****************************************************************************/
 #if (IEC60370_CPU == IEC60370_CM4)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_control(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_control(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -649,7 +649,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_control(void)
  * @warning This function cannot be interrupted.
  *****************************************************************************/
 #if (IEC60370_CPU == IEC60370_CM4)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_primask(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_primask(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -711,7 +711,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_primask(void)
  * @warning This function cannot be interrupted.
  *****************************************************************************/
 #if (IEC60370_CPU == IEC60370_CM4)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_basepri(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_basepri(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -775,7 +775,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_basepri(void)
  * @warning This function cannot be interrupted.
  *****************************************************************************/
 #if (IEC60370_CPU == IEC60370_CM4)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_faultmask(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_faultmask(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -839,7 +839,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_faultmask(void)
  * @warning The core must be in the secure state.Only for devices with the
  * Floating Point Unit (FPU).
  *****************************************************************************/
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_fpu_fpscr(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_fpu_fpscr(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -993,7 +993,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_fpu_fpscr(void)
  * @warning The core must be in the secure state.Only for devices with the
  * Floating Point Unit (FPU).
  *****************************************************************************/
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_fpu_fpsx(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_fpu_fpsx(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 #if (IEC60370_CPU == IEC60370_CM4)                             \

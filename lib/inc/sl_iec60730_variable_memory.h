@@ -228,7 +228,7 @@ sl_iec60730_test_result_t sl_iec60730_vmc_bist(void);
  *          * false - not allow
  *
  *****************************************************************************/
-bool sl_iec60730_vmc_pre_run_marchxc_step(uint32_t *addr, uint32_t size);
+bool sl_iec60730_vmc_pre_run_marchxc_step(const uint32_t *addr, uint32_t size);
 
 /**************************************************************************/ /**
  * @brief After testing the RAM, you can restore the previous work.
@@ -239,7 +239,7 @@ bool sl_iec60730_vmc_pre_run_marchxc_step(uint32_t *addr, uint32_t size);
  * @return void
  *
  *****************************************************************************/
-void sl_iec60730_vmc_post_run_marchxc_step(uint32_t *addr, uint32_t size);
+void sl_iec60730_vmc_post_run_marchxc_step(const uint32_t *addr, uint32_t size);
 
 /** @} (end addtogroup IEC60730_VARIABLE_MEMORY_TEST) */
 /** @} (end addtogroup efr32_iec60730) */

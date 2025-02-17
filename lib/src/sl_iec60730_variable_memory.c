@@ -42,20 +42,20 @@ extern bool sl_iec60730_vmc_marchxc_step(uint32_t *start,
                                          uint32_t background,
                                          uint32_t *backup);
 
-__WEAK bool sl_iec60730_vmc_pre_run_marchxc_step(uint32_t *addr, uint32_t size)
+__WEAK bool sl_iec60730_vmc_pre_run_marchxc_step(const uint32_t *addr, uint32_t size)
 {
   UNUSED_VAR(addr);
   UNUSED_VAR(size);
   return true;
 }
 
-__WEAK void sl_iec60730_vmc_post_run_marchxc_step(uint32_t *addr, uint32_t size)
+__WEAK void sl_iec60730_vmc_post_run_marchxc_step(const uint32_t *addr, uint32_t size)
 {
   UNUSED_VAR(addr);
   UNUSED_VAR(size);
 }
 
-void sl_iec60730_vmc_init(sl_iec60730_vmc_test_multiple_regions_t *test_config)
+void sl_iec60730_vmc_init(const sl_iec60730_vmc_test_multiple_regions_t *test_config)
 {
   if ((NULL == test_config) || (test_config->region == NULL)
       || (test_config->number_of_test_regions == 0)) {
@@ -92,7 +92,7 @@ sl_iec60730_test_result_t sl_iec60730_vmc_post(void)
     LABEL_DEF(IEC60730_VMC_POST_START_BKPT);
 
     // Check RAM region from begin to end
-    while (iec60730_rt_check < (uint32_t *)iec60730_vmc_test_config.region[current_test_region].end) {
+    while (iec60730_rt_check < iec60730_vmc_test_config.region[current_test_region].end) {
       if (!CHECK_INTEGRITY(uint32_t, iec60730_rt_check)) {
         goto VMC_POST_DONE;
       }
@@ -152,7 +152,7 @@ sl_iec60730_test_result_t sl_iec60730_vmc_bist(void)
         goto VMC_BIST_DONE;
       }
 
-      if (iec60730_rt_check > (uint32_t *)iec60730_vmc_test_config.region[current_test_region].end) {
+      if (iec60730_rt_check > iec60730_vmc_test_config.region[current_test_region].end) {
         LABEL_DEF(IEC60730_IMC_BIST_CHECK_BKBUF_BKPT);
 
         // Check backup buffer iec60730_bk_buf
