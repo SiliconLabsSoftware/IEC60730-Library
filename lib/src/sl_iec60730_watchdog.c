@@ -191,7 +191,7 @@ void sl_iec60730_watchdog_count_set(uint8_t count)
 sl_iec60730_test_result_t sl_iec60730_watchdog_post(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_FAILED;
-  uint32_t time_out;
+  volatile uint32_t time_out;
   // Check for the power on reset and watchdog reset condition
   if (SL_IEC60730_RST_POR && !SL_IEC60730_RST_WDOGS) {
     LABEL_DEF(IEC60730_WATCHDOG_POST_POR_RESET_BKPT);

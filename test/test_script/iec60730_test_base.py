@@ -29,7 +29,7 @@ compiler = ""
 
 class iec60730_logger:
     @staticmethod
-    def init_logger(self):
+    def init_logger():
         logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s: %(message)s')
         logger = logging.getLogger()
@@ -44,7 +44,7 @@ class iec60730_logger:
         logger.addHandler(file_handler)
         logger.propagate = False
         return logger
-    def remove_handler(self):
+    def remove_handler():
         # Remove all handlers associated with the root logger object.
         for handler in logging.root.handlers[:]:
             handler.close()
