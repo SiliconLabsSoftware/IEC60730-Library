@@ -68,7 +68,7 @@ static void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog);
  * private IEC60730 Set Watchdog Timeout Min
  *
  * @param  iec60730_wachdog input pointer point to watchdog want to set timeout min
- * f
+ *
  * @returns None.
  *
  * This function set config timeout for watchdog passing down the min value
@@ -84,7 +84,7 @@ static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* i
     while ((iec60730_wachdog->SL_WDOG->SYNCBUSY & WDOG_SYNCBUSY_CTRL) != 0U) {
       // wait syncbusy
     }
-    iec60730_wachdog->SL_WDOG->CTRL &= ~_WDOG_CTRL_PERSEL_MASK;
+    iec60730_wachdog->SL_WDOG->CTRL &= ~(uint32_t)_WDOG_CTRL_PERSEL_MASK;
   } while (0);
 #else // Series 2 devices
 #ifdef WDOG_HAS_SET_CLEAR
