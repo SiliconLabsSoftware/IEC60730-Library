@@ -17,7 +17,7 @@
 # @{
 # Python script for the IEC60730 Program counter Verification tests.
 #
-# For details on the tests, see iec60730_programme_counter.iec60730_programme_counter.
+# For details on the tests, see integration_test_iec60730_program_counter.iec60730_programme_counter.
 #
 #@section programme_counter_test_results Test Results
 #

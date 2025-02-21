@@ -17,7 +17,7 @@
 # @{
 # Python script for the IEC60730 Watchdog timer Verification tests.
 #
-# For details on the tests, see iec60730_watchdog.iec60730_watchdog.
+# For details on the tests, see integration_test_iec60730_watchdog.iec60730_watchdog.
 #
 #@section watchdog_test_results Test Results
 #

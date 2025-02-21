@@ -105,7 +105,7 @@ __WEAK bool sl_iec60730_vmc_marchxc_step(uint32_t *start,
   return cmock_return_value();
 }
 
-bool sl_iec60730_vmc_pre_run_marchxc_step(uint32_t *addr, uint32_t size)
+bool sl_iec60730_vmc_pre_run_marchxc_step(const uint32_t *addr, uint32_t size)
 {
   UNUSED_VAR(addr);
   UNUSED_VAR(size);

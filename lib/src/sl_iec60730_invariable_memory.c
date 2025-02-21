@@ -115,7 +115,7 @@ static const sl_iec60730_crc_t iec60730_crc_table[256] = {
 
 static sl_iec60730_crc_t sli_iec_60730_cal_crc(sl_iec60730_crc_t crc, uint8_t *buf, uint32_t len);
 
-void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, sl_iec60730_imc_test_multiple_regions_t *test_config)
+void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, const sl_iec60730_imc_test_multiple_regions_t *test_config)
 {
   UNUSED_VAR(params);
   if ((NULL == test_config) || (test_config->region == NULL)
@@ -149,8 +149,8 @@ sl_iec60730_test_result_t sl_iec60730_imc_post(void)
   }
 
   while (current_test_region < iec60730_imc_test_config.number_of_test_regions) {
-    if ((uint32_t) iec60730_imc_test_config.region[current_test_region].start
-        >= (uint32_t) iec60730_imc_test_config.region[current_test_region].end) {
+    if ( iec60730_imc_test_config.region[current_test_region].start
+         >=  iec60730_imc_test_config.region[current_test_region].end) {
       goto IMC_POST_DONE;
     }
     current_test_region++;
@@ -197,8 +197,8 @@ sl_iec60730_test_result_t sl_iec60730_imc_bist(void)
   uint8_t current_test_region = 0;
 
   while (current_test_region < iec60730_imc_test_config.number_of_test_regions) {
-    if ((uint32_t) iec60730_imc_test_config.region[current_test_region].start
-        >= (uint32_t) iec60730_imc_test_config.region[current_test_region].end) {
+    if ( iec60730_imc_test_config.region[current_test_region].start
+         >=  iec60730_imc_test_config.region[current_test_region].end) {
       goto IMC_BIST_DONE;
     }
     current_test_region++;
@@ -268,7 +268,7 @@ sl_iec60730_test_result_t sl_iec60730_imc_bist(void)
 sl_iec60730_test_result_t
 sl_iec60730_update_crc_with_data_buffer(sl_iec60730_update_crc_params_t *params,
                                         sl_iec60730_crc_t *crc,
-                                        uint8_t *buffer,
+                                        const uint8_t *buffer,
                                         uint32_t size)
 {
   if ((NULL == params) || (NULL == crc) || (NULL == buffer)) {
@@ -348,7 +348,7 @@ sl_static_dec_classb_vars(uint32_t *, iec60730_run_crc);
  *****************************************************************************/
 static void sli_iec60730_init_gpcrc(sl_iec60730_imc_params_t *params, uint32_t iec60730_init_value);
 
-void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, sl_iec60730_imc_test_multiple_regions_t *test_config)
+void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, const sl_iec60730_imc_test_multiple_regions_t *test_config)
 {
   if ((NULL == params) || (NULL == params->gpcrc)
       || (NULL == test_config) || (test_config->region == NULL)
@@ -359,7 +359,7 @@ void sl_iec60730_imc_init(sl_iec60730_imc_params_t *params, sl_iec60730_imc_test
   iec60730_imc_test_config.region = test_config->region;
   iec60730_imc_test_config.number_of_test_regions = test_config->number_of_test_regions;
   #ifndef UNIT_TEST_IEC60730_INVARIABLE_MEMORY_ENABLE
-  iec60730_run_crc = (uint32_t *) test_config->region[0].start;
+  iec60730_run_crc = test_config->region[0].start;
   #else
   iec60730_run_crc = (uint32_t*) unit_test_iec60730_imc_mock_init_run_crc();
   #endif // UNIT_TEST_IEC60730_INVARIABLE_MEMORY_ENABLE
@@ -388,8 +388,8 @@ sl_iec60730_test_result_t sl_iec60730_imc_post(void)
   }
 
   while (current_test_region < iec60730_imc_test_config.number_of_test_regions) {
-    if (((uint32_t) iec60730_imc_test_config.region[current_test_region].start
-         >= (uint32_t) iec60730_imc_test_config.region[current_test_region].end)) {
+    if (iec60730_imc_test_config.region[current_test_region].start
+        >= iec60730_imc_test_config.region[current_test_region].end) {
       goto IMC_POST_DONE;
     }
     current_test_region++;
@@ -404,8 +404,8 @@ sl_iec60730_test_result_t sl_iec60730_imc_post(void)
 
   // Calculate CRC
   while (current_test_region < iec60730_imc_test_config.number_of_test_regions) {
-    iec60730_rom_size_inwords = (uint32_t)SL_IEC60730_ROM_SIZE_INWORDS_TEST(iec60730_imc_test_config.region[current_test_region].start,
-                                                                            iec60730_imc_test_config.region[current_test_region].end);
+    iec60730_rom_size_inwords = SL_IEC60730_ROM_SIZE_INWORDS_TEST(iec60730_imc_test_config.region[current_test_region].start,
+                                                                  iec60730_imc_test_config.region[current_test_region].end);
     for (uint32_t i = 0; i < iec60730_rom_size_inwords; i++) {
       SL_IEC60730_CRC_INPUTU32(iec60730_gpcrc.gpcrc, *((uint32_t *) iec60730_imc_test_config.region[current_test_region].start + i));
     }
@@ -450,7 +450,7 @@ sl_iec60730_test_result_t sl_iec60730_imc_bist(void)
   SL_IEC60730_IMC_BIST_ENTER_ATOMIC();
 
   while (current_test_region < iec60730_imc_test_config.number_of_test_regions) {
-    if (((uint32_t) iec60730_imc_test_config.region[current_test_region].start >= (uint32_t) iec60730_imc_test_config.region[current_test_region].end)) {
+    if (iec60730_imc_test_config.region[current_test_region].start >= iec60730_imc_test_config.region[current_test_region].end) {
       goto IMC_BIST_DONE;
     }
     current_test_region++;
@@ -463,9 +463,9 @@ sl_iec60730_test_result_t sl_iec60730_imc_bist(void)
   while (current_test_region < iec60730_imc_test_config.number_of_test_regions) {
     for (uint16_t i = 0; i < SL_IEC60730_INVAR_BLOCKS_PER_BIST; i++) {
       if (CHECK_INTEGRITY(uint32_t, iec60730_run_crc)) {
-        if (iec60730_run_crc < (uint32_t *) iec60730_imc_test_config.region[current_test_region].end) {
-          iec60730_flash_block_words = (uint32_t)SL_IEC60730_FLASH_BLOCK_WORDS_TEST(iec60730_imc_test_config.region[current_test_region].start,
-                                                                                    iec60730_imc_test_config.region[current_test_region].end);
+        if (iec60730_run_crc < iec60730_imc_test_config.region[current_test_region].end) {
+          iec60730_flash_block_words = SL_IEC60730_FLASH_BLOCK_WORDS_TEST(iec60730_imc_test_config.region[current_test_region].start,
+                                                                          iec60730_imc_test_config.region[current_test_region].end);
           for (uint32_t j = 0; j < iec60730_flash_block_words; j++) {
             SL_IEC60730_CRC_INPUTU32(iec60730_gpcrc.gpcrc, *(iec60730_run_crc + j));
           }
@@ -492,7 +492,7 @@ sl_iec60730_test_result_t sl_iec60730_imc_bist(void)
 
             if (current_test_region < iec60730_imc_test_config.number_of_test_regions - 1) {
               current_test_region++;
-              iec60730_run_crc = (uint32_t *) iec60730_imc_test_config.region[current_test_region].start;
+              iec60730_run_crc = iec60730_imc_test_config.region[current_test_region].start;
               INV_CLASSB_PVAR(uint32_t, iec60730_run_crc);
             } else {
 #if (SL_IEC60730_CRC_DEBUG_ENABLE == 1)
@@ -532,7 +532,7 @@ sl_iec60730_test_result_t sl_iec60730_imc_bist(void)
 sl_iec60730_test_result_t
 sl_iec60730_update_crc_with_data_buffer(sl_iec60730_update_crc_params_t *params,
                                         sl_iec60730_crc_t *crc,
-                                        uint8_t *buffer,
+                                        const uint8_t *buffer,
                                         uint32_t size)
 {
   if ((NULL == params) || (NULL == params->hal.gpcrc)) {
@@ -567,7 +567,7 @@ sl_iec60730_update_crc_with_data_buffer(sl_iec60730_update_crc_params_t *params,
  * public Init Group CRC
  *
  *****************************************************************************/
-void sli_iec60730_init_gpcrc(sl_iec60730_imc_params_t *params, uint32_t iec60730_init_value)
+static void sli_iec60730_init_gpcrc(sl_iec60730_imc_params_t *params, uint32_t iec60730_init_value)
 {
   if ((NULL == params) || (NULL == params->gpcrc)) {
     return;

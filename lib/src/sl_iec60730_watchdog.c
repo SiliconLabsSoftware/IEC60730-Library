@@ -75,7 +75,7 @@ static void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog);
  *****************************************************************************/
 static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730_wachdog);
 
-void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730_wachdog)
+static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730_wachdog)
 {
 #ifndef UNIT_TEST_IEC60730_WATCHDOG_ENABLE
 // Min value for PERSEL is zero
@@ -84,7 +84,7 @@ void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730
     while ((iec60730_wachdog->SL_WDOG->SYNCBUSY & WDOG_SYNCBUSY_CTRL) != 0U) {
       // wait syncbusy
     }
-    iec60730_wachdog->SL_WDOG->CTRL &= ~(uint32_t) _WDOG_CTRL_PERSEL_MASK;
+    iec60730_wachdog->SL_WDOG->CTRL &= ~(uint32_t)_WDOG_CTRL_PERSEL_MASK;
   } while (0);
 #else // Series 2 devices
 #ifdef WDOG_HAS_SET_CLEAR
@@ -119,7 +119,7 @@ void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* iec60730
 #endif // UNIT_TEST_IEC60730_WATCHDOG_ENABLE
 }
 
-void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog)
+static void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog)
 {
   if (NULL == wdog) {
     return;
@@ -140,6 +140,7 @@ void sli_iec60730_restart_watchdog(WDOG_TypeDef *wdog)
   // Before writing to the WDOG_CMD register, make sure that
   // any previous write to the WDOG_CTRL is complete.
   while ((wdog->SYNCBUSY & WDOG_SYNCBUSY_CTRL) != 0U) {
+    // Waiting for watchdog syncbusy
   }
 
   wdog->CMD = WDOG_CMD_CLEAR;

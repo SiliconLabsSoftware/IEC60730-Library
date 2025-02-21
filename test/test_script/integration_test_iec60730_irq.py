@@ -17,7 +17,7 @@
 # @{
 # Python script for the IEC60730 IRQ plausibility verification tests.
 #
-# For details on the tests, see iec60730_irq.iec60730_irq.
+# For details on the tests, see integration_test_iec60730_irq.iec60730_irq.
 #
 #@section irq_test_results Test Results
 #

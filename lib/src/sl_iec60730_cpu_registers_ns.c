@@ -29,14 +29,14 @@ extern sl_iec60730_test_result_t unit_test_iec60730_cpu_registers_bist_ns_mock(v
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_msp_ns(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_psp_ns(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_msplim_ns(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_psplim_ns(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_control_ns(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_primask_ns(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_basepri_ns(void);
-static sl_iec60730_test_result_t sl_iec60730_cpu_registers_faultmask_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_msp_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_psp_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_msplim_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_psplim_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_control_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_primask_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_basepri_ns(void);
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_faultmask_ns(void);
 #endif
 
 /**************************************************************************/ /**
@@ -56,42 +56,42 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_bist_ns(void)
 
 #if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   /* Test Main Stack Pointer Non Secure */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_msp_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_msp_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
   /* Test Process Stack Pointer Non Secure */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_psp_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_psp_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
   /* Test Main Stack Pointer Limit Non Secure */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_msplim_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_msplim_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
   /* Test Process Stack Pointer Limit None Secure */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_psplim_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_psplim_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
   /* Test Control None Secure register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_control_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_control_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
   /* Test Primask Non Secure register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_primask_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_primask_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
   /* Test BasePri Non Secure register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_basepri_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_basepri_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
   /* Test FaultMask Non Secure register */
-  if (SL_IEC60730_TEST_FAILED == sl_iec60730_cpu_registers_faultmask_ns()) {
+  if (SL_IEC60730_TEST_FAILED == sli_iec60730_cpu_registers_faultmask_ns()) {
     goto CPU_REGISTERS_BIST_NS_DONE;
   }
 
@@ -131,7 +131,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_bist_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_msp_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_msp_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -203,7 +203,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_msp_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_psp_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_psp_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -275,7 +275,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_psp_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_msplim_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_msplim_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -347,7 +347,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_msplim_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_psplim_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_psplim_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -417,7 +417,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_psplim_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_control_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_control_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -492,7 +492,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_control_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_primask_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_primask_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -557,7 +557,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_primask_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_basepri_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_basepri_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 
@@ -623,7 +623,7 @@ sl_iec60730_test_result_t sl_iec60730_cpu_registers_basepri_ns(void)
 #if ((IEC60370_CPU == IEC60370_CM33) && defined(__TZ_PRESENT) \
   && (__TZ_PRESENT == 1))                                     \
   && defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-sl_iec60730_test_result_t sl_iec60730_cpu_registers_faultmask_ns(void)
+static sl_iec60730_test_result_t sli_iec60730_cpu_registers_faultmask_ns(void)
 {
   sl_iec60730_test_result_t result = SL_IEC60730_TEST_PASSED;
 

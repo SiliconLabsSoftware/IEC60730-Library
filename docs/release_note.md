@@ -75,7 +75,7 @@ This release contains the following components:
    ----------------
    2.0.0 Release
 
-   - Supported Device: EFR32MG families
+   - Supported Devices: EFR32MG families (confirmed devices included: EFR32MG12, EFR32MG21, EFR32MG22, EFR32MG24)
 
    - Supported Compilers: GCC, IAR
 
