@@ -108,6 +108,8 @@ The safety library IEC60730 is supported by adding the IEC60730 extension, which
 
 - Simplicity Studio 5
 
+- Gecko SDK Suite v4.4.2
+
 This project is organized as an extension of Simplicity Studio. This project is built upon GSDK version 4.4.2, GNU toolchain V12.2.1. The user can download the same version of GSDK from GitHub [GSDK](https://github.com/SiliconLabs/gecko_sdk) and Simplicity Studio V5 download link [Simplicity Studio V5](https://www.silabs.com/developers/simplicity-studio).
 
 To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be `Window > Preferences > Simplicity Studio >  SDKs > Gecko SDK Suite v4.4.2 > Add Extension`.

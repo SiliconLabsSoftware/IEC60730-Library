@@ -1,4 +1,4 @@
-Copyright 2024 Silicon Laboratories Inc. www.silabs.com
+Copyright 2025 Silicon Laboratories Inc. www.silabs.com
 
 Source code in this repo is covered by one of several different licenses. The default license is the Master Software License Agreement (MSLA) www.silabs.com/about-us/legal/master-software-license-agreement, which applies unless otherwise noted.
 
