@@ -7,3 +7,7 @@ simplicity_sdk/src/*
 !simplicity_sdk/src/CMakeLists.txt
 cmake_build
 log/
+*.html
+site
+assets
+/docs/document_api_iec60730_library
