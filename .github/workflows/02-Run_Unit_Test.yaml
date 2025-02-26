@@ -8,8 +8,6 @@ on:
         required: true
         default: 'main'
   pull_request:
-    branches:
-      - 'main'
 
 jobs:
   trigger-workflow:
