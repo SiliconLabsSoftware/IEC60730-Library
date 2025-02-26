@@ -9,7 +9,7 @@ on:
         default: 'main'
   pull_request:
     branches:
-      - dev
+      - main
 
 jobs:
   trigger-workflow:
