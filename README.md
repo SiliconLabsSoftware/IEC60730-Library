@@ -1,3 +1,5 @@
+![Static Badge](https://img.shields.io/badge/<Support>-<GeckoSDK_v4.4.2>-<green>)
+
 # IEC60730_Libs
 Platform codes for EFR32 series chips which complies to IEC60730 safety standard
 
