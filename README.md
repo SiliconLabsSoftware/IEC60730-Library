@@ -1,4 +1,4 @@
-![Static Badge](https://img.shields.io/badge/<Support>-<GeckoSDK_v4.4.2>-<green>)
+[![Static Badge](https://img.shields.io/badge/Supported-GeckoSDK_v4.4.2-green)](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.4.2)
 
 # IEC60730_Libs
 Platform codes for EFR32 series chips which complies to IEC60730 safety standard
