@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# $1: BOARD_NAME: brd4187c
+# $2: "-DENABLE_CAL_CRC_32=ON -DTEST_SECURE_PERIPHERALS_ENABLE"
+
+BASH_DIRECTION=$(pwd)
+CMAKE_DIRECTION=$(pwd)/..
+BOARD_NAME=$1
+OPTION_PRE_BUILD_IAR_TOOL=${2//"%20"/" "}
+
+cd ${CMAKE_DIRECTION}
+make prepare &> /dev/null
+cd $CMAKE_DIRECTION/build
+cmake --toolchain ../cmake/toolchain.cmake .. -DPRE_BUILD_IAR_TOOL=ON -DBOARD_NAME=${BOARD_NAME} $OPTION_PRE_BUILD_IAR_TOOL
+rm -rf $CMAKE_DIRECTION/build
