@@ -7,6 +7,10 @@ on:
         description: 'branch to checkout'
         required: true
         default: 'main'
+  pull_request:
+    branches:
+      - main
+      
 jobs:
   trigger-workflow:
     runs-on: ubuntu-latest
@@ -18,14 +22,18 @@ jobs:
           echo "REPO_B_OWNER=SiliconLabsInternal" >> $GITHUB_ENV
           echo "REPO_B_NAME=DevS-SQA" >> $GITHUB_ENV
           echo "DEFAULT_BRANCH=3-IEC60730-Library" >> $GITHUB_ENV
-          echo "REPO_TEST=${{ github.repository }}" >> $GITHUB_ENV
-          
+
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "Contribute_branch=${{ github.event.inputs.Branch }}" >> $GITHUB_ENV 
+            echo "REPO_TEST=${{ github.repository }}" >> $GITHUB_ENV
+            echo "Contribute_branch=${{ github.event.inputs.Branch }}" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "REPO_TEST=${{ github.event.pull_request.head.repo.full_name }}" >> $GITHUB_ENV
+            echo "Contribute_branch=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
           else
-            echo "Contribute_branch=${{ github.head_ref }}" >> $GITHUB_ENV  # PR branch
+            echo "REPO_TEST=${{ github.repository }}" >> $GITHUB_ENV
+            echo "Contribute_branch=${{ github.head_ref }}" >> $GITHUB_ENV
           fi
-          
+
           echo "Validate_branch=main" >> $GITHUB_ENV
 
       - name: Trigger Workflow
