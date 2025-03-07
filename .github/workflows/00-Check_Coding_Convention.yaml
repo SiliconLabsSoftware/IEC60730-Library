@@ -1,0 +1,76 @@
+name: 00-Check Coding Convention
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      branch: 
+        description: 'Branch to test'
+        type: string
+        default: 'main'
+env:
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ REPO_LINK: https://github.com/${{ github.repository }}.git
+jobs:
+  job1:
+    name: Check coding convention
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Trigger
+      run: echo "Triggered by ${{github.event_name}} event"
+    - name: Check Branch Input
+      run: |
+            if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+              if [ -z "${{ github.event.inputs.branch }}" ]; then
+                echo "Branch input is required for manual trigger."
+                exit 1
+              fi
+            fi              
+    - name: Checkout
+      uses: actions/checkout@v4.1.7
+      with:
+        ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}" 
+    - name: Log Current Branch and Commit
+      run: |
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current commit: $(git rev-parse HEAD)" 
+    - name: Install python3.11
+      if: always()
+      run: |
+        sudo apt update
+        sudo apt upgrade
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt update
+        sudo apt install python3.11
+        python3.11 --version
+        which python3.11
+        sudo apt install python3.11-full
+        curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3.11
+    - name: Install Pre-commmit
+      run: |
+        python3.11 -m pip install pre-commit
+        sudo apt install uncrustify clang-tidy cppcheck
+    - name: Run test
+      run: |
+        pre-commit install
+        pre-commit run --all-files | tee CodingConventionTool.txt
+          
+    - name: Upload Result
+      if: always()
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: CodingConventionResult
+        path: CodingConventionTool.txt
+        retention-days: 90
+    - name: Check log file to set status of the job
+      run: |
+        keywords=("Failed")
+        for keyword in "${keywords[@]}"; do
+          if grep -q "$keyword" CodingConventionTool.txt; then
+            echo "Keyword '$keyword' found in the file."
+            exit 1
+          else
+            echo "Keyword '$keyword' not found in the file."
+          fi
+        done
