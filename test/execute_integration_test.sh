@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 #./execute_test.sh $1 $2 $3 $4 $5
 # $1: BOARD_NAME: brd4187c
 # $2: task: all, gen-only, run-only
