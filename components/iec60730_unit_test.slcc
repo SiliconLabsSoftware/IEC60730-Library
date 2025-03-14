@@ -1,0 +1,34 @@
+package: iec60730
+description: This component supports running unit test function lib IEC60730
+label: IEC60730 Unit Test
+quality: test
+id: iec60730_unit_test
+category: Unit Test
+provides:
+  - name: "iec60730_unit_test"
+config_file:
+  - path: ./lib/config/sl_iec60730_config.h
+include:
+  - path: ./lib/inc
+    file_list:
+      - path: coding_standard.h
+      - path: efr32_iec60730_release_notes.h
+      - path: sl_iec60730_toolchain.h
+      - path: sl_iec60730_board.h
+      - path: sl_iec60730_comm.h
+      - path: sl_iec60730_cpu_registers.h
+      - path: sl_iec60730_internal.h
+      - path: sl_iec60730_invariable_memory.h
+      - path: sl_iec60730_irq.h
+      - path: sl_iec60730_library_documentation.h
+      - path: sl_iec60730_program_counter.h
+      - path: sl_iec60730_system_clock.h
+      - path: sl_iec60730_variable_memory.h
+      - path: sl_iec60730_watchdog.h
+      - path: sl_iec60730.h
+      - path: silabs_license_agreement.h
+define:
+  - name: SL_IEC60730_BOARD_HEADER
+    value: "\"sl_iec60730_board.h\""
+ui_hints:
+  visibility: never

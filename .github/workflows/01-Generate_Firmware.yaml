@@ -1,0 +1,263 @@
+name: 01-Generate Firmware
+on:
+  #pull_request:
+  #  branches:
+  #    - 'main'       
+  workflow_dispatch:
+    inputs:
+      branch: 
+        description: 'Branch to test'
+        type: string
+        default: 'dev'
+      ADAPTER_SN_MG12: 
+        description: 'Adapter serial number of MG12'
+        type: string
+        default: '440189400'
+      ADAPTER_SN_MG24: 
+        description: 'Adapter serial number of MG24'
+        type: string
+        default: '440133193'
+      RUNNER_BUILD:
+        description: 'Runner to generate firmware'
+        type: string
+        default: 'ubuntu-latest'
+    
+env:
+  AM_CORRETTO_17: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
+  SLC_CLI_URL: https://www.silabs.com/documents/login/software/slc_cli_linux.zip
+  COMMANDER_URL: https://www.silabs.com/documents/login/software/SimplicityCommander-Linux.zip
+  GCC_URL: https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
+  SIM_REPO: https://github.com/SiliconLabs/simplicity_sdk.git
+  GECKO_SDK_REPO: https://github.com/SiliconLabs/gecko_sdk.git
+  SDK_VER: v4.4.2
+  JLINK_SEGGER_URL: https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.tgz
+  TASK: gen-only  
+  JLINK_PATH: /opt/SEGGER/JLink/libjlinkarm.so
+  REPO_BRANCH: ${{ github.head_ref || github.ref_name }}    
+  BOARD_NAME_MG12: brd4161a
+  BOARD_NAME_MG24: brd4187c
+  ADAPTER_SN_MG12: ${{ github.event.inputs.ADAPTER_SN_MG12 }} #440189400
+  ADAPTER_SN_MG24: ${{ github.event.inputs.ADAPTER_SN_MG24 }} #440133193
+  HOST_IP: 192.168.1.69
+  TOOL_DIRS: arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
+  COMPILER: GCC
+  TOOL_CHAINS: GCC
+  COMPONENT: all
+  CHIP_MG12: EFR32MG12
+  CHIP_MG24: EFR32MG24BXXXF1536
+jobs:
+  job1:
+    name: Generate Firmware
+    runs-on: ${{ inputs.RUNNER_BUILD || 'ubuntu-latest' }}
+    permissions:
+      contents: read
+      pull-requests: write
+      
+    steps:
+    - name: Trigger
+      run: |
+        echo "Triggered by ${{github.event_name}} event"
+        echo "Repo root directory: $GITHUB_WORKSPACE"
+        echo "Current directory: $PWD"
+    - name: Check Branch Input
+      run: |
+            if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+              if [ -z "${{ github.event.inputs.branch }}" ]; then
+                echo "Branch input is required for manual trigger."
+                exit 1
+              else
+                echo "REPO_BRANCH=${{ github.event.inputs.branch }}">> $GITHUB_ENV
+              fi
+            fi              
+    - name: Checkout
+      uses: actions/checkout@v4.1.7
+      with:
+        ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}"
+    - name: Log Current Branch and Commit
+      run: |
+        echo "Current branch: $(echo ${{ github.ref }} | sed 's/refs\/heads\///')"
+        echo "Current commit: ${{ github.sha }}" 
+    - name: Install Simplicity SDK
+      run: |
+        mkdir simplicity_studio
+        cd simplicity_studio
+        git clone $SIM_REPO
+        cd simplicity_sdk
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
+    - name: Install Gecko SDK
+      run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
+        git clone $GECKO_SDK_REPO gecko_sdk_$SDK_VER
+        cd gecko_sdk_$SDK_VER
+        git checkout tags/$SDK_VER
+    - name: Install Gecko SDK extension
+      uses: actions/checkout@v4.1.7
+      with:
+        ref: ${{env.REPO_BRANCH}}
+        path: gecko_sdk_${{env.SDK_VER}}/extension/IEC60730-Library
+    - name: Check files
+      run: |
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
+        echo " List file in gecko_sdk_${{env.SDK_VER}}"
+        ls gecko_sdk_$SDK_VER
+        echo " List file in gecko_sdk_${{env.SDK_VER}}/extension"
+        ls gecko_sdk_${{env.SDK_VER}}/extension
+        
+    - name: Install Amazon Corretto 17
+      run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
+        wget $AM_CORRETTO_17
+        tar -xzf amazon-corretto-17-x64-linux-jdk.tar.gz
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
+    - name: Install SLC CLI
+      run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
+        wget $SLC_CLI_URL
+        unzip slc_cli_linux.zip
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
+    - name: Install Simplicity Commander
+      run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
+        wget $COMMANDER_URL
+        unzip SimplicityCommander-Linux.zip
+        mkdir commander
+        tar -xf SimplicityCommander-Linux/Commander_linux_x86_64_*.tar.bz commander
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
+    - name: Install GCC
+      run: |
+        cd ${{ github.workspace }}
+        echo "Current directory: $PWD"
+        wget $GCC_URL
+        tar -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
+    - name: Install Ninja build
+      run: |
+        sudo apt update
+        sudo apt -y install ninja-build
+        echo "Ninja version: "
+        ninja --version
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-apt
+        echo "Python version: "
+        python3 --version
+    - name: Install CMake
+      run: |
+        sudo apt update
+        sudo apt install -y wget build-essential libssl-dev
+        wget https://cmake.org/files/v3.25/cmake-3.25.0-linux-x86_64.sh
+        sudo bash cmake-3.25.0-linux-x86_64.sh --prefix=/usr/local --skip-license
+        echo "CMake version: "
+        cmake --version
+    - name: Set up Java 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Generate image
+      run: |
+        echo "Current directory: $PWD"
+        echo "List file in current folfer:"
+        ls -la
+        echo "List file in simplicity_sdk folfer"
+        ls -la "${{ github.workspace }}/simplicity_sdk"
+        export TOOL_DIRS=$PWD/$TOOL_DIRS
+        export SDK_PATH=$PWD/gecko_sdk_$SDK_VER
+        export PATH=$PATH:$PWD/commander
+        export PATH=$PATH:$PWD/slc_cli
+        export PATH=$PATH:/usr/bin/
+        export PATH=$PATH:$PWD/amazon-corretto-17.0.12.7.1-linux-x64/bin
+        echo "Current PATH:"
+        echo $PATH | tr ':' '\n'
+        cd ${{ github.workspace }}/slc_cli
+        echo 2 | 
+        echo "Version Java: "
+        java --version
+        echo "Version SLC: "
+        ./slc --version
+        ./slc configuration --sdk=${SDK_PATH}
+        ./slc signature trust --sdk $SDK_PATH
+        ./slc configuration -gcc=$TOOL_DIRS
+        ./slc signature trust -extpath $SDK_PATH/extension/IEC60730-Library
+        cd ${{ github.workspace }}
+        make prepare
+        echo "Generate MG12 image"
+        cd build
+        echo "Run Cmake"
+        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG12
+        make integration_test_info -j4
+        export HOST_IP=192.168.1.69
+        cd ../test/
+        mkdir log_MG12
+        ls -la
+        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG12 }}" ]; then
+            ADAPTER_SN_MG12=440189400
+        fi
+        echo "Run bash script"
+        bash execute_integration_test.sh $BOARD_NAME_MG12 $TASK $COMPONENT $ADAPTER_SN_MG12 $COMPILER 2>&1 | tee log_MG12/Gen_log_MG12.txt
+        echo "Generate MG24 image"
+        cd ${{ github.workspace }}
+        ls -la
+        mv -v build build_MG12
+        ls -la
+        rm -rf build
+        make prepare
+        cd build
+        echo "Run Cmake"
+        cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=$BOARD_NAME_MG24
+        make integration_test_info -j4
+        cd ../test/
+        mkdir log_MG24
+        ls -la
+        if [ -z "${{ github.event.inputs.ADAPTER_SN_MG24 }}" ]; then
+            ADAPTER_SN_MG24=440133193
+        fi  
+        echo "Run bash script"
+        bash execute_integration_test.sh $BOARD_NAME_MG24 $TASK $COMPONENT $ADAPTER_SN_MG24 $COMPILER 2>&1 | tee log_MG24/Gen_log_MG24.txt
+    - name: Upload firmware MG12
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: firmware_mg12_gcc
+        path: ${{ github.workspace }}/build_MG12/test/integration_test/build/${{ env.BOARD_NAME_MG12 }}
+        retention-days: 90
+    - name: Upload firmware MG24
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: firmware_mg24_gcc
+        path: ${{ github.workspace }}/build/test/integration_test/build/${{ env.BOARD_NAME_MG24 }}
+        retention-days: 90
+    - name: Check log file to set status of the job
+      run: |
+        keywords=("(Failed round)")
+        files=("test/log_MG12/Gen_log_MG12.txt" "test/log_MG24/Gen_log_MG24.txt")
+        for file in "${files[@]}"; do
+          for keyword in "${keywords[@]}"; do
+            if grep -q "$keyword" "$file"; then
+              echo "Keyword '$keyword' found in $file."
+              exit 1
+            else
+              echo "Keyword '$keyword' not found in $file."
+            fi
+          done
+        done
