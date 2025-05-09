@@ -1,6 +1,6 @@
 # Silicon Labs Contributor License Agreement
 
-By accepting this Contributor License Agreement, You understand and agree that project(s) and Contribution(s) are public and that a record of any contribution (including any personal information submitted such as full name and email address) will be maintained indefinitely and may be redistributed consistent with this project.
+By  accepting this Contributor License Agreement, You understand and agree that project(s) and Contribution(s) are public and that a record of any contribution (including any personal information submitted such as full name and email address) will be maintained indefinitely and may be redistributed consistent with this project.
 To clarify the intellectual property license granted with a Contribution from any person or entity, Silicon Laboratories Inc. ("Silicon Labs") requires acceptance of this Contributor License Agreement ("CLA") thereby indicating agreement to the license terms below. This license is for Your protection as a Contributor as well as the protection of Silicon Labs and users. This CLA can be executed by an individual or a corporate entity to authorize Contribution(s) to Silicon Labs Unify Software Development Kit (SDK) (the “Project”).
 You accept and agree to the following terms and conditions for any Contribution submitted to Silicon Labs. Except for the license granted herein to Silicon Labs and recipients of software distributed by Silicon Labs, You reserve all right, title, and interest in and to Your Contribution(s).
 
