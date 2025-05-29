@@ -31,6 +31,7 @@ jobs:
       uses: actions/checkout@v4.1.7
       with:
         ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}" 
+        submodules: true
     - name: Log Current Branch and Commit
       run: |
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
@@ -53,15 +54,22 @@ jobs:
         sudo apt install uncrustify clang-tidy cppcheck
     - name: Run test
       run: |
-        pre-commit install
-        pre-commit run --all-files | tee CodingConventionTool.txt
-          
+        pre-commit install --config .github/coding-convention-tool/.pre-commit-config.yaml
+        pre-commit run --config .github/coding-convention-tool/.pre-commit-config.yaml --all-files 2>&1 | tee CodingConventionTool.txt
+        git diff > code-fix.patch || echo "No changes to patch."
+        ls -lah code-fix.patch
     - name: Upload Result
       if: always()
       uses: actions/upload-artifact@v4.3.4
       with:
         name: CodingConventionResult
         path: CodingConventionTool.txt
+        retention-days: 90
+    - name: Upload Patch
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: code-fix.patch
+        path: code-fix.patch
         retention-days: 90
     - name: Check log file to set status of the job
       run: |
