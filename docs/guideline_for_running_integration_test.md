@@ -10,11 +10,11 @@ Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH
 If you want to calculate from the start address to the end address of Flash:
 
 ```sh
-$ export SDK_PATH=~/SimplicityStudio/SDKs/gecko_sdk
-$ export TOOL_DIRS=~/Downloads/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
+$ export SDK_PATH=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+$ export TOOL_DIRS=/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
 $ export TOOL_CHAINS=GCC
 $ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export PATH=$PATH:/media/slc_cli/slc_cli_linux_check/slc_cli
+$ export PATH=$PATH:/home/svc_sqa_automation/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
 $ export FLASH_REGIONS_TEST=0x8000000
 ```
 
@@ -24,29 +24,29 @@ Or if you want to calculate multiple regions:
 $ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
 ```
 
-with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4187c (chip EFR32MG24)
+with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4264c (chip EFR32FG23) or board name brd4187C (chip EFR32MG24)
 
 To run integration tests manually, for the watchdog module, you need to connect the device to ethernet. Export CHIP, ADAPTER_SN, LST_PATH, JLINK_PATH, and the device's IP address and run the test script, for example:
 
 ```sh
-$ export CHIP=EFR32MG24BXXXF1536 ADAPTER_SN=440111030
-$ export LST_PATH=~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/S
+$ export CHIP=EFR32FG23B020F512IM48 ADAPTER_SN=440111030
+$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+$ export HOST_IP=192.168.1.69
 ```
 
 If test secure peripherals or non-secure peripherals:
 
 ```sh
-$ export LST_PATH=~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/NS
-```
+$ export LST_PATH=/home/svc_sqa_automation/SQA/Hieu/IEC60730-Library/build/test/integration_test/build/brd4264c/GCC/integration_test_iec60730_watchdog/NS
 
+```
 ```sh
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export HOST_IP=192.168.1.69
+$ export LST_PATH=/home/svc_sqa_automation/SQA/Hieu/IEC60730-Library/build/test/integration_test/build/brd4264c/GCC/integration_test_iec60730_watchdog/S
 ```
 
 > [!NOTE]
 > Environment variables need to be exported during test execution:
->> export TOOL_CHAINS= (IAR or GCC)
+>> export TOOL_CHAINS= GCC
 >>
 >> export TOOL_DIRS= <path_to_tool_chains>
 >>
@@ -56,48 +56,6 @@ $ export HOST_IP=192.168.1.69
 >>
 >> export JLINK_PATH= <path_to_jlink>
 
-## Build test for IAR tool
-
-To build tests for the IAR tool, if you run a manual test, you must run the pre-build command below.
-
-```sh
-$ make prepare
-$ cd build
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DPRE_BUILD_IAR_TOOL=ON -DBOARD_NAME=${BOARD_NAME} $OPTION_PRE_BUILD_IAR_TOOL
-$ cd ..
-$ make prepare
-```
-> [!NOTE]
-> Keep `$OPTION_PRE_BUILD_IAR_TOOL` the same when running the integration test CMake config
-
-For example, build integration test:
-
-```sh
-$ make prepare
-$ cd build
-$ cmake --toolchain ../cmake/toolchain.cmake ..  -DPRE_BUILD_IAR_TOOL=ON -DBOARD_NAME=brd4187c -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_CAL_CRC_32=ON
-$ cd ..
-$ make prepare
-```
-
-or you can run bash script `pre_build_iar.sh` in path [./../simplicity_sdk/pre_build_iar.sh]() with:
-
-- $1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48
-- $2: OPTION_INTEGRATION_TEST: -DINTEGRATION_TEST_WDOG1_ENABLE=ON, etc...
-
-```sh
-$ bash pre_build_iar.sh $BOARD_NAME $OPTION_INTEGRATION_TEST
-```
-
-For example:
-
-```sh
-$ bash pre_build_iar.sh brd4187c "-DINTEGRATION_TEST_WDOG1_ENABLE=ON"
-```
-
-> [!NOTE]
-> Do not use option -DENABLE_UNIT_TESTING=ON or -DENABLE_INTEGRATION_TESTING=ON when running pre-build IAR toolchain with option -DPRE_BUILD_IAR_TOOL=ON
-
 ## Manually run integration tests
 
 CMake config
@@ -105,19 +63,19 @@ CMake config
 ```sh
 $ make prepare
 $ cd build
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=brd4187c
+$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=brd4264c
 ```
 
 CMake Build
 
 ```sh
-$ cmake --build . --target integration_test_info -j4
-```
-
-or
-
-```sh
-$ make integration_test_info -j4
+$ cmake --build . --target integration_test_iec60730_program_counter -j4
+$ cmake --build . --target integration_test_iec60730_irq -j4
+$ cmake --build . --target integration_test_iec60730_system_clock -j4
+$ cmake --build . --target integration_test_iec60730_watchdog -j4
+$ cmake --build . --target integration_test_iec60730_cpu_registers -j4
+$ cmake --build . --target integration_test_iec60730_variable_memory -j4
+$ cmake --build . --target integration_test_iec60730_invariable_memory -j4
 ```
 
 To support running integration tests for the watchdog module, there are 2 options when running the CMake config:
@@ -130,45 +88,43 @@ To support running integration tests for the variable memory module, there is 1 
 
 - INTEGRATION_TEST_USE_MARCHX_DISABLE: disable using MarchX algorithm
 
-By default when testing the variable memory module, enable using the MarchX algorithm. For example:
+By default, the Variable Memory Check module uses the MarchX algorithm.
+To disable MarchX, enable the following Cmake option. For example:
 
 ```sh
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=brd4187c
+$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=brd4264c
 ```
 
 For devices that have a Trust zone implemented, secure and non-secure peripherals need to be tested.
 Default enable checks non-secure peripherals. To check secure peripherals enable this option when running CMake config: TEST_SECURE_PERIPHERALS_ENABLE. For example:
 
 ```sh
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DBOARD_NAME=brd4187c
+$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DBOARD_NAME=brd4264c
 ```
 
 For devices that support 2 watchdogs, if you want to test both watchdogs, enable option INTEGRATION_TEST_WDOG1_ENABLE to ON when running Cmake config:
 
 ```sh
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DBOARD_NAME=brd4187c
+$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DBOARD_NAME=brd4264c
 ```
 
 To run integration tests for the watchdog module you need to connect the device to ethernet. Export CHIP, ADAPTER_SN, LST_PATH, JLINK_PATH, and the device's IP address and run the test script, for example:
 
 ```sh
-$ export CHIP=EFR32MG24BXXXF1536 ADAPTER_SN=440111030
-$ export LST_PATH=~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/S
+$ export CHIP=EFR32FG23B020F512IM48
+$ export ADAPTER_SN=440111030
+$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+$ export HOST_IP=192.168.1.69
 ```
 
 If test secure peripherals or non-secure peripherals:
 
 ```sh
-$ export LST_PATH=~/devs_safety_lib/build/test/integration_test/build/brd4187c/integration_test_iec60730_watchdog/NS
-```
+$ export LST_PATH=~/devs_safety_lib/build/test/integration_test/build/brd4264c/integration_test_iec60730_watchdog/S
 
-```sh
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export HOST_IP=192.168.1.69
-```
+or
 
-```sh
-$ python3 integration_test_iec60730_irq.py GCC
+$ export LST_PATH=~/devs_safety_lib/build/test/integration_test/build/brd4264c/integration_test_iec60730_watchdog/NS
 ```
 
 By default, the device enables watchdog 0 and test watchdog 0. If you want to test Watchdog 1 use this command:
@@ -199,11 +155,11 @@ bash execute_test.sh $1 $2 $3 $4 $5 $6
 
 With the input arguments, there is the following information.
 
-- $1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48
+- $1: BOARD_NAME: brd4264c or EFR32FG23B020F512IM48
 - $2: task: all, gen-only, run-only
 - $3: components: all, unit_test_iec60730_bist, unit_test_iec60730_post, ...
 - $4: ADAPTER_SN
-- $5: compiler: GCC, IAR
+- $5: compiler: GCC
 - $6: OPTION_SUPPORT_INTEGRATION_TEST: "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON - INTEGRATION_TEST_USE_MARCHX_DISABLE=ON"
 
 Which, components list that support testing includes:
@@ -229,12 +185,15 @@ If the compiler is GCC
 If you want to calculate from the start address to the end address of Flash:
 
 ```sh
-$ export SDK_PATH=~/SimplicityStudio/SDKs/gecko_sdk
-$ export TOOL_DIRS=~/Downloads/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
+$ export SDK_PATH=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+$ export TOOL_DIRS=/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
 $ export TOOL_CHAINS=GCC
-$ export FLASH_REGIONS_TEST=0x8000000
 $ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+$ export PATH=$PATH:/home/svc_sqa_automation/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
+$ export FLASH_REGIONS_TEST=0x8000000
 $ export HOST_IP=192.168.1.69
+$ export CHIP=EFR32FG23B020F512IM48
+$ export ADAPTER_SN=440111030
 ```
 
 Or if you want to calculate multiple regions:
@@ -244,7 +203,7 @@ $ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0
 ```
 
 > [!NOTE]
-> In the current integration test file, only enable computation of one region: from the start address of ​​the flash to the end of the flash. Therefore, export the flash's starting address. For example, chip EFR32MG24:
+> In the current integration test file, only enable computation of one region: from the start address of ​​the flash to the end of the flash. Therefore, export the flash's starting address. For example, chip EFR32MG24, ERF32FG23:
 >> $ export FLASH_REGIONS_TEST=0x8000000
 
 ### Example
@@ -252,26 +211,19 @@ $ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0
 - With GCC toolchain:
 
 ```sh
-bash execute_integration_test.sh brd4187c all all 440111030 GCC
+$ bash execute_integration_test.sh brd4264c all all 440111030 GCC
 ```
-
-- With IAR toolchain:
-
-```sh
-bash execute_integration_test.sh brd4187c all all 440111030 IAR
-```
-
 ### Note:
 In case you want to build CRC32 run this command. For example:
 
 ```sh
-bash execute_integration_test.sh brd4187c all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+$ bash execute_integration_test.sh brd4264c all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
 ```
 
 Or case you want to use the above integration test support options, run this command. For example:
 
 ```sh
-bash execute_integration_test.sh brd4187c all all 440111030 GCC "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"
+$ bash execute_integration_test.sh brd4264c all all 440111030 GCC "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"
 ```
 
 ## CRC calculation options
@@ -285,13 +237,51 @@ With the commands above, the default value supports the calculation CRC-16. If y
 by manually
 
 ```sh
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CAL_CRC_32=ON
+$ cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DBOARD_NAME=brd4264c \
+  -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
+  -DINTEGRATION_TEST_WDOG1_ENABLE=ON \
+  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON \
+  -DENABLE_CAL_CRC_32=ON
+
+$ cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DBOARD_NAME=brd4264c \
+  -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
+  -DINTEGRATION_TEST_WDOG1_ENABLE=ON \
+  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON \
+  -DENABLE_CRC_USE_SW=ON
+
+$ cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DBOARD_NAME=brd4264c \
+  -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
+  -DINTEGRATION_TEST_WDOG1_ENABLE=ON \
+  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON \
+  -DENABLE_CRC_USE_SW=ON \
+  -DENABLE_SW_CRC_TABLE=ON
+
+$ cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DBOARD_NAME=brd4264c \
+  -DINTEGRATION_TEST_WDOG1_ENABLE=ON \
+  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON \
+  -DENABLE_CRC_USE_SW=ON \
+  -DENABLE_SW_CRC_TABLE=ON \
+  -DENABLE_CAL_CRC_32=ON
 ```
 
 or by automatically
 
 ```sh
-bash execute_integration_test.sh brd4187c all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+$ bash execute_integration_test.sh brd4264c all all 440111030 GCC "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"
+
+$ bash execute_integration_test.sh brd4264c all all 440111030 GCC "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON"
+
+$ bash execute_integration_test.sh brd4264c all all 440111030 GCC "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
+
+$ bash execute_integration_test.sh brd4264c all all 440111030 GCC "-DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
 ```
 
 

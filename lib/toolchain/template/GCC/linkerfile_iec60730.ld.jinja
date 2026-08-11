@@ -419,8 +419,6 @@ SECTIONS
     . = ALIGN(4);
   } > RAM
 
-{%- endif %}
-
   .stack_check (NOLOAD):
   {
     . = ALIGN(8);
@@ -438,6 +436,28 @@ SECTIONS
     KEEP(*(.stack*))
  /* KEEP(*(.stackseal*))*/
   } > RAM
+
+  /* Simplicity SDK memory_manager heap (required by dma_manager / iostream).
+   * Place it here, while the RAM location counter is still contiguous after
+   * stack_dummy. Do NOT grow with `. = __StackLimit` after CLASSBRAM/ramfuncs
+   * — that absolute assignment overflows the small IEC60730 RAM region.
+   * 2 KiB matches Gecko SDK SL_HEAP_SIZE used by working demo 2.
+   */
+  .memory_manager_heap (NOLOAD):
+  {
+    . = ALIGN(8);
+    __HeapBase = .;
+    __end__ = .;
+    end = __end__;
+    _end = __end__;
+    KEEP(*(.memory_manager_heap*))
+    KEEP(*(.heap*))
+    . = . + 0x800;
+    . = ALIGN(8);
+    __HeapLimit = .;
+  } > RAM
+
+  __heap_size = __HeapLimit - __HeapBase;
 
 /* User class B RAM region */
   .user_classb (NOLOAD) :
@@ -474,6 +494,7 @@ SECTIONS
 
   /* Check if FLASH usage exceeds FLASH size */
   /*ASSERT( LENGTH(FLASH) >= (__etext + SIZEOF(.data)), "FLASH memory overflowed !")*/
+{%- endif %}
 
 {%- if bootloader_enable %}
   __SL_IEC60730_ROM_END__ = __etext + SIZEOF(.data);
@@ -539,6 +560,7 @@ SECTIONS
 
   __ramfuncs_end__ = .;
 
+{%- if iec60730_custom_linker_enable == 0 %}
    .heap (COPY):
   {
     __HeapBase = .;
@@ -550,6 +572,7 @@ SECTIONS
   } > RAM
 
   __heap_size = __HeapLimit - __HeapBase;
+{%- endif %}
   __ram_end__ = 0x{{ '%0x' % app_ram_start }} + 0x{{ '%0x' % app_ram_size }};
   __main_flash_end__ = 0x{{ '%0x' % app_flash_start }} + 0x{{ '%0x' % app_flash_size }};
 

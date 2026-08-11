@@ -1,11 +1,10 @@
 # Properties file for Simplicity Studio metadata
 id=com.silabs.sdk.iec60730
 
-version=1.1.0
+version=2.0.0
 
 label=Silicon Labs Safety Libraries IEC60730
-description=IEC60730 extension for Gecko SDK Suite
-
-prop.subLabel=Silicon\\ Labs\\ IEC60730 \\1.1.0
+description=IEC60730 extension for Simplicity SDK Suite
 
 prop.file.templatesFile=iec60730_templates.xml
+prop.subLabel=Silicon\\ Labs\\ IEC60730 \\ 2.0.0

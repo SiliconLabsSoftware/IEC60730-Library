@@ -10,18 +10,29 @@ function(generate_coding_convention relative_dir)
   execute_process(COMMAND make prepare
   WORKING_DIRECTORY ${FULL_DIR})
 
+  ensure_slc_slconf(SLC_SLCONF)
+
   if(${TOOL_CHAINS} STREQUAL "GCC")
-    execute_process(COMMAND slc generate -p
-      ${FULL_DIR}/lib_iec60730_coding_convention.slcp  -np -d ${FULL_DIR}/src -cpproj -name=lib_iec60730 -o cmake --with ${BOARD_NAME}
+    execute_process(COMMAND slc generate
+      --slconf=${SLC_SLCONF}
+      -p ${FULL_DIR}/lib_iec60730_coding_convention.slcp
+      -np -d ${FULL_DIR}/src -cpproj -name=lib_iec60730 -o cmake --with ${BOARD_NAME}
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
   elseif (${TOOL_CHAINS} STREQUAL "IAR")
-    execute_process(COMMAND slc generate -p
-      ${FULL_DIR}/lib_iec60730_coding_convention.slcp  -np -d ${FULL_DIR}/src -cpproj -name=lib_iec60730 -o cmake --with ${BOARD_NAME}
+    execute_process(COMMAND slc generate
+      --slconf=${SLC_SLCONF}
+      -p ${FULL_DIR}/lib_iec60730_coding_convention.slcp
+      -np -d ${FULL_DIR}/src -cpproj -name=lib_iec60730 -o cmake --with ${BOARD_NAME}
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-    execute_process(COMMAND slc generate -p
-      ${FULL_DIR}/lib_iec60730_coding_convention.slcp  -np -d ${FULL_DIR}/src -cpproj -name=lib_iec60730 -o iar --with ${BOARD_NAME}
+    execute_process(COMMAND slc generate
+      --slconf=${SLC_SLCONF}
+      -p ${FULL_DIR}/lib_iec60730_coding_convention.slcp
+      -np -d ${FULL_DIR}/src -cpproj -name=lib_iec60730 -o iar --with ${BOARD_NAME}
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
   endif()
+
+  # SLC CLI 6.x names the object library "slc"; restore project-specific name
+  fix_slc_cmake_targets(${FULL_DIR})
 
   if (EXISTS ${FULL_DIR}/CMakeLists.txt)
     message("-- [I] ${SDK_CMAKE_RELATIVE_DIR} path have CMake File: ${FULL_DIR}/CMakeLists.txt")

@@ -1,1 +1,1 @@
-add_subdirectory(lib_iec60730_cmake)
+add_subdirectory(cmake_gcc)
