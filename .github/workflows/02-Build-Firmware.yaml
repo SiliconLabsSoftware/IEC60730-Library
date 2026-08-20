@@ -1,0 +1,39 @@
+name: 02-Build-Firmware
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+      - "release/**"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branches to run the workflow on'
+        required: true
+        default: 'main'
+
+jobs:
+  FW_build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}
+
+      - name: Build Docker Image
+        run: |
+          IMAGE="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')-build-env:latest"
+          docker build -t "$IMAGE" .
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+
+      - name: Build firmware in Docker
+        run: |
+          docker run --rm -v "${{ github.workspace }}:/workspace" -w /workspace "$IMAGE" /bin/bash -c \
+            "make RUNNER=native bootstrap && make RUNNER=native build-unit && make RUNNER=native build-integration"
+
+      - name: Clean up workspace
+        if: always()
+        run: sudo git clean -ffdx

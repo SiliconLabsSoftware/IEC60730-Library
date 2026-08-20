@@ -1,0 +1,16 @@
+services:
+  iec60730-library:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: iec60730-library:latest
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - silabs-root:/root/.silabs
+    environment:
+      SLT_INSTALL_DIR: /root/.silabs
+    tty: true
+
+volumes:
+  silabs-root:

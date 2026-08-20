@@ -23,7 +23,6 @@
  * configuration_over_swo stub, USART_Tx can block forever on TXBL and
  * J-Link integration tests (e.g. cpu_registers) never reach POST breakpoints.
  */
-
 void app_init(void)
 {
   integration_test_run_init();

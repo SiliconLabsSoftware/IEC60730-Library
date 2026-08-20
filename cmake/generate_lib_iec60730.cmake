@@ -5,20 +5,73 @@ else()
 set(TOOL_CHAINS "GCC")
 endif()
 
-# Resolve / create user.slconf for SLC/SLT.
+# Report whether every sdk-package-path entry of <slconf> exists on this host.
+# recipe.slconf is committed with the container paths used by Docker/CI, so on a
+# native build it names directories that are not present; SLC would abort with
+# "SDK/Extension paths do not exist" long before generating any CMake files.
+function(slconf_paths_exist slconf out_var)
+  set(${out_var} FALSE PARENT_SCOPE)
+  set(SLCONF_MISSING_PATH "" PARENT_SCOPE)
+
+  if(NOT EXISTS "${slconf}")
+    return()
+  endif()
+
+  file(READ "${slconf}" _content)
+  string(REGEX REPLACE "#[^\n]*" "" _content "${_content}")
+  if(NOT _content MATCHES "sdk-package-path[ \t]*=[ \t]*\\[([^]]*)\\]")
+    return()
+  endif()
+
+  string(REGEX MATCHALL "\"[^\"]+\"" _entries "${CMAKE_MATCH_1}")
+  if(_entries STREQUAL "")
+    return()
+  endif()
+
+  foreach(_entry IN LISTS _entries)
+    string(REGEX REPLACE "^\"(.*)\"$" "\\1" _path "${_entry}")
+    if(NOT IS_DIRECTORY "${_path}")
+      set(SLCONF_MISSING_PATH "${_path}" PARENT_SCOPE)
+      return()
+    endif()
+  endforeach()
+
+  set(${out_var} TRUE PARENT_SCOPE)
+endfunction(slconf_paths_exist)
+
+# Resolve / create recipe.slconf for SLC/SLT.
 # sdk-package-path lists the SDK and this repo (IEC60730 .slce extension),
 # which trusts the extension without a separate 'slc signature trust -extpath'.
 #
-# Path resolution order:
+# Path resolution order (a candidate is skipped when its paths are not on this
+# host, so a container-flavoured recipe.slconf never breaks a native build):
 #   1. ENV{SLC_SLCONF} if set (absolute path to an existing .slconf)
-#   2. ${CMAKE_SOURCE_DIR}/user.slconf (created/updated from SDK_PATH or GSDK)
+#   2. ${CMAKE_SOURCE_DIR}/recipe.slconf (preferred; Docker/SLT bootstrap)
+#   3. ${CMAKE_SOURCE_DIR}/user.slconf (machine-local; created from SDK_PATH or GSDK)
 #
 # Usage: ensure_slc_slconf(<out_var>)
 function(ensure_slc_slconf out_var)
   if(DEFINED ENV{SLC_SLCONF} AND EXISTS "$ENV{SLC_SLCONF}")
-    set(${out_var} "$ENV{SLC_SLCONF}" PARENT_SCOPE)
-    message("-- [I] Using SLC slconf from SLC_SLCONF: $ENV{SLC_SLCONF}")
-    return()
+    slconf_paths_exist("$ENV{SLC_SLCONF}" _slconf_usable)
+    if(_slconf_usable)
+      set(${out_var} "$ENV{SLC_SLCONF}" PARENT_SCOPE)
+      message("-- [I] Using SLC slconf from SLC_SLCONF: $ENV{SLC_SLCONF}")
+      return()
+    endif()
+    message(WARNING
+      "Ignoring SLC_SLCONF ($ENV{SLC_SLCONF}): path does not exist on this host: "
+      "${SLCONF_MISSING_PATH}")
+  endif()
+
+  set(_recipe_slconf "${CMAKE_SOURCE_DIR}/recipe.slconf")
+  if(EXISTS "${_recipe_slconf}")
+    slconf_paths_exist("${_recipe_slconf}" _slconf_usable)
+    if(_slconf_usable)
+      set(${out_var} "${_recipe_slconf}" PARENT_SCOPE)
+      message("-- [I] Using SLC slconf: ${_recipe_slconf}")
+      return()
+    endif()
+    message("-- [I] Skipping ${_recipe_slconf}: path does not exist on this host: ${SLCONF_MISSING_PATH}")
   endif()
 
   set(_slconf "${CMAKE_SOURCE_DIR}/user.slconf")
@@ -27,15 +80,20 @@ function(ensure_slc_slconf out_var)
     set(_sdk_path "$ENV{SDK_PATH}")
   elseif(DEFINED ENV{GSDK} AND NOT "$ENV{GSDK}" STREQUAL "")
     set(_sdk_path "$ENV{GSDK}")
-  elseif(EXISTS "${_slconf}")
-    # Keep a pre-existing local file when SDK env vars are unset.
-    set(${out_var} "${_slconf}" PARENT_SCOPE)
-    message("-- [I] Using existing SLC slconf: ${_slconf}")
-    return()
   else()
+    slconf_paths_exist("${_slconf}" _slconf_usable)
+    if(_slconf_usable)
+      # Keep a pre-existing local file when SDK env vars are unset.
+      set(${out_var} "${_slconf}" PARENT_SCOPE)
+      message("-- [I] Using existing SLC slconf: ${_slconf}")
+      return()
+    endif()
     message(FATAL_ERROR
-      "Cannot create ${_slconf}: set SDK_PATH or GSDK (Simplicity SDK root), "
-      "or provide an existing file via SLC_SLCONF.")
+      "No usable SLC slconf. Set SDK_PATH or GSDK to the Simplicity SDK root "
+      "(e.g. \"$(slt where simplicity-sdk)\") so ${_slconf} can be generated, "
+      "or point SLC_SLCONF at an slconf whose paths exist on this host. "
+      "The committed recipe.slconf holds container paths and is only valid "
+      "inside Docker/CI.")
   endif()
 
   string(REGEX REPLACE "/+$" "" _sdk_path "${_sdk_path}")
