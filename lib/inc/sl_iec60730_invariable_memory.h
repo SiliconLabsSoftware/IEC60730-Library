@@ -104,8 +104,8 @@ extern "C" {
  * In case using CRC software (define #SL_IEC60730_CRC_USE_SW_ENABLE), you can pass NULL pointer
  * to function use this struct.
  *
- * We use a pair of variables to check intergrity. Using the following macros
- * in case you want to work with pair of variables need to be checked intergrity.
+ * We use a pair of variables to check integrity. Using the following macros
+ * in case you want to work with pair of variables need to be checked integrity.
  * These macros are defined in sl_iec60730.h file.
  *
  *   * #DEC_CLASSB_VARS is used to declare a pair of variables.

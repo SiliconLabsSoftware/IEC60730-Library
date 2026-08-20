@@ -137,3 +137,39 @@ $ slc generate \
   - Refer to the guideline link: [guideline_for_running_unit_test.md](./docs/guideline_for_running_unit_test.md)
 ### Run integration test
   - Refer to the guideline link: [guideline_for_running_integration_test.md](./docs/guideline_for_running_integration_test.md)
+
+## Docker build (Simplicity SDK via SLT)
+
+Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs SDKs and toolchains are **not** baked into the image; they are installed by `make bootstrap` into `/root/.silabs` (Compose volume `silabs-root`). Package pins live in `recipe.toml`; SLT/SLC paths live in root `recipe.slconf` (refreshed by bootstrap).
+
+**Prerequisites:** Docker Engine 24+, Docker Compose v2, network access to Silabs package servers.
+
+```sh
+# Layer A — build the image (once, or after Dockerfile changes)
+docker compose build
+
+# Layer B — install SLT + simplicity-sdk 2026.6.0 from recipe.toml (once)
+make bootstrap
+
+# Layer C — compile for brd4264c
+make build-unit          # unit test targets
+make build-integration   # integration test targets
+make build               # unit + integration
+# or: make all           # bootstrap + build
+
+make clean               # removes build/ output; keeps the silabs-root volume
+```
+
+Optional CMake flags:
+
+```sh
+make build-unit BUILD_ARGS="-DENABLE_CAL_CRC_32=ON"
+```
+
+Inside an already-running container or CI (`docker run -v "$PWD":/workspace ...`):
+
+```sh
+make RUNNER=native bootstrap build
+```
+
+Artifacts appear on the host under `build/` (bind-mounted workspace). Hardware flash and on-device test execution stay on the host via `test/execute_unit_test.sh` / `test/execute_integration_test.sh`.
