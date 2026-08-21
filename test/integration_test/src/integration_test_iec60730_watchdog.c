@@ -60,7 +60,9 @@ void integration_test_run_init(void)
   // Program is waiting for debugger take control after power on reset
   // Debugger must set this flag to true
   LABEL_DEF(IEC60730_TEST_WDOG_POR_BKPT);
-  while (wdog_por_wait == 0);
+  while (wdog_por_wait == 0) {
+    __NOP();
+  }
 
   integration_test_init();
   sl_iec60730_test_result_t result = sl_iec60730_watchdog_post();

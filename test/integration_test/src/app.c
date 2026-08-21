@@ -19,23 +19,16 @@
 #include "integration_test_common.h"
 #include "sl_iec60730_internal.h"
 
+/* Do not printf over VCOM here: with HW flow control / VCOM disabled /
+ * configuration_over_swo stub, USART_Tx can block forever on TXBL and
+ * J-Link integration tests (e.g. cpu_registers) never reach POST breakpoints.
+ */
 void app_init(void)
 {
-#if (_SILICON_LABS_32B_SERIES == 2)
-#if ((defined SL_IEC60730_NON_SECURE_ENABLE) && (!defined(SL_TRUSTZONE_SECURE)))
-  printf("Test non-secure peripherals\n");
-#else
-  printf("Test secure peripherals\n");
-#endif
-#else // Series 1 devices
-  printf("Test secure peripherals\n");
-#endif // (_SILICON_LABS_32B_SERIES == 2)
-
   integration_test_run_init();
 }
 
 void app_process_action(void)
 {
   integration_test_run_process_action();
-  printf("Pass-Test\n");
 }

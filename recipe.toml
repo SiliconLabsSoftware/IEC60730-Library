@@ -1,0 +1,8 @@
+
+[dependency]
+  commander = "~"
+  simplicity-sdk = [{ version = "2026.6.0" }]
+  slc-cli = [{ version = "6.0.23" }]
+  ninja = "~"
+  cmake = "~"
+  gcc-arm-none-eabi = "~"
