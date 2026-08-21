@@ -154,49 +154,79 @@ For building the project, select `Open in VS Code` to synchronize the project wi
 
 By default, after building the project, firmware files in `*.bin`, `*.hex`, and `*.s37` formats will be created.
 
-Modify the post-build steps so new firmware images are generated with a CRC value written into FLASH. Scripts `sl_iec60730_cal_crc16.sh` and `sl_iec60730_cal_crc32.sh` produce `*_crc16` / `*_crc32` images (documented generically as `*_crcNN`). They run on Windows and Ubuntu and live under `iec60730_<version>/lib/crc/`.
+Modify the post-build steps so new firmware images are generated with a CRC value written into FLASH at the `check_sum` symbol. Scripts `sl_iec60730_cal_crc16.sh` and `sl_iec60730_cal_crc32.sh` produce `*_crc16` / `*_crc32` images (documented generically as `*_crcNN`). They run on Windows and Ubuntu and live under `iec60730_<version>/lib/crc/`.
 
 ![Figure 8 CRC-16 and CRC-32 scripts](./images/figure_8_crc_16_and_crc_32_scripts.png)
 ###### Figure 8 CRC-16 and CRC-32 scripts
 
 Detailed parameters are described in **Support calculate CRC**.
 
+> **Important — customer notice (CRC-16 production path)**
+>
+> When **`SL_IEC60730_CRC_DEBUG_ENABLE` is disabled (`0`)** and **`SL_IEC60730_USE_CRC_32_ENABLE` is disabled (`0`)** (default CRC-16 mode in `config/sl_iec60730_config.h`):
+>
+> 1. The post-build step **must** run `sl_iec60730_cal_crc16.sh` so a `*_crc16` image is generated with the reference CRC stored at `check_sum`.
+> 2. You **must flash** the `*_crc16` firmware (`*.bin` / `*.hex` / `*.s37`), **not** the plain image without the CRC suffix.
+> 3. The address list passed to the script **must match** the Flash regions used at runtime in OEM IMC configuration (for example in `oem_iec60730.c`). Otherwise runtime `iec60730_ref_crc` and stored `SL_IEC60730_REF_CRC` (`check_sum`) will differ and IMC POST/BIST will fail.
+>
+> - If `SL_IEC60730_USE_CRC_32_ENABLE` is enabled (`1`), use `sl_iec60730_cal_crc32.sh` and flash `*_crc32` instead.
+> - If `SL_IEC60730_CRC_DEBUG_ENABLE` is enabled (`1`), IMC compares against the runtime-calculated reference and does not require a matching stored `check_sum`; the CRC post-build image is still recommended for production builds.
+
 ### Studio-style example (GCC)
 
+Single continuous region (start address to `check_sum`):
+
 ```bash
-arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_1.1.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "<path_build_dir>" "<path_srecord_bin>" GCC "0x8000000"
+arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_2.0.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "<path_build_dir>" "<path_srecord_bin>" GCC "0x8000000"
 ```
+
+Multiple regions (must match OEM Flash IMC regions; demo GCC offsets example):
+
+```bash
+arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_2.0.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "<path_build_dir>" "<path_srecord_bin>" GCC "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
+```
+
+These six addresses are **three start/end pairs**. They come from the demo OEM table in `oem_iec60730.c` (`OEM_FLASH_OFFSET = 20` words → `0x50` bytes per region, with one-region gaps). See **Section 7.2** for the OEM code to modify and why multiple regions are used.
 
 ![Figure 9 Output command from the Post-build Steps](./images/figure_9_add_the_command_to_post_build_steps.png)
 ###### Figure 9 Output command from the Post-build Steps
 
 ### Add post-build CRC (CMake)
 
-Apply CRC post-build in `cmake_gcc/CMakeLists.txt`. Append to the existing `POST_BUILD` (after `.s37` / `.hex` / `.bin`). Do **not** wrap the CRC invocation in `bash -c "..."` — nested quotes break under Windows `cmd.exe`.
+Apply CRC post-build in `cmake_gcc/CMakeLists.txt`. Append to the existing `POST_BUILD` (after `.s37` / `.hex` / `.bin`). Do **not** wrap the CRC invocation in `bash -c "..."` — nested quotes break under Windows `cmd.exe`. On Windows, `bash` must be available (MSYS / MinGW / Cygwin / Git Bash).
+
+Example for CRC-16 (`SL_IEC60730_USE_CRC_32_ENABLE` disabled), multi-region list aligned with the demo OEM Flash IMC regions:
 
 ```cmake
-add_custom_command(TARGET iec60730_demo_cpp
+add_custom_command(TARGET iec60730_demo
     POST_BUILD
-    COMMAND ${CMAKE_OBJCOPY} ${OBJCOPY_SREC_CMD} "$<TARGET_FILE:iec60730_demo_cpp>" "$<TARGET_FILE_DIR:iec60730_demo_cpp>/$<TARGET_FILE_BASE_NAME:iec60730_demo_cpp>.s37"
-    COMMAND ${CMAKE_OBJCOPY} ${OBJCOPY_IHEX_CMD} "$<TARGET_FILE:iec60730_demo_cpp>" "$<TARGET_FILE_DIR:iec60730_demo_cpp>/$<TARGET_FILE_BASE_NAME:iec60730_demo_cpp>.hex"
-    COMMAND ${CMAKE_OBJCOPY} ${OBJCOPY_BIN_CMD}  "$<TARGET_FILE:iec60730_demo_cpp>" "$<TARGET_FILE_DIR:iec60730_demo_cpp>/$<TARGET_FILE_BASE_NAME:iec60730_demo_cpp>.bin"
+    COMMAND ${CMAKE_OBJCOPY} ${OBJCOPY_SREC_CMD} "$<TARGET_FILE:iec60730_demo>" "$<TARGET_FILE_DIR:iec60730_demo>/$<TARGET_FILE_BASE_NAME:iec60730_demo>.s37"
+    COMMAND ${CMAKE_OBJCOPY} ${OBJCOPY_IHEX_CMD} "$<TARGET_FILE:iec60730_demo>" "$<TARGET_FILE_DIR:iec60730_demo>/$<TARGET_FILE_BASE_NAME:iec60730_demo>.hex"
+    COMMAND ${CMAKE_OBJCOPY} ${OBJCOPY_BIN_CMD}  "$<TARGET_FILE:iec60730_demo>" "$<TARGET_FILE_DIR:iec60730_demo>/$<TARGET_FILE_BASE_NAME:iec60730_demo>.bin"
     # .lst + CRC-16 (*_crc16.bin/hex/s37). Use bash on Windows (MSYS/MinGW/Cygwin).
-    COMMAND ${CMAKE_OBJDUMP} -t -h -d -S "$<TARGET_FILE:iec60730_demo_cpp>" > "$<TARGET_FILE_DIR:iec60730_demo_cpp>/$<TARGET_FILE_BASE_NAME:iec60730_demo_cpp>.lst"
+    COMMAND ${CMAKE_OBJDUMP} -t -h -d -S "$<TARGET_FILE:iec60730_demo>" > "$<TARGET_FILE_DIR:iec60730_demo>/$<TARGET_FILE_BASE_NAME:iec60730_demo>.lst"
     COMMAND bash "${CMAKE_CURRENT_LIST_DIR}/../iec60730_2.0.0/lib/crc/sl_iec60730_cal_crc16.sh"
-            "$<TARGET_FILE_BASE_NAME:iec60730_demo_cpp>"
-            "$<TARGET_FILE_DIR:iec60730_demo_cpp>"
+            "$<TARGET_FILE_BASE_NAME:iec60730_demo>"
+            "$<TARGET_FILE_DIR:iec60730_demo>"
             "C:/Program Files/srecord/bin"
             GCC
-            "0x8000000"
+            "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
 )
 ```
 
-Use `sl_iec60730_cal_crc32.sh` for CRC-32. On Linux, pass `""` for the srecord path field `"<path_srecord_bin>"`. On Windows, use MSYS/Git Bash. Flash `*_crcNN.*`, not the plain image.
+For a single continuous Flash range, replace the last argument with `"0x8000000"` and set OEM IMC to one region from `SL_IEC60730_ROM_START` to `SL_IEC60730_ROM_END`.
+
+Use `sl_iec60730_cal_crc32.sh` when `SL_IEC60730_USE_CRC_32_ENABLE` is enabled. On Linux, pass `""` for the srecord path field. After a successful post-build, flash `*_crc16.*` or `*_crc32.*`, not the plain image.
 
 > **Note**
->- In the default configuration, `SL_IEC60730_CRC_DEBUG_ENABLE` (debugging the CRC invariable-memory test on the demo) is enabled. To produce a CRC-calculated image for testing, run `sl_iec60730_cal_crc16.sh` or `sl_iec60730_cal_crc32.sh` from `lib/crc/` and flash the matching `*_crc16` or `*_crc32` image.
+>
+>- **Required when `SL_IEC60730_CRC_DEBUG_ENABLE` is `0` and `SL_IEC60730_USE_CRC_32_ENABLE` is `0`:** run `sl_iec60730_cal_crc16.sh` in post-build and flash `<project_name>_crc16` (`*.bin` / `*.hex` / `*.s37`). The plain image does not contain a valid reference CRC at `check_sum`, so IMC will fail.
+>
+>- Keep the script address list identical to the Flash regions configured for IMC in your OEM code.
+>
 >- If, during project configuration, you choose **Link to SDK and Copy Project Structures** or **Link to Source**, copy `sl_iec60730_cal_crc16.sh` or `sl_iec60730_cal_crc32.sh` into the `lib/crc` folder of your project directory (or point the CMake path at `iec60730_<version>/lib/crc/`).
->- After the build of a project is complete, it will call the command in the Post-build steps to create <project_name>_crc16 or <project_name >_crc32 files with the extension *.bin, *.hex, and *.s37.
+>
+>- After the build completes, Post-build creates `<project_name>_crc16` or `<project_name>_crc32` files with extensions `*.bin`, `*.hex`, and `*.s37`.
 ---
 
 ![Figure 10 Result after Post-build complete](./images/figure_10_result_after_post_build_complete.png)
@@ -242,32 +272,82 @@ sl_iec60730_irq_cfg_t oem_irq_config;
 
 These three variables are used for interrupt, invariable memory check and variable memory check.
 
-### 2. To perform an invariable memory check, the library uses CRC (Cyclic Redundancy Check) calculations for Flash memory. If the user calculates using hardware, the user will need to initialize the GPCRC module to support the calculation. Users can also enable `#define SL_IEC60730_CRC_USE_SW_ENABLE` for software calculation. To calculate the CRC value, It will have two options:
+### 2. To perform an invariable memory check, configure OEM Flash regions (must match post-build CRC script)
 
-To perform an invariable memory check, the IEC60730 library uses CRC (Cyclic Redundancy Check) calculations for Flash memory.
-
-CRC calculation can be performed using either the GPCRC hardware peripheral or a software implementation by enabling:
+The IEC60730 library uses CRC for Flash (IMC). CRC can use GPCRC hardware or software via:
 
 ```c
 #define SL_IEC60730_CRC_USE_SW_ENABLE
 ```
 
-If hardware CRC calculation is used, the GPCRC module must be initialized before running the Flash memory test.
+If hardware CRC is used, initialize GPCRC before the Flash test.
 
-The library supports two CRC calculation methods:
+The library supports two methods:
 
-- Calculate CRC from a user-defined Flash start address to the end of the application image.
-- Calculate CRC for multiple Flash regions by specifying the start and end addresses of each region.
+- **Single continuous region:** from a Flash start address to `check_sum` (`SL_IEC60730_ROM_END`).
+- **Multiple discontinuous regions:** start/end pairs for each area to protect (gaps between regions are **not** included in the CRC).
 
-For more details, refer to:
+#### Why the demo uses multiple regions
 
-```text
-oem_iec60730.c
+The demo configures **three** Flash regions (not the full image) to show how IMC can protect **selected** Flash ranges when code or data is split (for example several application/image sections with unused gaps between them). That matches the multi-region capability described in the IMC library documentation.
+
+In the demo, `OEM_FLASH_OFFSET` is counted in **`uint32_t` pointer units**. For GCC, `OEM_FLASH_OFFSET = 20` → each region is `20 × 4 = 80` bytes (`0x50`). Regions are placed with a one-region gap between them so the CRC deliberately skips the hole:
+
+| Region | Start | End (exclusive) | Size |
+| -- | -- | -- | -- |
+| 0 | `0x08000000` | `0x08000050` | `0x50` |
+| 1 | `0x080000A0` | `0x080000F0` | `0x50` |
+| 2 | `0x08000140` | `0x08000190` | `0x50` |
+
+Gaps `0x08000050`–`0x080000A0` and `0x080000F0`–`0x08000140` are **not** CRC’d. The post-build address list is therefore:
+
+`0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190`
+
+(start0 end0 start1 end1 start2 end2).
+
+#### OEM code you must modify — `oem/src/oem_iec60730.c`
+
+Highlight and edit these symbols so runtime IMC matches your product Flash map **and** Section 5 post-build script arguments:
+
+```c
+/* --- MODIFY: number of Flash IMC regions --- */
+#define OEM_NUM_FLASH_REGIONS_CHECK   3
+
+#if defined(__GNUC__)
+/* --- MODIFY: region size in uint32_t words (20 words = 0x50 bytes) --- */
+#define OEM_FLASH_OFFSET              20
+#elif defined(__ICCARM__)
+#define OEM_FLASH_OFFSET              80   /* IAR demo uses byte offsets in casts below */
+#endif
+
+#if defined(__GNUC__)
+/* --- MODIFY: Flash IMC regions (must match CRC script address list) --- */
+const sl_iec60730_imc_test_region_t oem_imc_region_test[OEM_NUM_FLASH_REGIONS_CHECK] =
+{ { .start = SL_IEC60730_ROM_START, .end = SL_IEC60730_ROM_START + OEM_FLASH_OFFSET },
+  { .start = SL_IEC60730_ROM_START + 2 * OEM_FLASH_OFFSET, .end = SL_IEC60730_ROM_START + 3 * OEM_FLASH_OFFSET },
+  { .start = SL_IEC60730_ROM_START + 4 * OEM_FLASH_OFFSET, .end = SL_IEC60730_ROM_START + 5 * OEM_FLASH_OFFSET } };
+#endif
 ```
 
-The calculated CRC value is stored at the end of the application image and is used by the IEC60730 Flash memory verification routine during runtime.
+Wire the table in `oem_iec60730_init()`:
 
-For GCC-based projects, the CRC value is automatically generated during the post-build process using the provided CRC calculation scripts or the Silicon Labs IEC60730 CRC Tool described in Section 5.
+```c
+oem_imc_param.gpcrc = SL_IEC60730_DEFAULT_GPRC;
+oem_imc_test.region = oem_imc_region_test;
+oem_imc_test.number_of_test_regions = OEM_NUM_FLASH_REGIONS_CHECK;
+sl_iec60730_imc_init(&oem_imc_param, &oem_imc_test);
+```
+
+**Single continuous region alternative** (script argument `"0x8000000"` only):
+
+```c
+#define OEM_NUM_FLASH_REGIONS_CHECK   1
+
+const sl_iec60730_imc_test_region_t oem_imc_region_test[OEM_NUM_FLASH_REGIONS_CHECK] =
+{ { .start = SL_IEC60730_ROM_START, .end = SL_IEC60730_ROM_END } };
+```
+
+The reference CRC is written at `check_sum` by the post-build script (Section 5). Flash the `*_crc16` / `*_crc32` image so runtime IMC can compare against `SL_IEC60730_REF_CRC`.
 
 ### 3. Configure Watchdog Test: this configuration determines which watchdog unit will be checked.The library does not initialize the watchdog units, the user should do the initialization. We support configuration for watchdog module
 
