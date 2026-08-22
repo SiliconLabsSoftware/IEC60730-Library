@@ -71,7 +71,8 @@ void integration_test_clock_config(void)
 {
 #if (_SILICON_LABS_32B_SERIES_2_CONFIG >= 1)
   /* System clock is default FSRCO - 20Mhz */
-  /* Watchdog and LETIMER clock is default LFRCO - 32Khz */
+  /* Watchdog and LETIMER clock use LFRCO - 32Khz (do not rely on LFXO /
+   * clock_manager DEFAULT_LF, which breaks watchdog POST under Simplicity SDK). */
   /* FSRCO clocks for timers at fixed 20Mhz */
   CMU_ClockSelectSet(cmuClock_TIMER0, cmuSelect_FSRCO);
 
@@ -80,16 +81,18 @@ void integration_test_clock_config(void)
 #if (_SILICON_LABS_32B_SERIES_2_CONFIG > 1)
   CMU_ClockEnable(cmuClock_TIMER0, true);
   CMU_ClockEnable(cmuClock_LETIMER0, true);
+  CMU_ClockEnable(cmuClock_FSRCO, true);
+  CMU_ClockEnable(cmuClock_LFRCO, true);
 #if (defined(WDOG0) && (SL_IEC60730_WDOG0_ENABLE == 1))
+  CMU_ClockSelectSet(cmuClock_WDOG0, cmuSelect_LFRCO);
   CMU_ClockEnable(cmuClock_WDOG0, true);
 #endif
 #if (defined(WDOG1) && (SL_IEC60730_WDOG1_ENABLE == 1))
+  CMU_ClockSelectSet(cmuClock_WDOG1, cmuSelect_LFRCO);
   CMU_ClockEnable(cmuClock_WDOG1, true);
 #endif
   CMU_ClockEnable(cmuClock_GPCRC, true);
   CMU_ClockEnable(cmuClock_BURAM, true);
-  CMU_ClockEnable(cmuClock_FSRCO, true);
-  CMU_ClockEnable(cmuClock_LFRCO, true);
 #endif
 #else
   /* System clock is default HFRCO - 19Mhz */
@@ -193,7 +196,8 @@ __WEAK sl_iec60730_test_result_t sl_iec60730_cpu_registers_post(void)
 /* IEC60730 safe state */
 void sl_iec60730_safe_state(sl_iec60730_test_failure_t failure)
 {
-  printf("Fail-Test. Error status: %d\n", failure);
+  /* Avoid USART printf — can block on TXBL under HWFC / disabled VCOM. */
+  (void)failure;
   LABEL_DEF(IEC60730_SAFE_STATE_BKPT);
   SL_IEC60730_RSTCAUSES_CLEAR();
   while (1) {

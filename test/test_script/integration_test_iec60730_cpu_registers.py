@@ -86,7 +86,8 @@ class iec60730_cpu_regs(unittest.TestCase, iec60730TestBase):
                                 typeflags=enums.JLinkBreakpoint.ANY)
 
     self.adapter.reset()
-    pc = self.adapter.run_to_breakpoint(0.5)
+    # Allow platform init + POST under Simplicity SDK clock_manager/iostream.
+    pc = self.adapter.run_to_breakpoint(5.0)
     logging.info("Halted at label: " + self.get_label(pc))
     self.assertEqual(pc, asm_labels[bkp_label_inject],\
                     "DUT failed to stop at " + bkp_label_inject + ", " + hex(asm_labels[bkp_label_inject]) +\
@@ -104,7 +105,7 @@ class iec60730_cpu_regs(unittest.TestCase, iec60730TestBase):
     reg_value = self.adapter.register_read(reg_test)
     logging.info("New value of " + reg_test + ": " + str(int_to_bytes(reg_value)))
 
-    pc = self.adapter.run_to_breakpoint(0.1)
+    pc = self.adapter.run_to_breakpoint(1.0)
     logging.info("Halted at label: " + self.get_label(pc) + " " + hex(pc))
 
     self.assertEqual(pc, asm_labels[bkp_testcase_pass], \

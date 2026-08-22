@@ -5,7 +5,7 @@ import fileinput
 # Read in the file
 full_path = os.path.realpath(__file__)
 dir_path = os.path.dirname(full_path)
-lib_iec60730_file = dir_path + "/src/lib_iec60730_cmake/lib_iec60730.cmake"
+lib_iec60730_file = dir_path + "/src/cmake_iar/lib_iec60730.cmake"
 text_search = "sl_udelay_armv6m_gcc.S"
 text_replace = "sl_udelay_armv6m_iar.s"
 is_crc32 = False

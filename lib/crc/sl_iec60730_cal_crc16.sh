@@ -41,7 +41,7 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
   linux*)
     OS_NAME="linux"
     ;;
-  msys*)
+  msys*|mingw*|cygwin*)
     OS_NAME="windows"
     ;;
   *)
@@ -49,7 +49,7 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
     ;;
 esac
 
-if [ -z ${BUILD_DIR} ]; then
+if [ -z "${BUILD_DIR}" ]; then
   MAPFILE=${PROJ_NAME}${SUFFIX_NON_SECURE}.map
   INPUT_HEXFILE=${PROJ_NAME}${SUFFIX_NON_SECURE}.hex
   OUTPUT_HEXFILE=${PROJ_NAME}${SUFFIX_NON_SECURE}${SUFFIX}.hex
@@ -77,34 +77,34 @@ echo OutputSrec: ${OUTPUT_SRECFILE}
 echo OS: ${OS_NAME}
 
 if [ "${OS_NAME}" = "windows" ]; then
-  SREC_CAT=${SREC_PATH}/srec_cat.exe
-  SREC_CMP=${SREC_PATH}/srec_cmp.exe
+  SREC_CAT="${SREC_PATH}/srec_cat.exe"
+  SREC_CMP="${SREC_PATH}/srec_cmp.exe"
 elif [ "${OS_NAME}" = "linux" ]; then
   SREC_CAT=srec_cat
   SREC_CMP=srec_cmp
 fi
 
-if [ -e ${TEMP_FILE} ]; then
-  rm -rf ${TEMP_FILE}
+if [ -e "${TEMP_FILE}" ]; then
+  rm -rf "${TEMP_FILE}"
 fi
-touch ${TEMP_FILE}
+touch "${TEMP_FILE}"
 
 if [ "${TOOL_CHAINS}" = "IAR" ]; then
-  grep -n "CHECKSUM" ${MAPFILE}>${TEMP_FILE}
+  grep -n "CHECKSUM" "${MAPFILE}">"${TEMP_FILE}"
   while IFS=' ' read -r a1 a2 a3 remainder; do
     if [ $a2 = "CHECKSUM" ]; then
       LINE_NO=${a1%%:*}
       # CRC_ADDR=$a3
       CRC_ADDR=$( echo "$a3" | sed s/\'//g)
     fi
-  done < ${TEMP_FILE}
+  done < "${TEMP_FILE}"
 else # GCC
-  grep -n "PROVIDE (check_sum = .)" ${MAPFILE}>${TEMP_FILE}
+  grep -n "PROVIDE (check_sum = .)" "${MAPFILE}">"${TEMP_FILE}"
   # Find address of check_sum
   while IFS=' ' read -r a1 a2 remainder; do
     LINE_NO=${a1%%:*}
     CRC_ADDR=$a2
-  done < ${TEMP_FILE}
+  done < "${TEMP_FILE}"
 fi
 
 echo Start address: ${START_ADDR}
@@ -114,50 +114,50 @@ if [ "$(( $NUMBER_ELEMENT % 2 ))" -eq 0 ]; then
 
 #printf "=== Calculate multiple regions: $START_ADDR and $END_ARR_ADDR to ${CRC_ADDR}\n"
 
-${SREC_CAT} \
-  ${INPUT_HEXFILE} -intel \
+"${SREC_CAT}" \
+  "${INPUT_HEXFILE}" -intel \
   -crop ${START_ADDR} \
   -crc16-l-e ${CRC_ADDR} -xmodem \
-  -o ${TEMP_FILE} -intel >/dev/null 2>&1
+  -o "${TEMP_FILE}" -intel >/dev/null 2>&1
 
-${SREC_CAT} \
-  ${INPUT_HEXFILE} -intel \
-  -exclude -within ${TEMP_FILE} -intel \
-  ${TEMP_FILE} -intel \
-  -o ${OUTPUT_HEXFILE} -intel
+"${SREC_CAT}" \
+  "${INPUT_HEXFILE}" -intel \
+  -exclude -within "${TEMP_FILE}" -intel \
+  "${TEMP_FILE}" -intel \
+  -o "${OUTPUT_HEXFILE}" -intel
 
 else
 
 #printf "=== Calculate from ${START_ADDR} to ${CRC_ADDR}\n"
 
-${SREC_CAT} \
-  ${INPUT_HEXFILE} -intel \
+"${SREC_CAT}" \
+  "${INPUT_HEXFILE}" -intel \
   -crop ${START_ADDR} ${CRC_ADDR}\
   -fill 0xFF ${START_ADDR} ${CRC_ADDR}\
   -crc16-l-e ${CRC_ADDR} -xmodem \
-  -o ${TEMP_FILE} -intel
+  -o "${TEMP_FILE}" -intel
 
-${SREC_CAT} \
-  ${INPUT_HEXFILE} -intel \
-  -exclude -within ${TEMP_FILE} -intel \
-  ${TEMP_FILE} -intel \
-  -o ${OUTPUT_HEXFILE} -intel
+"${SREC_CAT}" \
+  "${INPUT_HEXFILE}" -intel \
+  -exclude -within "${TEMP_FILE}" -intel \
+  "${TEMP_FILE}" -intel \
+  -o "${OUTPUT_HEXFILE}" -intel
 
 fi
 
-rm -rf ${TEMP_FILE}
+rm -rf "${TEMP_FILE}"
 
 echo Comparing ...
-${SREC_CMP} \
-  ${INPUT_HEXFILE} -intel ${OUTPUT_HEXFILE} -intel -v
+"${SREC_CMP}" \
+  "${INPUT_HEXFILE}" -intel "${OUTPUT_HEXFILE}" -intel -v
 
-${SREC_CAT} \
-  ${OUTPUT_HEXFILE} -intel \
+"${SREC_CAT}" \
+  "${OUTPUT_HEXFILE}" -intel \
   -offset -${START_ARR_ADDR} \
-  -o ${OUTPUT_BINFILE} -binary
+  -o "${OUTPUT_BINFILE}" -binary
 
-${SREC_CAT} \
-  ${OUTPUT_HEXFILE} -intel \
-  -o ${OUTPUT_SRECFILE} -address-length=4
+"${SREC_CAT}" \
+  "${OUTPUT_HEXFILE}" -intel \
+  -o "${OUTPUT_SRECFILE}" -address-length=4
 
 echo Build done!
