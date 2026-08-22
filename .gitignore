@@ -1,6 +1,9 @@
 *.json
 GNU ARM */
 build
+# The rule above matches any path component named "build", including the
+# script/build helper that the Makefile invokes.
+!script/build
 test/test_script/__pycache__
 *.temp-stream*
 simplicity_sdk/src/*
@@ -10,5 +13,11 @@ log/
 *.html
 !404.html
 !index.html
+!readme.html
 site
 docs/document_api_iec60730_library/
+**/*.slconf
+# Accidental SLT export at repo root
+/autogen/
+# Temporary stash used by script/build when building unit+integration together
+.docker-build-stash/

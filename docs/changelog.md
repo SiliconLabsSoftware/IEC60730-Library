@@ -1,8 +1,18 @@
+2.1.0 Release
+
+   - Add supported Devices: EFR32FG23 family (confirmed device: EFR32FG23B)
+
+   - Supported Compilers: GCC
+
+   - Update the IEC60730 Library Simplicity SDK extension to version 2.0.0 to align with Simplicity SDK 2026.6.0
+
+   - Support unit testing and integration testing for EFR32FG23
+
 2.0.0 Release
 
    - Supported Device: EFR32MG families
 
-   - Supported Compilers: GCC, IAR
+   - Supported Compilers: GCC
 
    - Update project from make file to CMake file
 

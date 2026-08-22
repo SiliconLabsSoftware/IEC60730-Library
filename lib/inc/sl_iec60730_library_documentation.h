@@ -58,19 +58,18 @@
  *
  * \subsection families_sec Supported Families
  *
- * This library supports **EFR32MG** families (confirmed devices included: EFR32MG12, EFR32MG21, EFR32MG22, EFR32MG24).
+ * This library supports **EFR32FG23x** families (confirmed devices included: EFR32FG23B) and **EFR32MG** families (confirmed devices included: EFR32MG21, EFR32MG22, EFR32MG24.
  *
  * @section software_requirements Software Requirements
  * The IEC60730 library dependencies:
  * -# CMSIS package.
  * -# Silicon Labs Devices header files.
  *
- * Users could get dependency source files from the GSDK suite (platform).
- * To get the latest version of GSDK, please refer to
- * <a href="https://github.com/SiliconLabs/gecko_sdk"> Gecko SDK.</a>
+ * Users can obtain dependency source files from the Simplicity SDK Suite.
+ * For the latest SDK releases, refer to Simplicity Studio 6 and the Simplicity SDK Suite documentation.
  *
- * @note The IEC60730 library support extension for GSDK 4.4.2 using
- * <a href="https://www.silabs.com/developers/simplicity-studio"> Simplicity Studio 5.</a>
+ * @note The IEC60730 library is provided as an extension for 
+ * Simplicity SDK Suite 2026.6.0 and is supported in Simplicity Studio 6.
  *
  * Details on the validation test setup used internally by Silicon Labs can
  * be found at \link IEC60730_VERIFICATION IEC60730 Test Specification\endlink.
@@ -97,7 +96,7 @@
  * sl_iec60730_bist() at the line with sl_iec60730_cpu_registers_bist(), and
  * single-step into the function.
  *
- * @section document Generate document API
+ * @section section Generate Documentation API
  *
  * @subsection doxygen Generate document
  *
@@ -231,7 +230,7 @@
  *
  * - SLC-CLI
  *
- *   - slc version 5.9.1.1
+ *   - slc version 6.0.23
  *
  * - Source code control:
  *
@@ -241,14 +240,14 @@
  *
  * - SDK support:
  *
- *   - Gecko SDK Suite v4.4.2
+ *   - Simplicity SDK Suite 2026.6.0
  *
- * @note If you want this extension to match your geck_sdk change the sdk field in the `iec60730.slce` file.
+ * @note If you want this extension to match a different Simplicity SDK Suite version, update the sdk field in the `iec60730.slce` file.
  * For example, you want to use simplicity sdk version:
  * ```sh
  * sdk:
  * id: simplicity_sdk
- * version: 2024.6.1
+ * version: 2026.6.0
  * ```
  *
  * @section system_architecture_spec System Architecture

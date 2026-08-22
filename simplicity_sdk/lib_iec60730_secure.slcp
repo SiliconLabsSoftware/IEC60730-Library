@@ -6,15 +6,16 @@ description: >
   Source code lib IEC60730 for unit test.
 category: Example|iec60730
 
-sdk: {id: gecko_sdk, version: 4.4.2}
-
 sdk_extension:
-  - {id: iec60730, version: 1.1.0}
+  - {id: iec60730, version: 2.0.0, vendor: silabs}
+sdk: {id: simplicity_sdk, vendor: silabs, version: 2026.6.0}
 
 component:
   - id: sl_system
   - id: device_init
-  - id: device_init_hfrco
+  # Replace device_init_hfrco with clock_manager so SL_CATALOG_CLOCK_MANAGER_PRESENT
+  # is defined and sl_debug_swo_init keeps TRACECLK on SYSCLK (avoids TPIU hang).
+  - id: clock_manager
   - id: emlib_wdog
   - id: emlib_gpcrc
   - id: uartdrv_core
@@ -24,6 +25,9 @@ component:
   - id: iostream_usart
     instance: [vcom]
   - id: iostream_retarget_stdio
+  - id: udelay
+  - id: iec60730_configuration_over_swo_stub
+    from: iec60730
   - id: iec60730_unit_test
     from: iec60730
   - id: iec60730_custom_linker
@@ -37,16 +41,22 @@ configuration:
     value: 1
   - name: SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE
     value: 80
-  - name: SL_DEVICE_INIT_HFRCO_BAND
-    value: cmuHFRCOFreq_19M0Hz
-    condition:
-      - device_series_1
+  # CTS/RTS blocks USART_Tx when VCOM/board controller is not driven (COS stub).
+  - name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
+    value: usartHwFlowControlNone
   - name: SL_IEC60730_IRQ_STATUS_ENABLE
     value: 1
   - name: SL_IEC60730_SAVE_STAGE_ENABLE
     value: 1
   - name: SL_IEC60730_CRC_DEBUG_ENABLE
     value: 0
+  # Prefer LFRCO for LF / WDOG (no device_init_lfxo with clock_manager).
+  - name: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE
+    value: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE_LFRCO
+  - name: SL_CLOCK_MANAGER_WDOG0CLK_SOURCE
+    value: CMU_WDOG0CLKCTRL_CLKSEL_LFRCO
+  - name: SL_CLOCK_MANAGER_WDOG1CLK_SOURCE
+    value: CMU_WDOG1CLKCTRL_CLKSEL_LFRCO
 toolchain_settings:
   - option: linkerfile
     value: autogen/linkerfile_iec60730.ld

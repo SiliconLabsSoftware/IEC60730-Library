@@ -1,0 +1,23 @@
+package: iec60730
+id: iec60730_configuration_over_swo_stub
+label: IEC60730 Configuration Over SWO Stub
+description: >
+  Stub that provides configuration_over_swo without debug_swo / CoreSight TPIU init.
+  board_control on WSTK requires configuration_over_swo; the real Silabs component
+  pulls debug_swo and calls sl_debug_swo_init(), which drops J-Link on Series 2
+  when the debugger is attached. IEC60730 tests use USART VCOM only.
+quality: test
+category: IEC60730
+provides:
+  - name: configuration_over_swo
+requires:
+  - name: status
+  - name: enum
+include:
+  - path: ./components/iec60730_configuration_over_swo_stub/inc
+    file_list:
+      - path: sl_cos.h
+source:
+  - path: ./components/iec60730_configuration_over_swo_stub/src/sl_cos_stub.c
+ui_hints:
+  visibility: never

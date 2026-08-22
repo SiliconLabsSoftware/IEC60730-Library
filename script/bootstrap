@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+#
+# Bootstrap host OS packages and/or Silicon Labs SLT tooling for IEC60730-Library.
+#
+# Usage:
+#   ./script/bootstrap           # packages + silabs
+#   ./script/bootstrap packages  # OS packages only
+#   ./script/bootstrap silabs    # SLT + recipe.toml packages only
+#
+
+set -euxo pipefail
+
+if [[ -n ${BASH_SOURCE[0]} ]]; then
+    script_path="${BASH_SOURCE[0]}"
+else
+    script_path="$0"
+fi
+script_dir="$(realpath "$(dirname "${script_path}")")"
+repo_dir="$(dirname "${script_dir}")"
+
+install_packages_apt()
+{
+    echo 'Installing script dependencies...'
+
+    # SLT installs and manages the heavy toolchains (gcc-arm-none-eabi, ninja,
+    # cmake, java21, commander) via recipe.toml, so they are intentionally NOT
+    # listed here. `bzip2` is needed to extract the Commander tarball that SLT
+    # downloads, `libgl1` is a runtime dependency of Simplicity Commander, and
+    # `srecord` is required for IEC60730 CRC post-build scripts.
+    sudo apt-get update
+    apt_packages=(
+        bzip2
+        ccache
+        coreutils
+        git
+        git-lfs
+        libgl1
+        python3-pip
+        python3-setuptools
+        srecord
+        unzip
+        wget
+    )
+    sudo apt-get --no-install-recommends install -y "${apt_packages[@]}"
+}
+
+install_packages_opkg()
+{
+    echo 'opkg not supported currently' && false
+}
+
+install_packages_rpm()
+{
+    echo 'rpm not supported currently' && false
+}
+
+install_packages_brew()
+{
+    echo 'Installing script dependencies...'
+
+    brew_packages=(
+        ccache
+        coreutils
+        git
+        git-lfs
+        grep
+        srecord
+        unzip
+        wget
+    )
+    brew install "${brew_packages[@]}"
+}
+
+install_packages_source()
+{
+    echo 'source not supported currently' && false
+}
+
+install_packages()
+{
+    PM=source
+    if command -v apt-get; then
+        PM=apt
+    elif command -v rpm; then
+        PM=rpm
+    elif command -v opkg; then
+        PM=opkg
+    elif command -v brew; then
+        PM=brew
+    fi
+    install_packages_$PM
+}
+
+do_bootstrap_silabs()
+{
+    echo "Bootstrapping Silabs SLT / Simplicity SDK"
+    # shellcheck source=bootstrap_silabs
+    source "${script_dir}/bootstrap_silabs"
+    main_bootstrap_silabs
+}
+
+main()
+{
+    if [ $# == 0 ]; then
+        install_packages
+        do_bootstrap_silabs
+    elif [ "$1" == 'packages' ]; then
+        install_packages
+    elif [ "$1" == 'silabs' ]; then
+        do_bootstrap_silabs
+    else
+        echo >&2 "Unsupported action: $1. Supported: packages, silabs"
+        exit 128
+    fi
+
+    echo "Bootstrap completed successfully."
+    echo "Next: source ./script/set_env.sh"
+}
+
+main "$@"

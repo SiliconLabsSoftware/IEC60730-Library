@@ -65,11 +65,11 @@ function flash_image {
 function run_image {
     file_out=$1
     component=$(basename $file_out .s37)
-    
+
     if [[ "$component" == "integration_test_iec60730_invariable_memory" ]]; then
         file_out="${file_out%/*}/integration_test_iec60730_invariable_memory_crc16.s37"
     fi
-    
+
     if [[ -f $LOG_PATH/${component}.log ]]; then
         rm -rf $LOG_PATH/${component}.log
     fi
@@ -84,7 +84,7 @@ function run_image {
         if [ -f "$TEST_SCRIPT_PATH/$component.py" ] && [ -d "$lst_path" ]; then
             printf "\n= Start run integration test: $component\n"
             echo $(pwd)
-            if [[ "$component" == "integration_test_iec60730_watchdog" ]] && [[ "$OPTION_INTEGRATION_TEST" == *"INTEGRATION_TEST_WDOG1_ENABLE=ON"* ]]; then                
+            if [[ "$component" == "integration_test_iec60730_watchdog" ]] && [[ "$OPTION_INTEGRATION_TEST" == *"INTEGRATION_TEST_WDOG1_ENABLE=ON"* ]]; then
                 log=$(CHIP=$DEVICE_NAME FILE_NAME=$component ADAPTER_SN=$ADAPTER_SN LST_PATH=$lst_path JLINK_PATH=$JLINK_PATH INTEGRATION_TEST_WDOG1_ENABLE=enable python3 $TEST_SCRIPT_PATH/$component.py $COMPILER)
             elif [[ "$component" == "integration_test_iec60730_variable_memory" ]] && [[ "$OPTION_INTEGRATION_TEST" == *"INTEGRATION_TEST_USE_MARCHX_DISABLE=ON"* ]]; then
                 log=$(CHIP=$DEVICE_NAME FILE_NAME=$component ADAPTER_SN=$ADAPTER_SN LST_PATH=$lst_path JLINK_PATH=$JLINK_PATH INTEGRATION_TEST_USE_MARCHX_DISABLE=disable python3 $TEST_SCRIPT_PATH/$component.py $COMPILER)
