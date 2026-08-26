@@ -1,0 +1,44 @@
+name: 00-Check-Code-Convention
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+      - "release/**"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to test"
+        type: string
+        default: "main"
+
+jobs:
+  job1:
+    name: Check coding convention
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger
+        run: echo "Triggered by ${{github.event_name}} event"
+      - name: Check Branch Input
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            if [ -z "${{ github.event.inputs.branch }}" ]; then
+              echo "Branch input is required for manual trigger."
+              exit 1
+            fi
+          fi
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}"
+          fetch-depth: 0
+      - name: Log Current Branch and Commit
+        run: |
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current commit: $(git rev-parse HEAD)"
+      - name: Check Code Convention
+        uses: SiliconLabsSoftware/devs-coding-convention-tool@master
+        with:
+          exclude-regex: '^docs/.*|^site/.*|^assets/.*|^pictures/.*|^test/test_script/.*|^log/.*|^sample/.*|^cmake/.*|^components/.*|^lib/inc/coding_standard\.h$|^lib/inc/silabs_license_agreement\.h$|^lib/inc/sl_iec60730_library_documentation\.h$|^README\.md$'
+          codespell-ignore-words: 'teh,foobar'
+          codespell-skip-paths: ''

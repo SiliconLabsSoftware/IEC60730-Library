@@ -8,16 +8,13 @@ description: >
   This is a Safety Libraries IEC60730 Example Demo.
 author: "Silicon Laboratories, Inc."
 
-sdk: {id: gecko_sdk, version: 4.4.2}
-
 sdk_extension:
-  - {id: iec60730, version: 1.1.0}
+  - {id: iec60730, version: 2.0.0, vendor: silabs}
+sdk: {id: simplicity_sdk, vendor: silabs, version: 2026.6.0}
 
 configuration:
-  - name: SL_DEVICE_INIT_HFRCO_BAND
-    value: cmuHFRCOFreq_19M0Hz
-    condition:
-     - device_series_1
+  - name: SL_BOARD_ENABLE_VCOM
+    value: 0
   - name: SL_IOSTREAM_USART_VCOM_PERIPHERAL
     value: USART0
     condition:
@@ -26,6 +23,26 @@ configuration:
     value: 0
     condition:
      - device_series_2
+  - name: SL_IOSTREAM_USART_VCOM_CONVERT_BY_DEFAULT_LF_TO_CRLF
+    value: 1
+  - name: SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE
+    value: 80
+  # CTS/RTS blocks USART_Tx when VCOM/board controller is not driven (COS stub).
+  - name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
+    value: usartHwFlowControlNone
+  - name: SL_IEC60730_IRQ_STATUS_ENABLE
+    value: 1
+  - name: SL_IEC60730_SAVE_STAGE_ENABLE
+    value: 1
+  - name: SL_IEC60730_CRC_DEBUG_ENABLE
+    value: 0
+  # Prefer LFRCO for LF / WDOG (no device_init_lfxo with clock_manager).
+  - name: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE
+    value: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE_LFRCO
+  - name: SL_CLOCK_MANAGER_WDOG0CLK_SOURCE
+    value: CMU_WDOG0CLKCTRL_CLKSEL_LFRCO
+  - name: SL_CLOCK_MANAGER_WDOG1CLK_SOURCE
+    value: CMU_WDOG1CLKCTRL_CLKSEL_LFRCO
 
 define:
   - name: HAL_CONFIG_HEADER
@@ -34,12 +51,16 @@ define:
 component:
   - id: sl_system
   - id: device_init
+  # Replace device_init_hfrco with clock_manager so SL_CATALOG_CLOCK_MANAGER_PRESENT
+  # is defined and sl_debug_swo_init keeps TRACECLK on SYSCLK (avoids TPIU hang).
+  - id: clock_manager
   - id: uartdrv_core
   - id: iostream_usart
     instance: [vcom]
   - id: iec60730_lib
     from: iec60730
-  - id: device_init_hfrco
+  - id: iec60730_configuration_over_swo_stub
+    from: iec60730
   - id: udelay
 include:
   - path: ./
@@ -65,6 +86,7 @@ source:
   - path: ./oem/src/oem_iec60730_functions.c
   - path: ./oem/src/iec60730_stub_functions.c
   - path: ./oem/src/oem_iec60730_timer.c
+
 readme:
   - path: ./readme.html
 
@@ -72,6 +94,7 @@ ui_hints:
   highlight:
     - path: readme.html
       focus: false
+
 toolchain_settings:
   - option: linkerfile
     value: autogen/linkerfile_iec60730.ld

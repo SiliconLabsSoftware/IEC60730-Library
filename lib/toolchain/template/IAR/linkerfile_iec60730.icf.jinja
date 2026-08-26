@@ -126,6 +126,10 @@ define region MAIN_FLASH_region   = mem:[from 0x{{ '%0x' % app_flash_start }}   
 {%- if iec60730_custom_linker_enable %}
 define region CLASSBRAM_region   = mem:[from __ICFEDIT_region_CLASSBRAM_start__   to __ICFEDIT_region_CLASSBRAM_end__];
 define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+/* 2 KiB heap matches Gecko SDK SL_HEAP_SIZE / GCC .memory_manager_heap.
+ * Placed in .stack_order after CSTACK so it stays contiguous and does not
+ * overflow the reduced IEC60730 RAM region after CLASSBRAM.
+ */
 define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
 define block CHECKSUM  with alignment = 64 { section .checksum };
 

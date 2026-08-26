@@ -7,7 +7,7 @@ The IEC60730 library for EFR32 provides a basic implementation required to suppo
 
 ## License
 
-Please refer [License](../LICENSE.md)
+Please refer [License](./license.md)
 
 ## Release Notes
 
@@ -61,20 +61,20 @@ The project has a CMake template that supports running tests. Follow the steps b
 
 #### Install slc-cli
 
-- Follow this link to Install slc: [Install slc](https://docs.silabs.com/simplicity-studio-5-users-guide/latest/ss-5-users-guide-tools-slc-cli/02-installation)
-- Follow this link to [Install Amazon Corretto 17 on Debian-Based Linux](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html)
+- Follow the Simplicity Studio 6 User Guide to install Simplicity Studio and the Simplicity CLI (slc): [Install Simplicity Studio](https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio).
+- Follow this guide to install Amazon Corretto 17 on Linux: [Install Amazon Corretto 17](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
 
 ##### How to use slc
 
 Add the path to the expanded slc-cli to your PATH sh export PATH=$PATH:~/SimplicityStudio/slc_cli_linux/slc_cli/
 
-Configure SDK. For example sh slc configuration --sdk ~/SimplicityStudio/SDKs/gecko_sdk/
+Configure SDK. For example sh slc configuration --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
 
-Run slc signature trust --sdk <path_to_the_gecko_sdk> if you have not yet trusted your SDK.
+Run slc signature trust --sdk <path_to_the_simplicity_sdk> if you have not yet trusted your SDK.
 
-For example your SDK locate at ~/SimplicityStudio/SDKs/gecko_sdk/. Run `slc signature trust --sdk ~/SimplicityStudio/SDKs/gecko_sdk/`
+For example your SDK locate at /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p. Run `slc signature trust --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p`
 
-Set toolchain For example sh slc configuration -gcc=~/SimplicityStudio-5/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/
+Set toolchain For example sh slc configuration --gcc-toolchain=~/SimplicityStudio/developer/toolchains/gnu_arm/12.2.rel1_2023.7
 
 Generate the project sh slc generate \path\to\example.slcp -np -d <project_destination> -name=<new_name> --with <board_or_device_that_supports_project>
 
@@ -92,11 +92,16 @@ Choose one of the options below to generate the project
 ##### For example
 
 ```sh
-$ GSDK=~/SimplicityStudio/SDKs/gecko_sdk
-$ slc configuration --sdk=$GSDK --gcc-toolchain=/Applications/ARM
-$ slc generate $GSDK/app/common/example/blink_baremetal -np -d blinky -name=blinky -o makefile
-   --with brd4166a
-$ slc signature trust -extpath $GSDK/extension/IEC60730_Libs
+$ SDK=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+$ slc configuration --sdk=$SDK
+$ slc signature trust --sdk $SDK
+$ slc signature trust -extpath $SDK/extension/IEC60730_Libs
+$ slc generate \
+    $SDK/app/common/example/blink_baremetal \
+    -np \
+    -d blinky \
+    -name=blinky \
+    --with brd4264c
 ```
 
 ### Run unit test

@@ -10,11 +10,11 @@ Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH
 If you want to calculate from the start address to the end address of Flash:
 
 ```sh
-$ export SDK_PATH=~/SimplicityStudio/SDKs/gecko_sdk
-$ export TOOL_DIRS=~/Downloads/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
+$ export SDK_PATH=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+$ export TOOL_DIRS=/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
 $ export TOOL_CHAINS=GCC
 $ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export PATH=$PATH:/media/slc_cli/slc_cli_linux_check/slc_cli
+$ export PATH=$PATH:/home/svc_sqa_automation/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
 $ export FLASH_REGIONS_TEST=0x8000000
 ```
 
@@ -24,54 +24,11 @@ Or if you want to calculate multiple regions:
 $ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
 ```
 
-with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4187c (chip EFR32MG24)
-
-## Build test for IAR tool
-
-To build tests for the IAR tool, if you run a manual test, you must run the pre-build command below.
-
-```sh
-$ make prepare
-$ cd build
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DPRE_BUILD_IAR_TOOL=ON -DBOARD_NAME=${BOARD_NAME} $OPTION_PRE_BUILD_IAR_TOOL
-$ cd ..
-$ make prepare
-```
-
-> [!NOTE]
-> Keep `$OPTION_PRE_BUILD_IAR_TOOL` the same when running unit test CMake config
-
-For example, build unit test:
-
-```sh
-$ make prepare
-$ cd build
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DPRE_BUILD_IAR_TOOL=ON -DBOARD_NAME=brd4187c -DENABLE_CRC_USE_SW=ON -DENABLE_CAL_CRC_32=ON
-$ cd ..
-$ make prepare
-```
-
-or you can run bash script `pre_build_iar.sh` in path [./../simplicity_sdk/pre_build_iar.sh]() with:
-
-- $1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48
-- $2: OPTION_UNIT_TEST: -DENABLE_CRC_USE_SW=ON , etc...
-
-```sh
-$ bash pre_build_iar.sh $BOARD_NAME $OPTION_UNIT_TEST
-```
-
-For example:
-
-```sh
-$ bash pre_build_iar.sh brd4187c "-DENABLE_CRC_USE_SW=ON"
-```
-
-> [!NOTE]
-> Do not use option -DENABLE_UNIT_TESTING=ON or -DENABLE_INTEGRATION_TESTING=ON when running pre-build IAR toolchain with option -DPRE_BUILD_IAR_TOOL=ON
+with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4187c (chip EFR32MG24) and brd4264c (chip EFR32FG23)
 
 ## Manually run unit tests
 
-CMake config
+Before building the unit tests, prepare the workspace and generate the build files. For example cmake config for board name brd4264c (chip EFR32FG23).
 
 ```sh
 $ make prepare
@@ -79,16 +36,19 @@ $ cd build
 $ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c
 ```
 
-CMake Build
+CMake Build Individual components
 
 ```sh
-$ cmake --build . --target unit_test_info -j4
-```
-
-or
-
-```sh
-$ make unit_test_info -j4
+$ cmake --build . --target unit_test_iec60730_post -j4
+$ cmake --build . --target unit_test_iec60730_bist -j4
+$ cmake --build . --target unit_test_iec60730_program_counter -j4
+$ cmake --build . --target unit_test_iec60730_safety_check -j4
+$ cmake --build . --target unit_test_iec60730_irq -j4
+$ cmake --build . --target unit_test_iec60730_system_clock -j4
+$ cmake --build . --target unit_test_iec60730_watchdog -j4
+$ cmake --build . --target unit_test_iec60730_cpu_registers -j4
+$ cmake --build . --target unit_test_iec60730_variable_memory -j4
+$ cmake --build . --target unit_test_iec60730_invariable_memory -j4
 ```
 
 ## Automatically run unit tests
@@ -96,16 +56,16 @@ $ make unit_test_info -j4
 Command run
 
 ```sh
-bash execute_test.sh $1 $2 $3 $4 $5 $6
+$ bash execute_test.sh $1 $2 $3 $4 $5 $6
 ```
 
 With the input arguments, there is the following information.
 
-- $1: BOARD_NAME: brd4187c or EFR32MG24B220F1536IM48
+- $1: BOARD_NAME: brd4264c or EFR32FG23B020F512IM48
 - $2: task: all, gen-only, run-only
 - $3: components: all, unit_test_iec60730_bist, unit_test_iec60730_post, ...
 - $4: ADAPTER_SN
-- $5: compiler: GCC, IAR
+- $5: compiler: GCC
 - $6: OPTION_SUPPORT_UNIT_TEST: "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW"
 
 Which, components list that supports unit testing includes:
@@ -137,8 +97,8 @@ If the compiler is GCC
 If you want to calculate from the start address to the end address of Flash:
 
 ```sh
-$ export SDK_PATH=~/SimplicityStudio/SDKs/gecko_sdk
-$ export TOOL_DIRS=~/Downloads/SimplicityStudio_v5/developer/toolchains/gnu_arm/12.2.rel1_2023.7/bin
+$ export SDK_PATH=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+$ export TOOL_DIRS=/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
 $ export TOOL_CHAINS=GCC
 $ export FLASH_REGIONS_TEST=0x8000000
 $ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
@@ -151,7 +111,7 @@ $ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0
 ```
 
 > [!NOTE]
-> In the current unit test file, only enable computation in one region: from the start address of ​​the flash to the end of the flash. Therefore, just export the flash's starting address. For example, chip EFR32MG24:
+> In the current unit test file, only enable computation in one region: from the start address of ​​the flash to the end of the flash. Therefore, just export the flash's starting address. For example, chip EFR32MG24, chip EFR32MG23:
 >> $ export FLASH_REGIONS_TEST=0x8000000
 
 ### Example
@@ -159,13 +119,7 @@ $ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0
 - With GCC toolchain:
 
 ```sh
-bash execute_unit_test.sh brd4187c all all 440111030 GCC
-```
-
-- With IAR toolchain:
-
-```sh
-bash execute_unit_test.sh brd4187c all all 440111030 IAR
+$ bash execute_unit_test.sh brd4264C all all 440111030 GCC
 ```
 
 ## CRC calculation options
@@ -180,12 +134,24 @@ by manually
 
 ```sh
 $ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CAL_CRC_32=ON
+
+$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CRC_USE_SW=ON
+
+$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON
+
+$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON
 ```
 
 or by automatically
 
 ```sh
-bash execute_unit_test.sh brd4187c all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+
+$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CRC_USE_SW=ON"
+
+$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
+
+$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
 ```
 
 Here are some options to support running tests of invariable memory modules:
