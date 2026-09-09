@@ -1,75 +1,131 @@
-project_name: "iec60730_example_demo"
-label: "IEC60730 Example Demo"
-package: "IEC60730"
-category: "IEC60730"
-quality: "production"
+# Silicon Labs Project Configuration Tools: slcp, v0
+
+project_name: iec60730_example_demo
+label: IEC60730 Example Demo
+
+package: IEC60730
+category: IEC60730
+quality: production
 
 description: >
   This is a Safety Libraries IEC60730 Example Demo.
-author: "Silicon Laboratories, Inc."
+
+author: Silicon Laboratories, Inc.
 
 sdk_extension:
-  - {id: iec60730, version: 2.0.0, vendor: silabs}
-sdk: {id: simplicity_sdk, vendor: silabs, version: 2026.6.0}
+  - {id: iec60730, version: 1.1.0}
+
+sdk:
+  id: gecko_sdk
+  version: 4.5.0
+
+component:
+  - from: iec60730
+    id: iec60730_lib
+
+  - id: sl_system
+
+  - id: device_init
+
+  - id: device_init_hfrco
+
+  - id: uartdrv_core
+
+  - id: iostream_usart
+    instance:
+      - vcom
+
+  - id: udelay
+
+  # oem_hal_config_board.h includes sl_board_control_config.h, which only
+  # exists when board_control is part of the project. A radio board BSP pulls
+  # it in implicitly; request it explicitly so device-only targets also get it.
+  - id: board_control
+
+# A device-only target (no radio board selected) has no BSP to fill in the
+# "sl:start pin_tool" sections of sl_board_control_config.h and
+# sl_iostream_usart_vcom_config.h, so those files come out with every pin
+# #define commented out. Values placed under "configuration:" cannot fix this,
+# because SLC can only substitute defines that are actually present in the file.
+# Override the two config files with family-specific pin assignments for
+# device-only targets (no radio board selected):
+#   xG21: BRD4180A on BRD4002A
+#   xG24: BRD4187C A01 derived, QFN40-safe (PA07/PB04 vs PA09/PB05)
+# Skipped whenever a board is selected, so board-based targets keep using
+# their own BSP configuration.
+config_file:
+  - path: ./config/xg21/sl_board_control_config.h
+    override:
+      component: board_control
+      file_id: board_control_config
+    condition:
+      - device_generic_family_efr32xg21
+    unless:
+      - hardware_board
+
+  - path: ./config/xg21/sl_iostream_usart_vcom_config.h
+    override:
+      component: iostream_usart
+      file_id: iostream_usart_config
+      instance: vcom
+    condition:
+      - device_generic_family_efr32xg21
+    unless:
+      - hardware_board
+
+  - path: ./config/xg24/sl_board_control_config.h
+    override:
+      component: board_control
+      file_id: board_control_config
+    condition:
+      - device_generic_family_efr32xg24
+    unless:
+      - hardware_board
+
+  - path: ./config/xg24/sl_iostream_usart_vcom_config.h
+    override:
+      component: iostream_usart
+      file_id: iostream_usart_config
+      instance: vcom
+    condition:
+      - device_generic_family_efr32xg24
+    unless:
+      - hardware_board
 
 configuration:
+
   - name: SL_BOARD_ENABLE_VCOM
     value: 0
+
+  - name: SL_DEVICE_INIT_HFRCO_BAND
+    value: cmuHFRCOFreq_19M0Hz
+    condition:
+      - device_series_1
+
   - name: SL_IOSTREAM_USART_VCOM_PERIPHERAL
     value: USART0
     condition:
-     - device_series_2
+      - device_series_2
+
   - name: SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO
     value: 0
     condition:
-     - device_series_2
-  - name: SL_IOSTREAM_USART_VCOM_CONVERT_BY_DEFAULT_LF_TO_CRLF
-    value: 1
-  - name: SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE
-    value: 80
-  # CTS/RTS blocks USART_Tx when VCOM/board controller is not driven (COS stub).
-  - name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
-    value: usartHwFlowControlNone
-  - name: SL_IEC60730_IRQ_STATUS_ENABLE
-    value: 1
-  - name: SL_IEC60730_SAVE_STAGE_ENABLE
-    value: 1
-  - name: SL_IEC60730_CRC_DEBUG_ENABLE
-    value: 0
-  # Prefer LFRCO for LF / WDOG (no device_init_lfxo with clock_manager).
-  - name: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE
-    value: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE_LFRCO
-  - name: SL_CLOCK_MANAGER_WDOG0CLK_SOURCE
-    value: CMU_WDOG0CLKCTRL_CLKSEL_LFRCO
-  - name: SL_CLOCK_MANAGER_WDOG1CLK_SOURCE
-    value: CMU_WDOG1CLKCTRL_CLKSEL_LFRCO
+      - device_series_2
 
 define:
   - name: HAL_CONFIG_HEADER
     value: "\"oem_hal_config_board.h\""
 
-component:
-  - id: sl_system
-  - id: device_init
-  # Replace device_init_hfrco with clock_manager so SL_CATALOG_CLOCK_MANAGER_PRESENT
-  # is defined and sl_debug_swo_init keeps TRACECLK on SYSCLK (avoids TPIU hang).
-  - id: clock_manager
-  - id: uartdrv_core
-  - id: iostream_usart
-    instance: [vcom]
-  - id: iec60730_lib
-    from: iec60730
-  - id: iec60730_configuration_over_swo_stub
-    from: iec60730
-  - id: udelay
 include:
   - path: ./
     file_list:
       - path: app.h
+
   - path: ./pictures/
     file_list:
       - path: test_fail.jpg
       - path: test_pass.jpg
+
   - path: ./oem/inc/
     file_list:
       - path: oem_hal_config_board.h
@@ -77,6 +133,7 @@ include:
       - path: oem_iec60730.h
       - path: oem_iec60730_init_device.h
       - path: oem_iec60730_comm.h
+
 source:
   - path: main.c
   - path: app.c
@@ -84,30 +141,25 @@ source:
   - path: ./oem/src/oem_iec60730.c
   - path: ./oem/src/oem_iec60730_comm.c
   - path: ./oem/src/oem_iec60730_functions.c
-  - path: ./oem/src/iec60730_stub_functions.c
   - path: ./oem/src/oem_iec60730_timer.c
-
-readme:
-  - path: ./readme.html
-
-ui_hints:
-  highlight:
-    - path: readme.html
-      focus: false
 
 toolchain_settings:
   - option: linkerfile
     value: autogen/linkerfile_iec60730.ld
     unless:
       - toolchain_iar
+
   - option: linkerfile
     value: autogen/linkerfile_iec60730.icf
     condition:
       - toolchain_iar
+
   - option: iar_linker_option
     value: "--keep check_sum --place_holder check_sum,2,.checksum,64"
     condition:
       - toolchain_iar
+
 template_contribution:
   - name: trustzone_secure
+    priority: 0
     value: 1

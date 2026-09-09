@@ -8,7 +8,7 @@ category: Example|iec60730
 
 sdk_extension:
   - {id: iec60730, version: 2.0.0, vendor: silabs}
-sdk: {id: simplicity_sdk, vendor: silabs, version: 2026.6.0}
+sdk: {id: gecko_sdk, version: 4.5.0}
 
 component:
   - id: sl_system
