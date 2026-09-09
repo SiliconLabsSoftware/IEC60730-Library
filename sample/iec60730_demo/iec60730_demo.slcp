@@ -23,6 +23,9 @@ component:
   - from: iec60730
     id: iec60730_lib
 
+  - from: iec60730
+    id: iec60730_configuration_over_swo_stub
+
   - id: sl_system
 
   - id: device_init

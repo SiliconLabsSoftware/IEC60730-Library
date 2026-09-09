@@ -31,10 +31,6 @@ void oem_comm_init_receive_status_message(void);
 void oem_comm_log(const uint8_t *str);
 void oem_comm_transmit_status_message(void);
 
-#ifdef __cplusplus
-}
-#endif
-
 /***************************************************************************/ /**
  * Initialize application.
  ******************************************************************************/
@@ -44,5 +40,9 @@ void app_init(void);
  * App ticking function.
  ******************************************************************************/
 void app_process_action(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // APP_H
