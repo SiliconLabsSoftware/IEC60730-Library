@@ -1,63 +1,53 @@
-/***************************************************************************//**
- * @file
- * @brief Board Control.
- * @note Device-only override based on BRD4187C A01 (BRD4002A).
- *       Display enable remapped for QFN40 (BRD4187C uses PC09).
- *******************************************************************************
- * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
- *******************************************************************************
- *
- * SPDX-License-Identifier: Zlib
- *
- * The licensor of this software is Silicon Laboratories Inc.
- *
- * This software is provided 'as-is', without any express or implied
- * warranty. In no event will the authors be held liable for any damages
- * arising from the use of this software.
- *
- * Permission is granted to anyone to use this software for any purpose,
- * including commercial applications, and to alter it and redistribute it
- * freely, subject to the following restrictions:
- *
- * 1. The origin of this software must not be misrepresented; you must not
- *    claim that you wrote the original software. If you use this software
- *    in a product, an acknowledgment in the product documentation would be
- *    appreciated but is not required.
- * 2. Altered source versions must be plainly marked as such, and must not be
- *    misrepresented as being the original software.
- * 3. This notice may not be removed or altered from any source distribution.
- *
- ******************************************************************************/
-
 #ifndef SL_BOARD_CONTROL_CONFIG_H
 #define SL_BOARD_CONTROL_CONFIG_H
+
+/* Dual-SDK compatibility */
+
+#ifndef SL_GPIO_PORT_A
+#define SL_GPIO_PORT_A gpioPortA
+#endif
+
+#ifndef SL_GPIO_PORT_B
+#define SL_GPIO_PORT_B gpioPortB
+#endif
+
+#ifndef SL_GPIO_PORT_C
+#define SL_GPIO_PORT_C gpioPortC
+#endif
+
+#ifndef SL_GPIO_PORT_D
+#define SL_GPIO_PORT_D gpioPortD
+#endif
+
+#ifndef SL_GPIO_PORT_E
+#define SL_GPIO_PORT_E gpioPortE
+#endif
+
+#ifndef SL_GPIO_PORT_F
+#define SL_GPIO_PORT_F gpioPortF
+#endif
 
 // <<< Use Configuration Wizard in Context Menu >>>
 
 // <q SL_BOARD_ENABLE_VCOM> Enable Virtual COM UART
 // <i> Default: 0
-#define SL_BOARD_ENABLE_VCOM                    0
+#define SL_BOARD_ENABLE_VCOM 0
 
 // <q SL_BOARD_ENABLE_DISPLAY> Enable Display
 // <i> Default: 0
-#define SL_BOARD_ENABLE_DISPLAY                 0
+#define SL_BOARD_ENABLE_DISPLAY 0
 
 // <<< end of configuration section >>>
 
 // <<< sl:start pin_tool >>>
 
 // <gpio> SL_BOARD_ENABLE_VCOM
-// $[GPIO_SL_BOARD_ENABLE_VCOM]
-#define SL_BOARD_ENABLE_VCOM_PORT               gpioPortB
-#define SL_BOARD_ENABLE_VCOM_PIN                0
-// [GPIO_SL_BOARD_ENABLE_VCOM]$
+#define SL_BOARD_ENABLE_VCOM_PORT     SL_GPIO_PORT_B
+#define SL_BOARD_ENABLE_VCOM_PIN      0
 
 // <gpio> SL_BOARD_ENABLE_DISPLAY
-// $[GPIO_SL_BOARD_ENABLE_DISPLAY]
-#define SL_BOARD_ENABLE_DISPLAY_PORT            gpioPortC
-#define SL_BOARD_ENABLE_DISPLAY_PIN             7
-// [GPIO_SL_BOARD_ENABLE_DISPLAY]$
+#define SL_BOARD_ENABLE_DISPLAY_PORT  SL_GPIO_PORT_C
+#define SL_BOARD_ENABLE_DISPLAY_PIN   7
 
 // <<< sl:end pin_tool >>>
 
