@@ -1,8 +1,6 @@
 SHELL := /bin/bash
 .ONESHELL:
 
-include $(CURDIR)/config/sdk_profiles.mk
-
 COMPOSE_FILE ?= $(CURDIR)/compose.yml
 DOCKER_COMPOSE ?= docker compose -f $(COMPOSE_FILE)
 DEV_CONTAINER ?= iec60730-library
@@ -85,28 +83,15 @@ endef
 
 .PHONY: all bootstrap bootstrap-env build build-unit build-integration clean prepare apply-sdk-profile
 
-# Render iec60730.slce and project .slcp files from *.in using PROFILE / SDK_*.
-# Examples:
+# Apply an SDK profile by copying profile-specific files from:
+#   sdk_profiles/<PROFILE>/
+#
+# For Examples:
 #   make apply-sdk-profile
 #   make apply-sdk-profile PROFILE=gecko_4_5
-#   make apply-sdk-profile SDK_ID=simplicity_sdk SDK_VERSION=2025.6.2
-ifeq ($(PROFILE),gecko_4_5)
-SDK_ID := gecko_sdk
-SDK_VERSION := 4.5.0
-EXT_VERSION := 2.0.0
-endif
-
-ifeq ($(PROFILE),ssdk_2026_6)
-SDK_ID := simplicity_sdk
-SDK_VERSION := 2026.6.0
-EXT_VERSION := 2.0.0
-endif
-
+#   make apply-sdk-profile PROFILE=ssdk_2026_6
 apply-sdk-profile:
-	@python3 "$(CURDIR)/script/apply_sdk_profile.py" \
-		--sdk-id "$(SDK_ID)" \
-		--sdk-version "$(SDK_VERSION)" \
-		--ext-version "$(EXT_VERSION)"
+	@python3 "$(CURDIR)/script/switch_sdk.py" "$(PROFILE)"
 
 all: bootstrap build
 
@@ -129,3 +114,4 @@ build-integration:
 
 clean:
 	$(call RUN_SCRIPT,clean,CLEAN_SCRIPT)
+

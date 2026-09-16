@@ -1,14 +1,14 @@
 # Silicon Labs Project Configuration Tools: slcp, v0
 
-project_name: iec60730_example_demo
-label: IEC60730 Example Demo
+project_name: iec60730_example_demo_cpp
+label: IEC60730 Example Demo C++
 
 package: IEC60730
 category: IEC60730
 quality: production
 
 description: >
-  This is a Safety Libraries IEC60730 Example Demo.
+  This is a Safety Libraries IEC60730 Example Demo C++.
 
 author: Silicon Laboratories, Inc.
 
@@ -137,12 +137,13 @@ include:
       - path: oem_iec60730_comm.h
 
 source:
-  - path: main.c
-  - path: app.c
+  - path: main.cpp
+  - path: app.cpp
   - path: ./oem/src/oem_iec60730_init_device.c
   - path: ./oem/src/oem_iec60730.c
   - path: ./oem/src/oem_iec60730_comm.c
   - path: ./oem/src/oem_iec60730_functions.c
+  - path: ./oem/src/iec60730_stub_functions.c
   - path: ./oem/src/oem_iec60730_timer.c
 
 toolchain_settings:
@@ -165,4 +166,3 @@ template_contribution:
   - name: trustzone_secure
     priority: 0
     value: 1
-

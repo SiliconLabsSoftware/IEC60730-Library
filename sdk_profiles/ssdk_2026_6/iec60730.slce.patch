@@ -1,9 +1,10 @@
 id: "iec60730"
 version: 2.0.0
+vendor: silabs
 description: "IEC60730 extension for Simplicity SDK Suite"
 label: "Silicon Labs Safety Libraries IEC60730"
 sdk:
-  id: gecko_sdk
-  version: 4.5.0
+  id: simplicity_sdk
+  version: 2026.6.0
 component_path:
   - path: components
