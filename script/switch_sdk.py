@@ -31,6 +31,26 @@ TARGETS = {
 
     "lib_iec60730_coding_convention.slcp.patch":
         ROOT / "simplicity_sdk/lib_iec60730_coding_convention.slcp",
+
+    # Sample application
+    "main.c.patch":
+        ROOT / "sample/iec60730_demo/main.c",
+
+    # Sample C++ application
+    "main_cpp.cpp.patch":
+        ROOT / "sample/iec60730_demo_cpp/main.cpp",
+
+    # Unit test entry point
+    "ut_main.c.patch":
+        ROOT / "test/unit_test/src/main.c",
+
+    # Integration test entry point
+    "it_main.c.patch":
+        ROOT / "test/integration_test/src/main.c",
+
+    # Simplicity SDK entry point (if SDK-specific)
+    "sdk_main.c.patch":
+        ROOT / "simplicity_sdk/main.c",
 }
 
 
