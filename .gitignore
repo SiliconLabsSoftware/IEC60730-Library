@@ -21,3 +21,5 @@ docs/document_api_iec60730_library/
 /autogen/
 # Temporary stash used by script/build when building unit+integration together
 .docker-build-stash/
+# SLT lock file
+/recipe.lock

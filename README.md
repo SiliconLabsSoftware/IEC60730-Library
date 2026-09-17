@@ -1,5 +1,6 @@
 ![Static Badge](https://img.shields.io/badge/Security_Support-Supported-green)
-![Static Badge](https://img.shields.io/badge/SDK-Simplicity_SDK_v2026.6.0-green?style=flat-square)
+![Static Badge](https://img.shields.io/badge/Supported-Simplicity_SDK_v2026.6.0-green?style=flat-square)
+[![Static Badge](https://img.shields.io/badge/Supported-GeckoSDK_v4.5.0-green)](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0)
 
 # IEC60730_Libs
 Platform codes for EFR32 series chips which complies to IEC60730 safety standard
@@ -115,22 +116,41 @@ Choose one of the options below to generate the project
 |^ | -cpproj, --copy-proj-sources | Copies all files referenced by the project and links any SDK sources. This can be combined with -cpsdk. |
 |^ | -cpsdk, --copy-sdk-sources | Copies all files referenced by the selected components and links any project sources. This can be combined with -cpproj. |
 
-> [!NOTE]: To be able to use the extension LibIEC60730. You need to add the LibIEC60730
-> extension to your SDK in the extension folder and run the command: `slc signature trust -extpath <path_to_your_extension_sdk>`
+> [!NOTE]
+>
+> The LibIEC60730 extension supports:
+>
+> - Gecko SDK (GSDK) 4.5.0
+> - Simplicity SDK (SSDK) 2026.6.0
+>
+> To use the LibIEC60730 extension, copy it into the SDK `extension` directory and trust the extension:
+>
+> - `slc signature trust -extpath <path_to_extension>`
+>
+> If your workspace supports SDK profile switching, select the desired SDK profile before generating the project:
+>
+> - `make apply-sdk-profile PROFILE=gecko_4_5`
+> - `make apply-sdk-profile PROFILE=ssdk_2026_6`
+
 
 ##### For example
 
 ```sh
-$ SDK=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ slc configuration --sdk=$SDK
+# Configure SDK
+$ SDK=/home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+
+# Trust the SDK and the IEC60730 extension
+$ slc configuration --sdk $SDK
 $ slc signature trust --sdk $SDK
 $ slc signature trust -extpath $SDK/extension/IEC60730_Libs
+
+# Generate a project
 $ slc generate \
     $SDK/app/common/example/blink_baremetal \
     -np \
     -d blinky \
     -name=blinky \
-    --with brd4264c
+    --with EFR32BG21A010F1024IM32
 ```
 
 ### Run unit test

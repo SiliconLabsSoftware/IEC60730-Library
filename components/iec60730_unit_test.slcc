@@ -11,8 +11,6 @@ config_file:
 include:
   - path: ./lib/inc
     file_list:
-      - path: coding_standard.h
-      - path: efr32_iec60730_release_notes.h
       - path: sl_iec60730_toolchain.h
       - path: sl_iec60730_board.h
       - path: sl_iec60730_comm.h
@@ -26,7 +24,6 @@ include:
       - path: sl_iec60730_variable_memory.h
       - path: sl_iec60730_watchdog.h
       - path: sl_iec60730.h
-      - path: silabs_license_agreement.h
 define:
   - name: SL_IEC60730_BOARD_HEADER
     value: "\"sl_iec60730_board.h\""

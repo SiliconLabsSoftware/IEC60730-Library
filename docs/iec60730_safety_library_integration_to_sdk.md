@@ -73,7 +73,7 @@ SILICON LABS
 
 The IEC60730 is a safety standard used in household applications. It defines the test and diagnostic method that ensures the safe operation of devices. We provide the test of the following components: CPU registers, variable memory check, invariable memory check, program counter check, clock check, and interrupt check.
 
-At the time of this writing, the library IEC60730 has been tested on two devices EFR32xG23 and EFR32xG24 on Simplicity Studio 6 (SS6) with toolchain GNU ARM v12.2.1 and SDK version 2026.6.0.
+At the time of this writing, the IEC60730 Library SDK Extension has been tested on EFR32BG21 and EFR32BG24 devices using GNU Arm Embedded Toolchain v12.2.1 with both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
 
 ## 2. Install the required software.
 
@@ -92,11 +92,14 @@ The safety library IEC60730 is supported by adding the IEC60730 extension, which
 
 - Simplicity Studio 6
 
-- Simplicity SDK Suite v2026.6.0
+- Gecko SDK (GSDK) 4.5.0
 
-This project is organized as an extension of Simplicity Studio. This project is built upon SSDK version 2026.6.0, GNU toolchain V12.2.1. The user can download the same version of SSDK from `PACKAGES > PACKAGES MANAGER > Simplicity SDKs > Add new SDK > Simplicity SDK 2026.6.0` and Simplicity Studio V6 download link [Simplicity Studio V6](https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started).
+- Simplicity SDK (SSDK) 2026.6.0
 
-To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be `SETTING > SDKs > Simplicity SDK Suite v2026.6.0 > Add Extension`.
+This project is organized as an extension of Simplicity Studio. It supports both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0 with GNU Arm Embedded Toolchain v12.2.1.
+For Simplicity SDK (SSDK) 2026.6.0, users can install the SDK from `PACKAGES > PACKAGE MANAGER > Simplicity SDKs > Add New SDK > Simplicity SDK 2026.6.0` after installing Simplicity Studio V6. Simplicity Studio V6 can be downloaded from: [Simplicity Studio V6](https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started). For Gecko SDK (GSDK) 4.5.0, users can download the SDK from [GSDK](https://github.com/SiliconLabs/gecko_sdk) and import it into Simplicity Studio V6 `SETTINGS > SDKs > Add SDK > Gecko SDK 4.5.0`
+
+To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be `SETTING > SDKs > Simplicity SDK (SSDK) 2026.6.0 > Add Extension`.
 
 ![Figure 1 Adding Extension to SDK](./images/figure_1_adding_extension_to_sdk.png)
 ###### Figure 1 Adding Extension to SDK
@@ -109,10 +112,19 @@ Press `Browse` to find the directory of this extension. Then choose the folder t
 
 ## 4. Generate an example project.
 
-Before using Simplicity Studio to generate the project, you need to add the IEC60730 extension. Please remember the following text:
-> `"This extension supports a demo example for EFR32MG families"`
+Before using Simplicity Studio to generate a project, make sure that the IEC60730 extension has been added to your SDK.
 
-Start a project, select `DEVICES` and choose `Devices you can connect`. For example, you can select `EFR32FG23 2.4GHz 20 dBm Radio Board (Rev A00)` in the Target Boards section, with the Target Device set to `EFR32FG23B020F512IM48` as shown in the image below.
+> This extension supports demo projects for EFR32BG21 and EFR32BG24 devices on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
+
+If you are using this repository, apply the SDK profile that matches your SDK version before generating the project:
+
+```bash
+make apply-sdk-profile PROFILE=gecko_4_5
+# or
+make apply-sdk-profile PROFILE=ssdk_2026_6 
+```
+
+The same project generation workflow applies to both devices when using either Gecko SDK (GSDK) 4.5.0 or Simplicity SDK (SSDK) 2026.6.0, as shown in the image below.
 
 ![Figure 3 Create new project](./images/figure_3_create_new_project.png)
 ######  Figure 3 Create new project
@@ -132,7 +144,7 @@ In `Example Project Selection`, use the checkboxes or keywords to find the examp
 ![Figure 4 Example Project Selection](./images/figure_4_example_project_selection.png)
 ###### Figure 4 Example Project Selection
 
-In `Project Configuration Selection`, rename and location your project if you want. For the three selections under `Copy contents`, you can choose any of the selections you want.
+In `Project Configuration Selection`, rename your project and choose its location if you want. For the three selections under `Copy contents`, you can choose any of the selections you want.
 
 ![Figure 5 Project Configuration](./images/figure_5_project_configuration.png)
 ###### Figure 5 Project Configuration
@@ -249,7 +261,7 @@ When you install these components, the source code library IEC60730 will be adde
 
 ## 7. Integrate code into the project.
 
-The library IEC60730 has been divided into 2 main test phases: Power on Self-Test (POST) and Build In Self-Test (BIST). [Figure 13 Flow chart of the library IEC60730](#figure-13-flow-chart-of-the-library-iec60730) shows the basics of the library IEC60730 integration into a user software solution.
+The IEC60730 library is divided into two main test phases: Power-On Self-Test (POST) and Built-In Self-Test (BIST). [Figure 14 Flow chart of the library IEC60730 shows the basic IEC60730 integration flow within a user software solution.
 
 ![Figure 14 Flow chart of the library IEC60730](./images/figure_14_flow_chart_of_the_lib_iec60730.png)
 ###### Figure 14 Flow chart of the library IEC60730
@@ -441,7 +453,7 @@ oem_irq_exec_count[0]++;
 | 1.1.0 | June 2024 | Adding Section 3 and Section 4 for support creates a Library Extension Updated other sections for suit with the released package EFR32xG12 and EFR32xG24 devices. |
 | 2.0.0 | Nov 2024 | Rewrite the documentation by the re-factory code of the library support device EFR32MG families. |
 | 2.1.0 | Aug 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32FG23 device family. |
-
+| 2.2.0 | Sep 2026 | Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support. |
 
 
 
