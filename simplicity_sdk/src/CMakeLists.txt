@@ -1,1 +1,2 @@
 add_subdirectory(cmake_gcc)
+add_subdirectory(lib_iec60730_vmc_support_cmake)

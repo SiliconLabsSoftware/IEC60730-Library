@@ -81,7 +81,17 @@ define RUN_SCRIPT
 	fi
 endef
 
-.PHONY: all bootstrap bootstrap-env build build-unit build-integration clean prepare
+.PHONY: all bootstrap bootstrap-env build build-unit build-integration clean prepare apply-sdk-profile
+
+# Apply an SDK profile by copying profile-specific files from:
+#   sdk_profiles/<PROFILE>/
+#
+# For Examples:
+#   make apply-sdk-profile
+#   make apply-sdk-profile PROFILE=gecko_4_5
+#   make apply-sdk-profile PROFILE=ssdk_2026_6
+apply-sdk-profile:
+	@python3 "$(CURDIR)/script/switch_sdk.py" "$(PROFILE)"
 
 all: bootstrap build
 
@@ -104,3 +114,4 @@ build-integration:
 
 clean:
 	$(call RUN_SCRIPT,clean,CLEAN_SCRIPT)
+

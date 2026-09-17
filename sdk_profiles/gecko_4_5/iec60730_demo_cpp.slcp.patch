@@ -13,11 +13,11 @@ description: >
 author: Silicon Laboratories, Inc.
 
 sdk_extension:
-  - {id: iec60730, version: 2.0.0, vendor: silabs}
+  - {id: iec60730, version: 2.0.0}
 
 sdk:
-  id: simplicity_sdk
-  version: 2026.6.0
+  id: gecko_sdk
+  version: 4.5.0
 
 component:
   - from: iec60730
@@ -95,36 +95,24 @@ config_file:
       - hardware_board
 
 configuration:
+
   - name: SL_BOARD_ENABLE_VCOM
     value: 0
+
+  - name: SL_DEVICE_INIT_HFRCO_BAND
+    value: cmuHFRCOFreq_19M0Hz
+    condition:
+      - device_series_1
+
   - name: SL_IOSTREAM_USART_VCOM_PERIPHERAL
     value: USART0
     condition:
-     - device_series_2
+      - device_series_2
+
   - name: SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO
     value: 0
     condition:
-     - device_series_2
-  - name: SL_IOSTREAM_USART_VCOM_CONVERT_BY_DEFAULT_LF_TO_CRLF
-    value: 1
-  - name: SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE
-    value: 80
-  # CTS/RTS blocks USART_Tx when VCOM/board controller is not driven (COS stub).
-  - name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
-    value: usartHwFlowControlNone
-  - name: SL_IEC60730_IRQ_STATUS_ENABLE
-    value: 1
-  - name: SL_IEC60730_SAVE_STAGE_ENABLE
-    value: 1
-  - name: SL_IEC60730_CRC_DEBUG_ENABLE
-    value: 0
-  # Prefer LFRCO for LF / WDOG (no device_init_lfxo with clock_manager).
-  - name: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE
-    value: SL_CLOCK_MANAGER_DEFAULT_LF_CLOCK_SOURCE_LFRCO
-  - name: SL_CLOCK_MANAGER_WDOG0CLK_SOURCE
-    value: CMU_WDOG0CLKCTRL_CLKSEL_LFRCO
-  - name: SL_CLOCK_MANAGER_WDOG1CLK_SOURCE
-    value: CMU_WDOG1CLKCTRL_CLKSEL_LFRCO
+      - device_series_2
 
 define:
   - name: HAL_CONFIG_HEADER
