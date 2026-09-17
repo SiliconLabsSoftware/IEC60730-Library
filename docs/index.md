@@ -86,25 +86,34 @@ Choose one of the options below to generate the project
 |^ | -cpproj, --copy-proj-sources | Copies all files referenced by the project and links any SDK sources. This can be combined with -cpsdk. |
 |^ | -cpsdk, --copy-sdk-sources | Copies all files referenced by the selected components and links any project sources. This can be combined with -cpproj. |
 
-> [!NOTE]: To be able to use the extension LibIEC60730. You need to add the LibIEC60730
-> extension to your SDK in the extension folder and run the command: `slc signature trust -extpath <path_to_your_extension_sdk>`
+> [!NOTE]
+> The LibIEC60730 extension supports EFR32BG21 and EFR32BG24 devices on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
+>
+> Before generating a project, copy the LibIEC60730 extension into the SDK's `extension` directory and trust both the SDK and the extension using the `slc` commands below.
+>
+> If your workspace supports dual SDK switching, select the desired SDK profile before generating the project:
+>
+> ```sh
+> make apply-sdk-profile PROFILE=gecko_4_5
+> make apply-sdk-profile PROFILE=ssdk_2026_6
+> ```
 
-##### For example
+##### Example
 
 ```sh
-$ SDK=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ slc configuration --sdk=$SDK
+# Configure SDK
+$ SDK=/home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+
+# Trust the SDK and the IEC60730 extension
+$ slc configuration --sdk $SDK
 $ slc signature trust --sdk $SDK
 $ slc signature trust -extpath $SDK/extension/IEC60730_Libs
-$ slc generate \
-    $SDK/app/common/example/blink_baremetal \
-    -np \
-    -d blinky \
-    -name=blinky \
-    --with brd4264c
-```
 
-### Run unit test
-  - Refer to the guideline link: [guideline_for_running_unit_test.md](./guideline_for_running_unit_test.md)
-### Run integration test
-  - Refer to the guideline link: [guideline_for_running_integration_test.md](./guideline_for_running_integration_test.md)
+# Generate an IEC60730 project
+$ slc generate \
+    <path_to_project>.slcp \
+    -np \
+    -d iec60730_demo \
+    -name=iec60730_demo \
+    --with EFR32BG21A010F1024IM32
+```

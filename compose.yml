@@ -3,13 +3,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+
     image: iec60730-library:latest
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     working_dir: /workspace
+
     volumes:
       - .:/workspace
-      - silabs-root:/root/.silabs
+      - silabs-root:/home/ubuntu/.silabs
+
+      # Note: Optional Gecko SDK mount for GSDK builds.
+      - ${GSDK_PATH:-/tmp}:/opt/gecko_sdk:ro
+
     environment:
-      SLT_INSTALL_DIR: /root/.silabs
+      SLT_INSTALL_DIR: /home/ubuntu/.silabs
+
+      # Note: Preserve board-specific flash base address from Makefile.
+      FLASH_REGIONS_TEST: ${FLASH_REGIONS_TEST}
+
+      # Note: Empty for SSDK, /opt/gecko_sdk for GSDK profile.
+      SDK_PATH: ${SDK_PATH:-}
+
     tty: true
 
 volumes:
