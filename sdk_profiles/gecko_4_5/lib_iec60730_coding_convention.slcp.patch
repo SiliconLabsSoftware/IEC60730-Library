@@ -7,13 +7,13 @@ description: >
 category: Example|iec60730
 
 sdk_extension:
-  - {id: iec60730, version: 2.0.0, vendor: silabs}
-sdk: {id: simplicity_sdk, version: 2026.6.0, vendor: silabs}
+  - {id: iec60730, version: 2.0.0}
+sdk: {id: gecko_sdk, version: 4.5.0}
 
 component:
   - id: sl_system
   - id: device_init
-  - id: clock_manager
+  - id: device_init_hfrco
   - id: emlib_wdog
   - id: emlib_gpcrc
   - id: uartdrv_core
@@ -28,10 +28,12 @@ component:
   - id: board_control
   - id: iec60730_configuration_over_swo_stub
     from: iec60730
-  - id: iec60730_unit_test
-    from: iec60730
   - id: iec60730_custom_linker
     from: iec60730
+define:
+  - name: SL_TRUSTZONE_SECURE
+  - name: SL_IEC60730_BOARD_HEADER
+    value: "sl_iec60730_board.h"
 config_file:
   - path: ../sample/iec60730_demo/config/xg21/sl_board_control_config.h
     override:
@@ -108,3 +110,6 @@ toolchain_settings:
     value: "--keep check_sum --place_holder check_sum,2,.checksum,64"
     condition:
       - toolchain_iar
+template_contribution:
+  - name: trustzone_secure
+    value: 1
