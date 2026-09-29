@@ -1574,7 +1574,7 @@
 <p><a href="#figure-17-configuration-for-system-clock-module">Figure 17 Configuration for system clock module</a></p>
 <h2 id="1-background">1. Background<a class="headerlink" href="#1-background" title="Permanent link">&para;</a></h2>
 <p>The IEC60730 is a safety standard used in household applications. It defines the test and diagnostic method that ensures the safe operation of devices. We provide the test of the following components: CPU registers, variable memory check, invariable memory check, program counter check, clock check, and interrupt check.</p>
-<p>At the time of this writing, the library IEC60730 has been tested on two devices EFR32xG23 and EFR32xG24 on Simplicity Studio 6 (SS6) with toolchain GNU ARM v12.2.1 and SDK version 2026.6.0.</p>
+<p>At the time of this writing, the IEC60730 Library SDK Extension has been tested on EFR32BG21 and EFR32BG24 devices using GNU Arm Embedded Toolchain v12.2.1 with both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.</p>
 <h2 id="2-install-the-required-software">2. Install the required software.<a class="headerlink" href="#2-install-the-required-software" title="Permanent link">&para;</a></h2>
 <p>We use the third-party software <a href="http://srecord.sourceforge.net/">SRecord</a> to calculate CRC value. Firstly, you need to install this software. If you're using Windows OS, you can go to the link of this software (link above), download the installation, and run the installer to install. If you're using Ubuntu OS, please follow the installation instructions below.</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
@@ -1590,22 +1590,31 @@ $<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>
 <p>Simplicity Studio 6</p>
 </li>
 <li>
-<p>Simplicity SDK Suite v2026.6.0</p>
+<p>Gecko SDK (GSDK) 4.5.0</p>
+</li>
+<li>
+<p>Simplicity SDK (SSDK) 2026.6.0</p>
 </li>
 </ul>
-<p>This project is organized as an extension of Simplicity Studio. This project is built upon SSDK version 2026.6.0, GNU toolchain V12.2.1. The user can download the same version of SSDK from <code>PACKAGES &gt; PACKAGES MANAGER &gt; Simplicity SDKs &gt; Add new SDK &gt; Simplicity SDK 2026.6.0</code> and Simplicity Studio V6 download link <a href="https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started">Simplicity Studio V6</a>.</p>
-<p>To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be <code>SETTING &gt; SDKs &gt; Simplicity SDK Suite v2026.6.0 &gt; Add Extension</code>.</p>
+<p>This project is organized as an extension of Simplicity Studio. It supports both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0 with GNU Arm Embedded Toolchain v12.2.1.
+For Simplicity SDK (SSDK) 2026.6.0, users can install the SDK from <code>PACKAGES &gt; PACKAGE MANAGER &gt; Simplicity SDKs &gt; Add New SDK &gt; Simplicity SDK 2026.6.0</code> after installing Simplicity Studio V6. Simplicity Studio V6 can be downloaded from: <a href="https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started">Simplicity Studio V6</a>. For Gecko SDK (GSDK) 4.5.0, users can download the SDK from <a href="https://github.com/SiliconLabs/gecko_sdk">GSDK</a> and import it into Simplicity Studio V6 <code>SETTINGS &gt; SDKs &gt; Add SDK &gt; Gecko SDK 4.5.0</code></p>
+<p>To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be <code>SETTING &gt; SDKs &gt; Simplicity SDK (SSDK) 2026.6.0 &gt; Add Extension</code>.</p>
 <p><img alt="Figure 1 Adding Extension to SDK" src="images/figure_1_adding_extension_to_sdk.png" /></p>
 <h6 id="figure-1-adding-extension-to-sdk">Figure 1 Adding Extension to SDK<a class="headerlink" href="#figure-1-adding-extension-to-sdk" title="Permanent link">&para;</a></h6>
 <p>Press <code>Browse</code> to find the directory of this extension. Then choose the folder that has the file name <code>iec60730.slce</code>. Simplicity Studio will detect SDK extensions automatically. Click <code>OK</code> then <code>Apply and Close</code></p>
 <p><img alt=" Figure 2 Browse to extension location" src="images/figure_2_brows_to_extension_location.png" /></p>
 <h6 id="figure-2-browse-to-extension-location">Figure 2 Browse to extension location<a class="headerlink" href="#figure-2-browse-to-extension-location" title="Permanent link">&para;</a></h6>
 <h2 id="4-generate-an-example-project">4. Generate an example project.<a class="headerlink" href="#4-generate-an-example-project" title="Permanent link">&para;</a></h2>
-<p>Before using Simplicity Studio to generate the project, you need to add the IEC60730 extension. Please remember the following text:</p>
+<p>Before using Simplicity Studio to generate a project, make sure that the IEC60730 extension has been added to your SDK.</p>
 <blockquote>
-<p><code>"This extension supports a demo example for EFR32MG families"</code></p>
+<p>This extension supports demo projects for EFR32BG21 and EFR32BG24 devices on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.</p>
 </blockquote>
-<p>Start a project, select <code>DEVICES</code> and choose <code>Devices you can connect</code>. For example, you can select <code>EFR32FG23 2.4GHz 20 dBm Radio Board (Rev A00)</code> in the Target Boards section, with the Target Device set to <code>EFR32FG23B020F512IM48</code> as shown in the image below.</p>
+<p>If you are using this repository, apply the SDK profile that matches your SDK version before generating the project:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
+<span class="c1"># or</span>
+make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6<span class="w"> </span>
+</code></pre></div>
+<p>The same project generation workflow applies to both devices when using either Gecko SDK (GSDK) 4.5.0 or Simplicity SDK (SSDK) 2026.6.0, as shown in the image below.</p>
 <p><img alt="Figure 3 Create new project" src="images/figure_3_create_new_project.png" /></p>
 <h6 id="figure-3-create-new-project">Figure 3 Create new project<a class="headerlink" href="#figure-3-create-new-project" title="Permanent link">&para;</a></h6>
 <p>To create a new Simplicity Studio® 6 (SSv6) project, follow these three dialog steps:</p>
@@ -1624,7 +1633,7 @@ $<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>
 <p>In <code>Example Project Selection</code>, use the checkboxes or keywords to find the example of interest. To create a radio board example IEC60730 Demo, search the keyword <code>iec60730</code> in the search box, related examples will show. Choose <code>IEC60730 Example Demo</code>. Click <code>Create</code></p>
 <p><img alt="Figure 4 Example Project Selection" src="images/figure_4_example_project_selection.png" /></p>
 <h6 id="figure-4-example-project-selection">Figure 4 Example Project Selection<a class="headerlink" href="#figure-4-example-project-selection" title="Permanent link">&para;</a></h6>
-<p>In <code>Project Configuration Selection</code>, rename and location your project if you want. For the three selections under <code>Copy contents</code>, you can choose any of the selections you want.</p>
+<p>In <code>Project Configuration Selection</code>, rename your project and choose its location if you want. For the three selections under <code>Copy contents</code>, you can choose any of the selections you want.</p>
 <p><img alt="Figure 5 Project Configuration" src="images/figure_5_project_configuration.png" /></p>
 <h6 id="figure-5-project-configuration">Figure 5 Project Configuration<a class="headerlink" href="#figure-5-project-configuration" title="Permanent link">&para;</a></h6>
 <p>Once you finish project creation, the Simplicity IDE perspective opens. There may be a slight delay in the initial configuration.</p>
@@ -1715,7 +1724,7 @@ $<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>
 <p><img alt="Figure 13 Assembly code algorithm MARCHC for GCC compiler" src="images/figure_13_assembly_code_alorithm_marchc_for_gcc_compiler.png" /></p>
 <h6 id="figure-13-assembly-code-algorithm-marchc-for-gcc-compiler">Figure 13 Assembly code algorithm MARCHC for GCC compiler<a class="headerlink" href="#figure-13-assembly-code-algorithm-marchc-for-gcc-compiler" title="Permanent link">&para;</a></h6>
 <h2 id="7-integrate-code-into-the-project">7. Integrate code into the project.<a class="headerlink" href="#7-integrate-code-into-the-project" title="Permanent link">&para;</a></h2>
-<p>The library IEC60730 has been divided into 2 main test phases: Power on Self-Test (POST) and Build In Self-Test (BIST). <a href="#figure-13-flow-chart-of-the-library-iec60730">Figure 13 Flow chart of the library IEC60730</a> shows the basics of the library IEC60730 integration into a user software solution.</p>
+<p>The IEC60730 library is divided into two main test phases: Power-On Self-Test (POST) and Built-In Self-Test (BIST). [Figure 14 Flow chart of the library IEC60730 shows the basic IEC60730 integration flow within a user software solution.</p>
 <p><img alt="Figure 14 Flow chart of the library IEC60730" src="images/figure_14_flow_chart_of_the_lib_iec60730.png" /></p>
 <h6 id="figure-14-flow-chart-of-the-library-iec60730">Figure 14 Flow chart of the library IEC60730<a class="headerlink" href="#figure-14-flow-chart-of-the-library-iec60730" title="Permanent link">&para;</a></h6>
 <p>In our example, we have added a demo <code>oem</code> foler  (Original equipment manufacturer) to integrate with the library IEC60730 to test steps such as flow charts fully.</p>
@@ -1927,6 +1936,11 @@ sl_iec60730_irq_cfg_t<span class="w"> </span>oem_irq_config<span class="p">;</sp
 <td>2.1.0</td>
 <td>Aug 2026</td>
 <td>Update the documentation to reflect the extension configuration changes that add support for the EFR32FG23 device family.</td>
+</tr>
+<tr>
+<td>2.2.0</td>
+<td>Sep 2026</td>
+<td>Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support.</td>
 </tr>
 </tbody>
 </table>

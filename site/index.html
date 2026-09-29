@@ -450,10 +450,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#for-example" class="md-nav__link">
+  <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For example
+        Example
       
     </span>
   </a>
@@ -467,28 +467,6 @@
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-unit-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run unit test
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-integration-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run integration test
-      
-    </span>
-  </a>
   
 </li>
         
@@ -969,10 +947,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#for-example" class="md-nav__link">
+  <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For example
+        Example
       
     </span>
   </a>
@@ -986,28 +964,6 @@
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-unit-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run unit test
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-integration-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run integration test
-      
-    </span>
-  </a>
   
 </li>
         
@@ -1120,29 +1076,31 @@
 </tbody>
 </table>
 <blockquote>
-<p>[!NOTE]: To be able to use the extension LibIEC60730. You need to add the LibIEC60730
-extension to your SDK in the extension folder and run the command: <code>slc signature trust -extpath &lt;path_to_your_extension_sdk&gt;</code></p>
+<p>[!NOTE]
+The LibIEC60730 extension supports EFR32BG21 and EFR32BG24 devices on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.</p>
+<p>Before generating a project, copy the LibIEC60730 extension into the SDK's <code>extension</code> directory and trust both the SDK and the extension using the <code>slc</code> commands below.</p>
+<p>If your workspace supports dual SDK switching, select the desired SDK profile before generating the project:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
+make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6
+</code></pre></div>
 </blockquote>
-<h5 id="for-example">For example<a class="headerlink" href="#for-example" title="Permanent link">&para;</a></h5>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">SDK</span><span class="o">=</span>/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$<span class="w"> </span>slc<span class="w"> </span>configuration<span class="w"> </span>--sdk<span class="o">=</span><span class="nv">$SDK</span>
+<h5 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="c1"># Configure SDK</span>
+$<span class="w"> </span><span class="nv">SDK</span><span class="o">=</span>/home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+
+<span class="c1"># Trust the SDK and the IEC60730 extension</span>
+$<span class="w"> </span>slc<span class="w"> </span>configuration<span class="w"> </span>--sdk<span class="w"> </span><span class="nv">$SDK</span>
 $<span class="w"> </span>slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>--sdk<span class="w"> </span><span class="nv">$SDK</span>
 $<span class="w"> </span>slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>-extpath<span class="w"> </span><span class="nv">$SDK</span>/extension/IEC60730_Libs
+
+<span class="c1"># Generate an IEC60730 project</span>
 $<span class="w"> </span>slc<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span><span class="nv">$SDK</span>/app/common/example/blink_baremetal<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>&lt;path_to_project&gt;.slcp<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-np<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-d<span class="w"> </span>blinky<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-name<span class="o">=</span>blinky<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--with<span class="w"> </span>brd4264c
+<span class="w">    </span>-d<span class="w"> </span>iec60730_demo<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-name<span class="o">=</span>iec60730_demo<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--with<span class="w"> </span>EFR32BG21A010F1024IM32
 </code></pre></div>
-<h3 id="run-unit-test">Run unit test<a class="headerlink" href="#run-unit-test" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Refer to the guideline link: <a href="guideline_for_running_unit_test.html">guideline_for_running_unit_test.md</a></li>
-</ul>
-<h3 id="run-integration-test">Run integration test<a class="headerlink" href="#run-integration-test" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Refer to the guideline link: <a href="guideline_for_running_integration_test.html">guideline_for_running_integration_test.md</a></li>
-</ul>
 
 
 
