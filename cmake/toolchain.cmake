@@ -34,9 +34,12 @@ execute_process(
   ERROR_QUIET
 )
 
-#
-# GCC Toolchain
-#
+# Resolve GCC toolchain location using the following priority:
+# 1. TOOL_DIRS : Project-specific toolchain path.
+# 2. ARM_GCC_DIR : User-provided ARM GCC installation.
+# 3. SLT : Discover toolchain via 'slt where'.
+# 4. Windows default : Fallback to standard SLT install location.
+# 5. Linux fallback : Last-resort fallback path.
 if(DEFINED ENV{TOOL_DIRS})
   set(TOOLCHAIN_DIR "$ENV{TOOL_DIRS}/")
 elseif(DEFINED ENV{ARM_GCC_DIR})
