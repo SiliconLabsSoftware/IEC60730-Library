@@ -27,96 +27,99 @@ execute_process(
   ERROR_QUIET
 )
 
-execute_process(
-  COMMAND slt where ninja
-  OUTPUT_VARIABLE NINJA_SLT_PATH
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  ERROR_QUIET
-)
+#
+# Verify SLC CLI
+#
+find_program(SLC_EXE slc)
 
-# Resolve GCC toolchain location using the following priority:
-# 1. TOOL_DIRS : Project-specific toolchain path.
-# 2. ARM_GCC_DIR : User-provided ARM GCC installation.
-# 3. SLT : Discover toolchain via 'slt where'.
-# 4. Windows default : Fallback to standard SLT install location.
-# 5. Linux fallback : Last-resort fallback path.
+if(NOT SLC_EXE)
+  message(FATAL_ERROR
+    "slc not found in PATH.\n"
+    "Please add Simplicity Studio SLC CLI to PATH.\n"
+    "Example:\n"
+    "export PATH=$HOME/.silabs/slt/installs/archive/slc-cli-v6.0.25/slc_cli:$PATH")
+endif()
+
+#
+# Resolve GCC toolchain location
+#
+# Priority:
+# 1. TOOL_DIRS
+# 2. ARM_GCC_DIR
+# 3. SLT
+# 4. Windows fallback
+# 5. Linux fallback
+#
 if(DEFINED ENV{TOOL_DIRS})
+
   set(TOOLCHAIN_DIR "$ENV{TOOL_DIRS}/")
+
 elseif(DEFINED ENV{ARM_GCC_DIR})
+
   set(TOOLCHAIN_DIR "$ENV{ARM_GCC_DIR}/bin/")
+
 elseif(ARM_GCC_SLT_PATH)
+
   set(TOOLCHAIN_DIR "${ARM_GCC_SLT_PATH}/bin/")
+
 elseif(WIN32)
+
   set(TOOLCHAIN_DIR
       "${USER_DIR}/.silabs/slt/installs/conan/p/gcc-ab83b3403fdca6/p/bin/")
+
 else()
+
   set(TOOLCHAIN_DIR "/bin/")
+
 endif()
 
 set(TARGET_TRIPLET "arm-none-eabi-")
 
 if(NOT EXISTS
     "${TOOLCHAIN_DIR}${TARGET_TRIPLET}gcc${EXE_SUFFIX}")
+
   message(FATAL_ERROR
     "ARM GCC compiler not found.\n"
     "TOOLCHAIN_DIR=${TOOLCHAIN_DIR}\n"
     "Please set TOOL_DIRS, ARM_GCC_DIR, or install via SLT.")
+
 endif()
 
 #
 # Commander
 #
 if(DEFINED ENV{POST_BUILD_EXE})
+
   set(POST_BUILD_EXE "$ENV{POST_BUILD_EXE}")
 
 elseif(COMMANDER_SLT_PATH)
 
   if(WIN32)
+
     set(POST_BUILD_EXE
         "${COMMANDER_SLT_PATH}/commander.exe")
+
   elseif(APPLE)
+
     set(POST_BUILD_EXE
         "${COMMANDER_SLT_PATH}/Contents/MacOS/commander")
+
   else()
+
     set(POST_BUILD_EXE
         "${COMMANDER_SLT_PATH}/commander")
+
   endif()
 
 elseif(WIN32)
+
   set(POST_BUILD_EXE
       "${USER_DIR}/.silabs/slt/installs/archive/Simplicity Commander/commander.exe")
+
 else()
+
   set(POST_BUILD_EXE "")
-endif()
 
-#
-# Ninja
-#
-if(DEFINED ENV{NINJA_EXE_PATH})
-  set(NINJA_RUNTIME_PATH "$ENV{NINJA_EXE_PATH}")
-
-elseif(NINJA_SLT_PATH)
-
-  if(WIN32)
-    set(NINJA_RUNTIME_PATH
-        "${NINJA_SLT_PATH}/ninja.exe")
-  else()
-    set(NINJA_RUNTIME_PATH
-        "${NINJA_SLT_PATH}/ninja")
-  endif()
-
-elseif(WIN32)
-  set(NINJA_RUNTIME_PATH
-      "${USER_DIR}/.silabs/slt/installs/conan/p/ninja1a38fc85adcf7/p/ninja.exe")
-else()
-  set(NINJA_RUNTIME_PATH "")
-endif()
-
-if(NINJA_RUNTIME_PATH)
-  set(CMAKE_MAKE_PROGRAM
-      ${NINJA_RUNTIME_PATH}
-      CACHE FILEPATH ""
-      FORCE)
 endif()
 
 #
@@ -163,7 +166,7 @@ set(CMAKE_NM_UTIL
 #
 set(OBJCOPY_SREC_CMD "-O;srec")
 set(OBJCOPY_IHEX_CMD "-O;ihex")
-set(OBJCOPY_BIN_CMD  "-O;binary")
+set(OBJCOPY_BIN_CMD "-O;binary")
 
 #
 # Language standard options
@@ -202,6 +205,6 @@ set(CMAKE_EXECUTABLE_SUFFIX_CXX .out)
 
 message(STATUS "Toolchain directory : ${TOOLCHAIN_DIR}")
 message(STATUS "Commander          : ${POST_BUILD_EXE}")
-message(STATUS "Ninja              : ${NINJA_RUNTIME_PATH}")
+message(STATUS "SLC                : ${SLC_EXE}")
 message(STATUS "C Compiler         : ${CMAKE_C_COMPILER}")
 message(STATUS "CXX Compiler       : ${CMAKE_CXX_COMPILER}")
