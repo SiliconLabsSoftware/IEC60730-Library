@@ -3,14 +3,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+
     image: iec60730-library:latest
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     working_dir: /workspace
+
     volumes:
       - .:/workspace
-      - silabs-root:/root/.silabs
-    environment:
-      SLT_INSTALL_DIR: /root/.silabs
-    tty: true
+      - ${HOME}/.silabs:/home/ubuntu/.silabs
 
-volumes:
-  silabs-root:
+      # Optional Gecko SDK mount
+      - ${GSDK_PATH:-/tmp}:/opt/gecko_sdk:ro
+
+    environment:
+      SLT_INSTALL_DIR: /home/ubuntu/.silabs
+      FLASH_REGIONS_TEST: ${FLASH_REGIONS_TEST}
+      SDK_PATH: ${SDK_PATH:-}
+
+    tty: true

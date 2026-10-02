@@ -71,6 +71,19 @@ This release contains the following components:
 
 ## Revision History
    ----------------
+   2.2.0 Release
+   
+   - Add support for EFR32BG21 and EFR32BG24 devices.
+   
+   - Supported compiler: GCC.
+   
+   - Add dual SDK support using IEC60730 Library SDK Extension v2.1.0 with Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
+   
+   - Add unit test and integration test support for EFR32BG21 and EFR32BG24 devices.
+   
+   - Add Makefile support for switching between GSDK 4.5.0 and Simplicity SDK 2026.6.0 using SDK profiles.
+   
+   ----------------
    2.1.0 Release
 
    - Add supported Devices: EFR32FG23 family (confirmed device: EFR32FG23B)
