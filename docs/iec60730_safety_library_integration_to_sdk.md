@@ -90,7 +90,7 @@ $ sudo apt install srecord
 
 The safety library IEC60730 is supported by adding the IEC60730 extension, which is built using the software environment.:
 
-- OS-Ubuntu 20.04
+- OS-Ubuntu 24.04
 
 - Simplicity Studio 6
 

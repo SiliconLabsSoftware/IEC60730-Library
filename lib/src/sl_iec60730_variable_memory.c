@@ -238,4 +238,3 @@ sl_iec60730_test_result_t sl_iec60730_vmc_bist(void)
 
   return result;
 }
- 

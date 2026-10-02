@@ -76,13 +76,31 @@ install_slt_packages()
 
 check_slt_installation()
 {
-    local slt_location="${HOME}/.silabs/slt/slt.location"
-    if [ -f "${slt_location}" ]; then
-        SLT_INSTALL_DIR="$(dirname "$(cat "${slt_location}")")"
-    fi
-    if "${SLT_INSTALL_DIR}/slt" --version >/dev/null 2>&1; then
+    #
+    # New Simplicity Installer layout
+    #
+    if [ -x "${HOME}/.silabs/bin/slt" ]; then
+        SLT_INSTALL_DIR="${HOME}/.silabs/bin"
+        export SLT_INSTALL_DIR
         return 0
     fi
+
+    #
+    # Legacy layout
+    #
+    local slt_bin
+
+    slt_bin="$(find "${HOME}/.silabs" \
+        -type f \
+        -path "*/slt-cli-*/slt" \
+        2>/dev/null | head -n 1)"
+
+    if [ -n "${slt_bin}" ]; then
+        SLT_INSTALL_DIR="$(dirname "${slt_bin}")"
+        export SLT_INSTALL_DIR
+        return 0
+    fi
+
     return 1
 }
 
@@ -169,17 +187,25 @@ main_bootstrap_silabs()
     [ -n "${SLT_INSTALL_DIR-}" ] || SLT_INSTALL_DIR="/home/${USER}/.silabs/"
     export SLT_INSTALL_DIR
 
+    # if ! check_slt_installation; then
+    #     echo "SLT not found. Installing SLT..."
+    #     install_slt
+    #     if ! check_slt_installation; then
+    #         echo "SLT installation failed. Exiting."
+    #         exit 1
+    #     fi
+    #     echo "SLT installed successfully. Installation directory: ${SLT_INSTALL_DIR}"
+    # else
+    #     echo "SLT already installed. Installation directory: ${SLT_INSTALL_DIR}"
+    # fi
+
     if ! check_slt_installation; then
-        echo "SLT not found. Installing SLT..."
-        install_slt
-        if ! check_slt_installation; then
-            echo "SLT installation failed. Exiting."
-            exit 1
-        fi
-        echo "SLT installed successfully. Installation directory: ${SLT_INSTALL_DIR}"
-    else
-        echo "SLT already installed. Installation directory: ${SLT_INSTALL_DIR}"
+        echo "Error: SLT is not installed."
+        echo "Install SLT/Simplicity Studio first."
+        exit 1
     fi
+
+    echo "SLT already installed. Installation directory: ${SLT_INSTALL_DIR}"
 
     slt_upgrade
 

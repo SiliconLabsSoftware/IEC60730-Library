@@ -10,21 +10,14 @@ services:
 
     volumes:
       - .:/workspace
-      - silabs-root:/home/ubuntu/.silabs
+      - ${HOME}/.silabs:/home/ubuntu/.silabs
 
-      # Note: Optional Gecko SDK mount for GSDK builds.
+      # Optional Gecko SDK mount
       - ${GSDK_PATH:-/tmp}:/opt/gecko_sdk:ro
 
     environment:
       SLT_INSTALL_DIR: /home/ubuntu/.silabs
-
-      # Note: Preserve board-specific flash base address from Makefile.
       FLASH_REGIONS_TEST: ${FLASH_REGIONS_TEST}
-
-      # Note: Empty for SSDK, /opt/gecko_sdk for GSDK profile.
       SDK_PATH: ${SDK_PATH:-}
 
     tty: true
-
-volumes:
-  silabs-root:
