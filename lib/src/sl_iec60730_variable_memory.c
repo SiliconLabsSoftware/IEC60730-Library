@@ -1,21 +1,21 @@
 /***************************************************************************/ /**
- * @file
- * @brief Variable memory check
- *******************************************************************************
- * # License
- * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
- *******************************************************************************
- *
- * SPDX-License-Identifier: LicenseRef-MSLA
- *
- * The licensor of this software is Silicon Laboratories Inc. Your use of this
- * software is governed by the terms of the Silicon Labs Master Software License
- * Agreement (MSLA) available at
- * www.silabs.com/about-us/legal/master-software-license-agreement
- * By installing, copying or otherwise using this software, you agree to the
- * terms of the MSLA.
- *
- ******************************************************************************/
+* @file
+* @brief Variable memory check
+*******************************************************************************
+* # License
+* <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
+*******************************************************************************
+*
+* SPDX-License-Identifier: LicenseRef-MSLA
+*
+* The licensor of this software is Silicon Laboratories Inc. Your use of this
+* software is governed by the terms of the Silicon Labs Master Software License
+* Agreement (MSLA) available at
+* www.silabs.com/about-us/legal/master-software-license-agreement
+* By installing, copying or otherwise using this software, you agree to the
+* terms of the MSLA.
+*
+******************************************************************************/
 
 #include <stddef.h>
 
@@ -92,6 +92,10 @@ sl_iec60730_test_result_t sl_iec60730_vmc_post(void)
     INV_CLASSB_PVAR(uint32_t, iec60730_rt_check);
 
     LABEL_DEF(IEC60730_VMC_POST_START_BKPT);
+
+    if (iec60730_rt_check > iec60730_vmc_test_config.region[current_test_region].end) {
+      goto VMC_POST_DONE;
+    }
 
     // Check RAM region from begin to end
     while (iec60730_rt_check < iec60730_vmc_test_config.region[current_test_region].end) {
@@ -234,3 +238,4 @@ sl_iec60730_test_result_t sl_iec60730_vmc_bist(void)
 
   return result;
 }
+ 
