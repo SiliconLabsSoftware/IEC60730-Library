@@ -31,7 +31,22 @@ make apply-sdk-profile PROFILE=ssdk_2026_6
 ## Export Variables
 
 > [!NOTE]
-> Before running CMake, you need to export some variables first.
+> The environment variable examples above are provided for reference only.
+>
+> Native builds should normally use:
+>
+> ```bash
+> source script/set_env.sh
+> ```
+>
+> This script automatically configures SDK, toolchain, and build-tool
+> locations for the active SDK profile.
+>
+> Alternatively, when configuring CMake manually, ensure the required
+> environment variables are exported before running CMake. Recent updates to
+> `cmake/toolchain.cmake` also allow `arm-none-eabi-gcc` to be discovered
+> from `PATH`, reducing dependence on fixed toolchain paths and SLT package
+> installation hashes.
 
 Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH_REGIONS_TEST (flash start address used to calculate CRC for the Invariable Memory module), JLINK_PATH, and add the slc-cli path to PATH before running CMake configuration.
 
