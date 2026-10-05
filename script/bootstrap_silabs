@@ -171,4 +171,3 @@ main_bootstrap_silabs()
     export JAVA_HOME
     export PATH="${JAVA_HOME}/bin:${PATH}"
 }
-
