@@ -1,0 +1,20 @@
+# sdk_profiles/gecko_4_5/source_gsdk.path
+#
+# Pin for the Gecko SDK used by the gecko_4_5 profile. Sourced by
+# script/set_gsdk.sh. Shell syntax only (KEY="value").
+
+GSDK_VERSION="4.5.0"
+
+GSDK_URL="https://github.com/SiliconLabs/gecko_sdk/releases/download/v4.5.0/gecko-sdk.zip"
+
+# sha256 of gecko-sdk.zip. Empty = not verified. set_gsdk.sh prints the hash
+# after the first download so it can be pinned here.
+GSDK_SHA256=""
+
+GSDK_CACHE_SUBDIR="gecko-sdk"
+
+# File that must exist at the SDK root for a directory to count as Gecko SDK.
+GSDK_MARKER="platform/common/inc/sl_gsdk_version.h"
+
+# Pre-mounted SDK location (compose.yml binds ${GSDK_PATH} here read-only).
+GSDK_MOUNT_DIR="/opt/gecko_sdk"

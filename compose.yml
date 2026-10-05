@@ -12,7 +12,11 @@ services:
       - .:/workspace
       - ${HOME}/.silabs:/home/ubuntu/.silabs
 
-      # Optional Gecko SDK mount
+      # Gecko SDK cache (gecko_4_5 profile): downloaded once by bootstrap,
+      # shared between host and container.
+      - ${HOME}/.cache/iec60730:/home/ubuntu/.cache/iec60730
+
+      # Optional: expose a host Gecko SDK (GSDK_PATH) instead of the cache.
       - ${GSDK_PATH:-/tmp}:/opt/gecko_sdk:ro
 
     environment:

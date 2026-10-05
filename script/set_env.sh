@@ -168,32 +168,29 @@ if [ "${_set_env_failed}" -ne 0 ]; then
     return 1
 fi
 
-if [ -n "${SDK_PATH:-}" ]; then
-    export SDK_PATH
-else
-    if [ -n "${SDK_PATH:-}" ]; then
-        export SDK_PATH
-    else
-        export SDK_PATH="$(_set_env_slt_where simplicity-sdk)"
+# SDK root. sdk.env (written by `make apply-sdk-profile`) selects the profile:
+#   gecko_4_5   -> script/set_gsdk.sh (GSDK_PATH / mount / cache / download)
+#   otherwise   -> explicit SDK_PATH, else SLT-managed simplicity-sdk
+if [ "${SDK_PROFILE:-}" = "gecko_4_5" ]; then
+    # shellcheck source=set_gsdk.sh
+    if ! source "${_set_env_repo_root}/script/set_gsdk.sh"; then
+        echo "Error: could not resolve Gecko SDK for profile gecko_4_5."
+        echo "Set GSDK_PATH to an existing Gecko SDK 4.5.0 root, or allow the download into \${XDG_CACHE_HOME:-~/.cache}/iec60730."
+        unset _set_env_repo_root _set_env_failed _set_env_slconf
+        unset _set_env_dir_slc_cli _set_env_dir_java21 _set_env_dir_gcc_arm_none_eabi
+        unset _set_env_dir_commander _set_env_dir_ninja _set_env_dir_cmake
+        unset -f _set_env_resolve_slt_dir _set_env_slt_where _set_env_path_prepend _set_env
+        unset -f _set_env_slconf_usable
+        return 1
     fi
+elif [ -z "${SDK_PATH:-}" ]; then
+    SDK_PATH="$(_set_env_slt_where simplicity-sdk)"
 fi
+export SDK_PATH
 
 # Note: Toolchain paths used by CMake and build scripts.
 export TOOL_DIRS="${_set_env_dir_gcc_arm_none_eabi}/bin"
 export TOOL_CHAINS="${TOOL_CHAINS:-GCC}"
-
-# Note: Optional Gecko SDK location for GSDK builds.
-# export GSDK_PATH="${GSDK_PATH:-$HOME/SimplicityStudio/SDKs/gecko_sdk}"
-
-# Validate Gecko SDK mount when using GSDK profile.
-if [ "${SDK_PATH:-}" = "/opt/gecko_sdk" ]; then
-    if [ ! -f "/opt/gecko_sdk/platform/common/inc/sl_gsdk_version.h" ]; then
-        echo "Error: Gecko SDK is not mounted."
-        echo "Expected Gecko SDK at /opt/gecko_sdk"
-        echo "Set GSDK_PATH to your Gecko SDK root."
-        return 1
-    fi
-fi
 
 
 # Note: Preserve FLASH_REGIONS_TEST from the build environment.

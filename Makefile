@@ -96,6 +96,7 @@ define RUN_SCRIPT
 			echo "Use: make RUNNER=native $(1)"; \
 			exit 1; \
 		fi; \
+		mkdir -p "$(HOME)/.cache/iec60730"; \
 		printf '%s\n' "$$$(2)" | $(DOCKER_COMPOSE) run --rm -T $(DEV_CONTAINER) /bin/bash; \
 	elif [ "$(RUNNER)" = "native" ]; then \
 		printf '%s\n' "$$$(2)" | /bin/bash; \
