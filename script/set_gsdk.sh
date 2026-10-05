@@ -30,16 +30,39 @@ _gsdk_is_sdk() {
     [ -n "${1:-}" ] && [ -f "${1}/${GSDK_MARKER}" ]
 }
 
+# A cached zip must pass the same checks as a fresh download. CI restores
+# this file from actions/cache and would otherwise skip the checksum.
+_gsdk_verify_zip() {
+    local sum
+
+    unzip -tq "${_gsdk_zip}" >/dev/null 2>&1 || return 1
+
+    sum="$(sha256sum "${_gsdk_zip}" | cut -d' ' -f1)"
+    if [ -n "${GSDK_SHA256}" ]; then
+        if [ "${sum}" != "${GSDK_SHA256}" ]; then
+            echo "Error: sha256 mismatch for ${_gsdk_zip}"
+            echo "  expected ${GSDK_SHA256}"
+            echo "  actual   ${sum}"
+            rm -f "${_gsdk_zip}"
+            return 1
+        fi
+        echo "  sha256 OK"
+    else
+        echo "  sha256 ${sum}  (pin it as GSDK_SHA256 in sdk_profiles/gecko_4_5/source_gsdk.path)"
+    fi
+}
+
 _gsdk_download() {
     local part="${_gsdk_zip}.part"
 
     mkdir -p "$(dirname "${_gsdk_zip}")" || return 1
 
+    if [ -f "${_gsdk_zip}" ] && _gsdk_verify_zip; then
+        return 0
+    fi
+
     if [ -f "${_gsdk_zip}" ]; then
-        if unzip -tq "${_gsdk_zip}" >/dev/null 2>&1; then
-            return 0
-        fi
-        echo "Cached archive is corrupt, re-downloading: ${_gsdk_zip}"
+        echo "Cached archive is unusable, re-downloading: ${_gsdk_zip}"
         rm -f "${_gsdk_zip}"
     fi
 
@@ -54,20 +77,7 @@ _gsdk_download() {
     fi
     mv "${part}" "${_gsdk_zip}" || return 1
 
-    local sum
-    sum="$(sha256sum "${_gsdk_zip}" | cut -d' ' -f1)"
-    if [ -n "${GSDK_SHA256}" ]; then
-        if [ "${sum}" != "${GSDK_SHA256}" ]; then
-            echo "Error: sha256 mismatch for ${_gsdk_zip}"
-            echo "  expected ${GSDK_SHA256}"
-            echo "  actual   ${sum}"
-            rm -f "${_gsdk_zip}"
-            return 1
-        fi
-        echo "  sha256 OK"
-    else
-        echo "  sha256 ${sum}  (pin it as GSDK_SHA256 in sdk_profiles/gecko_4_5/source_gsdk.path)"
-    fi
+    _gsdk_verify_zip
 }
 
 _gsdk_extract() {
@@ -134,7 +144,7 @@ _gsdk_rc=$?
 [ "${_gsdk_rc}" -eq 0 ] && export SDK_PATH
 
 unset _gsdk_repo_root _gsdk_cache_root _gsdk_cache_dir _gsdk_zip
-unset -f _gsdk_is_sdk _gsdk_download _gsdk_extract _gsdk_resolve
+unset -f _gsdk_is_sdk _gsdk_verify_zip _gsdk_download _gsdk_extract _gsdk_resolve
 
 # Keep the pin variables out of the caller's environment.
 unset GSDK_VERSION GSDK_URL GSDK_SHA256 GSDK_CACHE_SUBDIR GSDK_MARKER GSDK_MOUNT_DIR

@@ -15,13 +15,29 @@ on:
 
 jobs:
   FW_build:
+    name: FW_build (${{ matrix.profile }})
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        profile:
+          - ssdk_2026_6
+          - gecko_4_5
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}
+
+      # Gecko SDK is not installed by SLT. Cache the 1.2 GB zip only; bootstrap
+      # extracts it into the same directory, which is mounted into the container.
+      - name: Restore Gecko SDK archive
+        if: matrix.profile == 'gecko_4_5'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/iec60730/downloads/gecko-sdk-4.5.0.zip
+          key: gecko-sdk-4.5.0-${{ hashFiles('sdk_profiles/gecko_4_5/source_gsdk.path') }}
 
       - name: Build Docker Image
         run: |
@@ -31,8 +47,14 @@ jobs:
 
       - name: Build firmware in Docker
         run: |
-          docker run --rm -v "${{ github.workspace }}:/workspace" -w /workspace "$IMAGE" /bin/bash -c \
-            "make RUNNER=native bootstrap && make RUNNER=native build-unit && make RUNNER=native build-integration"
+          mkdir -p "${HOME}/.cache/iec60730"
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -v "${HOME}/.cache/iec60730:/root/.cache/iec60730" \
+            -e IEC60730_CACHE_DIR=/root/.cache/iec60730 \
+            -w /workspace \
+            "$IMAGE" /bin/bash -c \
+            "make apply-sdk-profile PROFILE=${{ matrix.profile }} && make RUNNER=native bootstrap && make RUNNER=native build-unit && make RUNNER=native build-integration"
 
       - name: Clean up workspace
         if: always()
