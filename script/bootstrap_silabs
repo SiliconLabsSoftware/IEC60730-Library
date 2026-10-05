@@ -7,6 +7,46 @@ repo_dir="$(dirname "${script_dir}")"
 
 [ -f "${repo_dir}/sdk.env" ] && source "${repo_dir}/sdk.env"
 
+install_slt()
+{
+    [ -n "${SLT_INSTALL_DIR-}" ] || SLT_INSTALL_DIR="${HOME}/.silabs"
+    export SLT_INSTALL_DIR
+
+    local os_type
+
+    if [[ $OSTYPE == linux* ]]; then
+        os_type="linux"
+    elif [[ $OSTYPE == darwin* ]]; then
+        os_type="mac"
+    else
+        echo "Unsupported OS: $OSTYPE"
+        exit 1
+    fi
+
+    local slt_download_url="https://www.silabs.com/documents/public/software/slt-cli-1.1.1-${os_type}-x64.zip"
+
+    mkdir -p "${SLT_INSTALL_DIR}"
+    mkdir -p "${SLT_INSTALL_DIR}/bin"
+
+    local slt_zip="${SLT_INSTALL_DIR}/slt.zip"
+
+    wget "${slt_download_url}" -O "${slt_zip}"
+
+    unzip -q -o -j "${slt_zip}" -d "${SLT_INSTALL_DIR}/bin"
+
+    rm -f "${slt_zip}"
+
+    SLT_INSTALL_DIR="${SLT_INSTALL_DIR}/bin"
+    export SLT_INSTALL_DIR
+
+    "${SLT_INSTALL_DIR}/slt" --help >/dev/null 2>&1 || true
+
+    if ! check_slt_installation; then
+        echo "SLT installation failed."
+        exit 1
+    fi
+}
+
 check_slt_installation()
 {
     #
@@ -94,10 +134,23 @@ EOF
 
 main_bootstrap_silabs()
 {
+    #
+    # Ensure SLT is available.
+    #
     if ! check_slt_installation; then
         echo
-        echo "ERROR: SLT not found."
-        echo "Install Simplicity Studio / Simplicity Installer first."
+        echo "SLT not found. Installing..."
+        echo
+
+        install_slt
+    fi
+
+    #
+    # Verify installation again.
+    #
+    if ! check_slt_installation; then
+        echo
+        echo "ERROR: SLT installation failed."
         echo
         exit 1
     fi
@@ -118,3 +171,4 @@ main_bootstrap_silabs()
     export JAVA_HOME
     export PATH="${JAVA_HOME}/bin:${PATH}"
 }
+
