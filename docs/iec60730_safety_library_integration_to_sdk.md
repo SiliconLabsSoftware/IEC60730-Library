@@ -45,31 +45,31 @@ SILICON LABS
 
 [Figure 5 Target Device Selection](#figure_5-target-device-selection)
 
-[Figure 6 Project Configuration](#figure-5-project-configuration)
+[Figure 6 Project Configuration](#figure-6-project-configuration)
 
-[Figure 7 Project generation in workspace](#figure-6-project-generation-in-workspace)
+[Figure 7 Project generation in workspace](#figure-7-project-generation-in-workspace)
 
-[Figure 8 Build Project](#figure-7-build-project)
+[Figure 8 Build Project](#figure-8-build-project)
 
-[Figure 9 CRC-16 and CRC-32 scripts](#figure-8-crc-16-and-crc-32-scripts)
+[Figure 9 CRC-16 and CRC-32 scripts](#figure-9-crc-16-and-crc-32-scripts)
 
-[Figure 10 Output command from the Post-build Steps](#figure-9-output-command-from-the-post-build-steps)
+[Figure 10 Output command from the Post-build Steps](#figure-10-output-command-from-the-post-build-steps)
 
-[Figure 11 Result after Post-build complete](#figure-10-result-after-post-build-complete)
+[Figure 11 Result after Post-build complete](#figure-11-result-after-post-build-complete)
 
-[Figure 12 Components support library IEC60730](#figure-11-components-support-library-iec60730)
+[Figure 12 Components support library IEC60730](#figure-12-components-support-library-iec60730)
 
-[Figure 13 Add source code library IEC60730](#figure-12-add-source-code-library-iec60730)
+[Figure 13 Add source code library IEC60730](#figure-13-add-source-code-library-iec60730)
 
-[Figure 14 Assembly code algorithm MARCHC for GCC compiler](#figure-13-assembly-code-algorithm-marchc-for-gcc-compiler)
+[Figure 14 Assembly code algorithm MARCHC for GCC compiler](#figure-14-assembly-code-algorithm-marchc-for-gcc-compiler)
 
-[Figure 15 Flow chart of the library IEC60730](#figure-14-flow-chart-of-the-library-iec60730)
+[Figure 15 Flow chart of the library IEC60730](#figure-15-flow-chart-of-the-library-iec60730)
 
-[Figure 16 Demo OEM files integrated with Library IEC60730](#figure-15-demo-oem-files-integrated-with-library-iec60730)
+[Figure 16 Demo OEM files integrated with Library IEC60730](#figure-16-demo-oem-files-integrated-with-library-iec60730)
 
-[Figure 17 Configuration for watchdog module](#figure-16-configuration-for-watchdog-module)
+[Figure 17 Configuration for watchdog module](#figure-17-configuration-for-watchdog-module)
 
-[Figure 18 Configuration for system clock module](#figure-17-configuration-for-system-clock-module)
+[Figure 18 Configuration for system clock module](#figure-18-configuration-for-system-clock-module)
 
 ## 1. Background
 
