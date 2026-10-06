@@ -1,5 +1,6 @@
 ![Static Badge](https://img.shields.io/badge/Security_Support-Supported-green)
-![Static Badge](https://img.shields.io/badge/SDK-Simplicity_SDK_v2026.6.0-green?style=flat-square)
+![Static Badge](https://img.shields.io/badge/Supported-Simplicity_SDK_v2026.6.0-green?style=flat-square)
+[![Static Badge](https://img.shields.io/badge/Supported-GeckoSDK_v4.5.0-green)](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0)
 
 # IEC60730_Libs
 Platform codes for EFR32 series chips which complies to IEC60730 safety standard
@@ -115,22 +116,41 @@ Choose one of the options below to generate the project
 |^ | -cpproj, --copy-proj-sources | Copies all files referenced by the project and links any SDK sources. This can be combined with -cpsdk. |
 |^ | -cpsdk, --copy-sdk-sources | Copies all files referenced by the selected components and links any project sources. This can be combined with -cpproj. |
 
-> [!NOTE]: To be able to use the extension LibIEC60730. You need to add the LibIEC60730
-> extension to your SDK in the extension folder and run the command: `slc signature trust -extpath <path_to_your_extension_sdk>`
+> [!NOTE]
+>
+> The LibIEC60730 extension supports:
+>
+> - Gecko SDK (GSDK) 4.5.0
+> - Simplicity SDK (SSDK) 2026.6.0
+>
+> To use the LibIEC60730 extension, copy it into the SDK `extension` directory and trust the extension:
+>
+> - `slc signature trust -extpath <path_to_extension>`
+>
+> If your workspace supports SDK profile switching, select the desired SDK profile before generating the project:
+>
+> - `make apply-sdk-profile PROFILE=gecko_4_5`
+> - `make apply-sdk-profile PROFILE=ssdk_2026_6`
+
 
 ##### For example
 
 ```sh
-$ SDK=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ slc configuration --sdk=$SDK
+# Configure SDK
+$ SDK=/home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+
+# Trust the SDK and the IEC60730 extension
+$ slc configuration --sdk $SDK
 $ slc signature trust --sdk $SDK
 $ slc signature trust -extpath $SDK/extension/IEC60730_Libs
+
+# Generate a project
 $ slc generate \
     $SDK/app/common/example/blink_baremetal \
     -np \
     -d blinky \
     -name=blinky \
-    --with brd4264c
+    --with EFR32BG21A010F1024IM32
 ```
 
 ### Run unit test
@@ -138,17 +158,19 @@ $ slc generate \
 ### Run integration test
   - Refer to the guideline link: [guideline_for_running_integration_test.md](./docs/guideline_for_running_integration_test.md)
 
-## Docker build (Simplicity SDK via SLT)
+## Docker build
 
-Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs SDKs and toolchains are **not** baked into the image; they are installed by `make bootstrap` into `/root/.silabs` (Compose volume `silabs-root`). Package pins live in `recipe.toml`; SLT/SLC paths live in root `recipe.slconf` (refreshed by bootstrap).
+Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs tooling (`slc-cli`, `java21`, `gcc-arm-none-eabi`, `commander`, `cmake`, and `ninja`) is installed and managed by SLT during `make bootstrap`. Package versions are pinned in `recipe.toml`; SLT/SLC search paths are maintained in the repository `recipe.slconf` file and refreshed during bootstrap.
 
-**Prerequisites:** Docker Engine 24+, Docker Compose v2, network access to Silabs package servers.
+SDK resolution depends on the selected SDK profile. Simplicity SDK profiles use the SDK installed and managed by SLT. Gecko SDK profiles automatically resolve the SDK from an explicit `GSDK_PATH`, an optional `/opt/gecko_sdk` Docker mount, the local cache under `~/.cache/iec60730/gecko-sdk/<version>`, or by downloading the configured Gecko SDK release when no local installation is available. Downloaded Gecko SDK archives and extracted SDKs are cached and automatically reused across subsequent builds.
+
+**Prerequisites:** Docker Engine 24+, Docker Compose v2, and network access to Silicon Labs package servers.
 
 ```sh
 # Layer A — build the image (once, or after Dockerfile changes)
 docker compose build
 
-# Layer B — install SLT + simplicity-sdk 2026.6.0 from recipe.toml (once)
+# Layer B — install / refresh Silicon Labs tooling and SDKs
 make bootstrap
 
 # Layer C — compile for brd4264c
@@ -157,7 +179,7 @@ make build-integration   # integration test targets
 make build               # unit + integration
 # or: make all           # bootstrap + build
 
-make clean               # removes build/ output; keeps the silabs-root volume
+make clean               # removes build/ output; preserves SDK caches
 ```
 
 Optional CMake flags:
@@ -166,10 +188,22 @@ Optional CMake flags:
 make build-unit BUILD_ARGS="-DENABLE_CAL_CRC_32=ON"
 ```
 
-Inside an already-running container or CI (`docker run -v "$PWD":/workspace ...`):
+If a Gecko SDK is already installed locally, it may be used directly:
+
+```sh
+export GSDK_PATH=/path/to/gecko-sdk
+```
+
+Otherwise, the SDK is downloaded automatically during bootstrap and stored under:
+
+```text
+~/.cache/iec60730
+```
+
+Inside an already-running container or CI environment:
 
 ```sh
 make RUNNER=native bootstrap build
 ```
 
-Artifacts appear on the host under `build/` (bind-mounted workspace). Hardware flash and on-device test execution stay on the host via `test/execute_unit_test.sh` / `test/execute_integration_test.sh`.
+Artifacts appear on the host under `build/` (bind-mounted workspace). Hardware flashing and on-device test execution remain host-side via `test/execute_unit_test.sh` and `test/execute_integration_test.sh`.

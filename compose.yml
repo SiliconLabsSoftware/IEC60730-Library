@@ -3,14 +3,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+
     image: iec60730-library:latest
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     working_dir: /workspace
+
     volumes:
       - .:/workspace
-      - silabs-root:/root/.silabs
-    environment:
-      SLT_INSTALL_DIR: /root/.silabs
-    tty: true
+      - ${HOME}/.silabs:/home/ubuntu/.silabs
 
-volumes:
-  silabs-root:
+      # Gecko SDK cache (gecko_4_5 profile): downloaded once by bootstrap,
+      # shared between host and container.
+      - ${HOME}/.cache/iec60730:/home/ubuntu/.cache/iec60730
+
+      # Optional: expose a host Gecko SDK (GSDK_PATH) instead of the cache.
+      - ${GSDK_PATH:-/tmp}:/opt/gecko_sdk:ro
+
+    environment:
+      SLT_INSTALL_DIR: /home/ubuntu/.silabs
+      FLASH_REGIONS_TEST: ${FLASH_REGIONS_TEST}
+      SDK_PATH: ${SDK_PATH:-}
+
+    tty: true

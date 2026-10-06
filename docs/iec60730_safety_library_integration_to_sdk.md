@@ -43,37 +43,39 @@ SILICON LABS
 
 [Figure 4 Example Project Selection](#figure-4-example-project-selection)
 
-[Figure 5 Project Configuration](#figure-5-project-configuration)
+[Figure 5 Target Device Selection](#figure_5-target-device-selection)
 
-[Figure 6 Project generation in workspace](#figure-6-project-generation-in-workspace)
+[Figure 6 Project Configuration](#figure-6-project-configuration)
 
-[Figure 7 Build Project](#figure-7-build-project)
+[Figure 7 Project generation in workspace](#figure-7-project-generation-in-workspace)
 
-[Figure 8 CRC-16 and CRC-32 scripts](#figure-8-crc-16-and-crc-32-scripts)
+[Figure 8 Build Project](#figure-8-build-project)
 
-[Figure 9 Output command from the Post-build Steps](#figure-9-output-command-from-the-post-build-steps)
+[Figure 9 CRC-16 and CRC-32 scripts](#figure-9-crc-16-and-crc-32-scripts)
 
-[Figure 10 Result after Post-build complete](#figure-10-result-after-post-build-complete)
+[Figure 10 Output command from the Post-build Steps](#figure-10-output-command-from-the-post-build-steps)
 
-[Figure 11 Components support library IEC60730](#figure-11-components-support-library-iec60730)
+[Figure 11 Result after Post-build complete](#figure-11-result-after-post-build-complete)
 
-[Figure 12 Add source code library IEC60730](#figure-12-add-source-code-library-iec60730)
+[Figure 12 Components support library IEC60730](#figure-12-components-support-library-iec60730)
 
-[Figure 13 Assembly code algorithm MARCHC for GCC compiler](#figure-13-assembly-code-algorithm-marchc-for-gcc-compiler)
+[Figure 13 Add source code library IEC60730](#figure-13-add-source-code-library-iec60730)
 
-[Figure 14 Flow chart of the library IEC60730](#figure-14-flow-chart-of-the-library-iec60730)
+[Figure 14 Assembly code algorithm MARCHC for GCC compiler](#figure-14-assembly-code-algorithm-marchc-for-gcc-compiler)
 
-[Figure 15 Demo OEM files integrated with Library IEC60730](#figure-15-demo-oem-files-integrated-with-library-iec60730)
+[Figure 15 Flow chart of the library IEC60730](#figure-15-flow-chart-of-the-library-iec60730)
 
-[Figure 16 Configuration for watchdog module](#figure-16-configuration-for-watchdog-module)
+[Figure 16 Demo OEM files integrated with Library IEC60730](#figure-16-demo-oem-files-integrated-with-library-iec60730)
 
-[Figure 17 Configuration for system clock module](#figure-17-configuration-for-system-clock-module)
+[Figure 17 Configuration for watchdog module](#figure-17-configuration-for-watchdog-module)
+
+[Figure 18 Configuration for system clock module](#figure-18-configuration-for-system-clock-module)
 
 ## 1. Background
 
 The IEC60730 is a safety standard used in household applications. It defines the test and diagnostic method that ensures the safe operation of devices. We provide the test of the following components: CPU registers, variable memory check, invariable memory check, program counter check, clock check, and interrupt check.
 
-At the time of this writing, the library IEC60730 has been tested on two devices EFR32xG23 and EFR32xG24 on Simplicity Studio 6 (SS6) with toolchain GNU ARM v12.2.1 and SDK version 2026.6.0.
+At the time of this writing, the IEC60730 Library SDK Extension has been tested on EFR32BG21 and EFR32BG24 devices using GNU Arm Embedded Toolchain v12.2.1 with both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
 
 ## 2. Install the required software.
 
@@ -88,15 +90,18 @@ $ sudo apt install srecord
 
 The safety library IEC60730 is supported by adding the IEC60730 extension, which is built using the software environment.:
 
-- OS-Ubuntu 20.04
+- OS-Ubuntu 24.04
 
 - Simplicity Studio 6
 
-- Simplicity SDK Suite v2026.6.0
+- Gecko SDK (GSDK) 4.5.0
 
-This project is organized as an extension of Simplicity Studio. This project is built upon SSDK version 2026.6.0, GNU toolchain V12.2.1. The user can download the same version of SSDK from `PACKAGES > PACKAGES MANAGER > Simplicity SDKs > Add new SDK > Simplicity SDK 2026.6.0` and Simplicity Studio V6 download link [Simplicity Studio V6](https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started).
+- Simplicity SDK (SSDK) 2026.6.0
 
-To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be `SETTING > SDKs > Simplicity SDK Suite v2026.6.0 > Add Extension`.
+This project is organized as an extension of Simplicity Studio. It supports both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0 with GNU Arm Embedded Toolchain v12.2.1.
+For Simplicity SDK (SSDK) 2026.6.0, users can install the SDK from `PACKAGES > PACKAGE MANAGER > Simplicity SDKs > Add New SDK > Simplicity SDK 2026.6.0` after installing Simplicity Studio V6. Simplicity Studio V6 can be downloaded from: [Simplicity Studio V6](https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started). For Gecko SDK (GSDK) 4.5.0, users can download the SDK from [GSDK](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0) and import it into Simplicity Studio V6 `SETTINGS > SDKs > Add SDK > Gecko SDK 4.5.0`
+
+To create and build demo projects, the user must add the IEC60730 extension to Simplicity Studio. The procedure would be `SETTING > SDKs > Simplicity SDK (SSDK) 2026.6.0 > Add Extension`.
 
 ![Figure 1 Adding Extension to SDK](./images/figure_1_adding_extension_to_sdk.png)
 ###### Figure 1 Adding Extension to SDK
@@ -109,10 +114,19 @@ Press `Browse` to find the directory of this extension. Then choose the folder t
 
 ## 4. Generate an example project.
 
-Before using Simplicity Studio to generate the project, you need to add the IEC60730 extension. Please remember the following text:
-> `"This extension supports a demo example for EFR32MG families"`
+Before using Simplicity Studio to generate a project, make sure that the IEC60730 extension has been added to your SDK.
 
-Start a project, select `DEVICES` and choose `Devices you can connect`. For example, you can select `EFR32FG23 2.4GHz 20 dBm Radio Board (Rev A00)` in the Target Boards section, with the Target Device set to `EFR32FG23B020F512IM48` as shown in the image below.
+> This extension supports demo projects for EFR32BG21 and EFR32BG24 devices on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
+
+If you are using this repository, apply the SDK profile that matches your SDK version before generating the project:
+
+```bash
+make apply-sdk-profile PROFILE=gecko_4_5
+# or
+make apply-sdk-profile PROFILE=ssdk_2026_6 
+```
+
+The same project generation workflow applies to both devices when using either Gecko SDK (GSDK) 4.5.0 or Simplicity SDK (SSDK) 2026.6.0, as shown in the image below.
 
 ![Figure 3 Create new project](./images/figure_3_create_new_project.png)
 ######  Figure 3 Create new project
@@ -127,27 +141,33 @@ To create a new Simplicity Studio® 6 (SSv6) project, follow these three dialog 
 
 An indicator at the top of the dialog will show you your current position in the process. You can click `Back` at any time to return to a previous dialog if you need to make changes.
 
-In `Example Project Selection`, use the checkboxes or keywords to find the example of interest. To create a radio board example IEC60730 Demo, search the keyword `iec60730` in the search box, related examples will show. Choose `IEC60730 Example Demo`. Click `Create`
+In `Example Project Selection`, use the checkboxes or keywords to find the example of interest. To create a radio board example IEC60730 Demo, search the keyword `iec60730` in the search box, related examples will show. Choose `IEC60730 Example Demo`. Click `create`
 
 ![Figure 4 Example Project Selection](./images/figure_4_example_project_selection.png)
 ###### Figure 4 Example Project Selection
 
-In `Project Configuration Selection`, rename and location your project if you want. For the three selections under `Copy contents`, you can choose any of the selections you want.
+In Target Device, select the target device for the project. For this example, choose `EFR32BG24A010F1024IM40`, then click `Next`. The same steps apply to `BRD4264C` or `EFR32BG21A010F1024IM32`.
+<br>
 
-![Figure 5 Project Configuration](./images/figure_5_project_configuration.png)
-###### Figure 5 Project Configuration
+![Figure 5 Target Device Selection](./images/figure_5_target_device_selection.png)
+###### Figure 5 Target Device Selection
+
+In `Project Configuration Selection`, rename your project and choose its location if you want. For the three selections under `Copy contents`, you can choose any of the selections you want.
+
+![Figure 6 Project Configuration](./images/figure_6_project_configuration.png)
+###### Figure 6 Project Configuration
 
 Once you finish project creation, the Simplicity IDE perspective opens. There may be a slight delay in the initial configuration.
 
 The project typically opens `README tab`, which contains an example project description, and `OVERVIEW tab`.
 
-![Figure 6 Project generation in workspace](./images/figure_6_project_generation_in_workspace.png)
-###### Figure 6 Project generation in workspace
+![Figure 7 Project generation in workspace](./images/figure_7_project_generation_in_workspace.png)
+###### Figure 7 Project generation in workspace
 
 For building the project, select `Open in VS Code` to synchronize the project with Visual Studio Code. Then, open the Extensions view in VS Code and install the `Simplicity Studio for VS Code` extension. After installation, click the hammer icon to build the project, or right-click the project and select Build Project.
 
-![Figure 7 Build Project](./images/figure_7_build_project.png)
-###### Figure 7 Build Project
+![Figure 8 Build Project](./images/figure_8_build_project.png)
+###### Figure 8 Build Project
 
 
 ## 5. Edit the post-build steps.
@@ -156,8 +176,8 @@ By default, after building the project, firmware files in `*.bin`, `*.hex`, and 
 
 Modify the post-build steps so new firmware images are generated with a CRC value written into FLASH at the `check_sum` symbol. Scripts `sl_iec60730_cal_crc16.sh` and `sl_iec60730_cal_crc32.sh` produce `*_crc16` / `*_crc32` images (documented generically as `*_crcNN`). They run on Windows and Ubuntu and live under `iec60730_<version>/lib/crc/`.
 
-![Figure 8 CRC-16 and CRC-32 scripts](./images/figure_8_crc_16_and_crc_32_scripts.png)
-###### Figure 8 CRC-16 and CRC-32 scripts
+![Figure 9 CRC-16 and CRC-32 scripts](./images/figure_9_crc_16_and_crc_32_scripts.png)
+###### Figure 9 CRC-16 and CRC-32 scripts
 
 Detailed parameters are described in **Support calculate CRC**.
 
@@ -188,8 +208,8 @@ arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildAr
 
 These six addresses are **three start/end pairs**. They come from the demo OEM table in `oem_iec60730.c` (`OEM_FLASH_OFFSET = 20` words → `0x50` bytes per region, with one-region gaps). See **Section 7.2** for the OEM code to modify and why multiple regions are used.
 
-![Figure 9 Output command from the Post-build Steps](./images/figure_9_add_the_command_to_post_build_steps.png)
-###### Figure 9 Output command from the Post-build Steps
+![Figure 10 Output command from the Post-build Steps](./images/figure_10_add_the_command_to_post_build_steps.png)
+###### Figure 10 Output command from the Post-build Steps
 
 ### Add post-build CRC (CMake)
 
@@ -229,35 +249,35 @@ Use `sl_iec60730_cal_crc32.sh` when `SL_IEC60730_USE_CRC_32_ENABLE` is enabled. 
 >- After the build completes, Post-build creates `<project_name>_crc16` or `<project_name>_crc32` files with extensions `*.bin`, `*.hex`, and `*.s37`.
 ---
 
-![Figure 10 Result after Post-build complete](./images/figure_10_result_after_post_build_complete.png)
-###### Figure 10 Result after Post-build complete
+![Figure 11 Result after Post-build complete](./images/figure_11_result_after_post_build_complete.png)
+###### Figure 11 Result after Post-build complete
 
 ## 6. Add the source code to the project.
 
 In our example, after adding the SDK extension, the software component will have a few components that support adding code files (*.c, *. s) of Library IEC60730 to the project:
 
-![Figure 11 Components support library IEC60730](./images/figure_11_components_support_library_iec60730.png)
-###### Figure 11 Components support library IEC60730
+![Figure 12 Components support library IEC60730](./images/figure_12_components_support_library_iec60730.png)
+###### Figure 12 Components support library IEC60730
 
 When you install these components, the source code library IEC60730 will be added. For example:
 
-![Figure 12 Add source code library IEC60730](./images/figure_12_add_source_code_library_iec60730.png)
-######  Figure 12 Add source code library IEC60730
+![Figure 13 Add source code library IEC60730](./images/figure_13_add_source_code_library_iec60730.png)
+######  Figure 13 Add source code library IEC60730
 
-![Figure 13 Assembly code algorithm MARCHC for GCC compiler](./images/figure_13_assembly_code_alorithm_marchc_for_gcc_compiler.png)
-###### Figure 13 Assembly code algorithm MARCHC for GCC compiler
+![Figure 14 Assembly code algorithm MARCHC for GCC compiler](./images/figure_13_assembly_code_alorithm_marchc_for_gcc_compiler.png)
+###### Figure 14 Assembly code algorithm MARCHC for GCC compiler
 
 ## 7. Integrate code into the project.
 
-The library IEC60730 has been divided into 2 main test phases: Power on Self-Test (POST) and Build In Self-Test (BIST). [Figure 13 Flow chart of the library IEC60730](#figure-13-flow-chart-of-the-library-iec60730) shows the basics of the library IEC60730 integration into a user software solution.
+The IEC60730 library is divided into two main test phases: Power-On Self-Test (POST) and Built-In Self-Test (BIST). [Figure 14 Flow chart of the library IEC60730 shows the basic IEC60730 integration flow within a user software solution.
 
-![Figure 14 Flow chart of the library IEC60730](./images/figure_14_flow_chart_of_the_lib_iec60730.png)
-###### Figure 14 Flow chart of the library IEC60730
+![Figure 15 Flow chart of the library IEC60730](./images/figure_15_flow_chart_of_the_lib_iec60730.png)
+###### Figure 15 Flow chart of the library IEC60730
 
 In our example, we have added a demo `oem` foler  (Original equipment manufacturer) to integrate with the library IEC60730 to test steps such as flow charts fully.
 
-![Figure 15 Demo OEM files integrated with Library IEC60730](./images/figure_15_demo_oem_files_intergrade_with_lib_iec.png)
-###### Figure 15 Demo OEM files integrated with Library IEC60730
+![Figure 16 Demo OEM files integrated with Library IEC60730](./images/figure_16_demo_oem_files_intergrade_with_lib_iec.png)
+###### Figure 16 Demo OEM files integrated with Library IEC60730
 
 If you want to add your OEM code and don't want to use our OEM files demo, you COULD add your OEM code via the following steps below:
 
@@ -351,8 +371,8 @@ The reference CRC is written at `check_sum` by the post-build script (Section 5)
 
 ### 3. Configure Watchdog Test: this configuration determines which watchdog unit will be checked.The library does not initialize the watchdog units, the user should do the initialization. We support configuration for watchdog module
 
-![Figure 16 Configuration for watchdog module](./images/figure_16_configuration_for_watchdog_module.png)
-###### Figure 16 Configuration for watchdog module
+![Figure 17 Configuration for watchdog module](./images/figure_17_configuration_for_watchdog_module.png)
+###### Figure 17 Configuration for watchdog module
 
 The two define used to enable watchdog testing are used in the application:
 
@@ -375,8 +395,8 @@ If these macros are not enabled, it will show an error saying watchdog checking 
 
 - Create two timers with 10 milliseconds (ms) and 100 milliseconds (ms) interrupt periods (parameters 10ms and 100ms are recommended values) to test the clock and the clock switch. You can refer our demo example, file `oem_iec60730_timer.c` for more details. Note that adjusting the 10ms and 100ms values will require adjusting other configuration `IEC60730_SYS_CLK`:
 
-![Figure 17 Configuration for system clock module](./images/figure_16_configuration_for_system_clock_module.png)
-###### Figure 17 Configuration for system clock module
+![Figure 18 Configuration for system clock module](./images/figure_18_configuration_for_system_clock_module.png)
+###### Figure 18 Configuration for system clock module
 
 ### 5. To perform a variable memory check, the library uses MarchC and MarchXC algorithms. It will have two options:
 
@@ -441,7 +461,7 @@ oem_irq_exec_count[0]++;
 | 1.1.0 | June 2024 | Adding Section 3 and Section 4 for support creates a Library Extension Updated other sections for suit with the released package EFR32xG12 and EFR32xG24 devices. |
 | 2.0.0 | Nov 2024 | Rewrite the documentation by the re-factory code of the library support device EFR32MG families. |
 | 2.1.0 | Aug 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32FG23 device family. |
-
+| 2.2.0 | Sep 2026 | Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support. |
 
 
 
