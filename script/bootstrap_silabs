@@ -94,7 +94,23 @@ install_slt_packages()
 
 ensure_recipe_slconf()
 {
+
+    # Do not overwrite host recipe.slconf from inside Docker.
+    if [ -f /.dockerenv ]; then
+        return
+    fi
+
+    local sdk_path="${SDK_PATH:-}"
+
     local dest="${repo_dir}/recipe.slconf"
+
+    # local dest
+
+    # if [ -f /.dockerenv ]; then
+    #     dest="${repo_dir}/recipe.docker.slconf"
+    # else
+    #     dest="${repo_dir}/recipe.slconf"
+    # fi
 
     local sdk_path="${SDK_PATH:-}"
 
