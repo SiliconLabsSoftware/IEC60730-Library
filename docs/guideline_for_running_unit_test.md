@@ -38,10 +38,11 @@ make apply-sdk-profile PROFILE=ssdk_2026_6
 > Native builds should normally use:
 >
 > ```bash
+> ./script/bootstrap_silabs
 > source script/set_env.sh
 > ```
 >
-> This script automatically configures SDK, toolchain, and build-tool
+> These scripts automatically configure SDK, toolchain, and build-tool
 > locations for the active SDK profile.
 >
 > Alternatively, when configuring CMake manually, ensure the required

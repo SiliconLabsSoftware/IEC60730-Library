@@ -36,10 +36,11 @@ make apply-sdk-profile PROFILE=ssdk_2026_6
 > Native builds should normally use:
 >
 > ```bash
+> ./script/bootstrap_silabs
 > source script/set_env.sh
 > ```
 >
-> This script automatically configures SDK, toolchain, and build-tool
+> These scripts automatically configure SDK, toolchain, and build-tool
 > locations for the active SDK profile.
 >
 > Alternatively, when configuring CMake manually, ensure the required
@@ -109,6 +110,10 @@ $ export CHIP=EFR32BG21A010F1024IM32
 # EFR32BG24A010F1024IM40
 $ export CHIP=EFR32BG24A010F1024IM40
 ```
+
+> [!NOTE]
+>
+> Replace `HOST_IP` with the IPv4 address configured on the target device and replace `ADAPTER_SN` with the serial number of the SEGGER J-Link adapter connected to the target. The host machine running the integration test must be able to reach the target device over the network and access the specified J-Link adapter.
 
 If test secure peripherals or non-secure peripherals:
 

@@ -160,11 +160,18 @@ $ slc generate \
 
 ## Docker build
 
+## Docker build
+
+> **Note**
+>
+> SLT currently installs and manages Simplicity SDK (SSDK) 2026.6.0 during `make bootstrap`.
+> Gecko SDK (GSDK) 4.5.0 is not currently installed or managed by SLT. Instead, it is resolved by the repository bootstrap flow using `GSDK_PATH`, an optional `/opt/gecko_sdk` Docker mount, the local cache, or automatic SDK download.
+
 Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs tooling (`slc-cli`, `java21`, `gcc-arm-none-eabi`, `commander`, `cmake`, and `ninja`) is installed and managed by SLT during `make bootstrap`. Package versions are pinned in `recipe.toml`; SLT/SLC search paths are maintained in the repository `recipe.slconf` file and refreshed during bootstrap.
 
 SDK resolution depends on the selected SDK profile. Simplicity SDK profiles use the SDK installed and managed by SLT. Gecko SDK profiles automatically resolve the SDK from an explicit `GSDK_PATH`, an optional `/opt/gecko_sdk` Docker mount, the local cache under `~/.cache/iec60730/gecko-sdk/<version>`, or by downloading the configured Gecko SDK release when no local installation is available. Downloaded Gecko SDK archives and extracted SDKs are cached and automatically reused across subsequent builds.
 
-**Prerequisites:** Docker Engine 24+, Docker Compose v2, and network access to Silicon Labs package servers.
+**Prerequisites:** Docker Engine, Docker Compose, and network access to Silicon Labs package servers.
 
 ```sh
 # Layer A — build the image (once, or after Dockerfile changes)

@@ -68,11 +68,11 @@ The project has a CMake template that supports running tests. Follow the steps b
 
 Add the path to the expanded slc-cli to your PATH sh export PATH=$PATH:~/SimplicityStudio/slc_cli_linux/slc_cli/
 
-Configure SDK. For example sh slc configuration --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+Configure SDK. For example sh slc configuration --sdk /home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
 
 Run slc signature trust --sdk <path_to_the_simplicity_sdk> if you have not yet trusted your SDK.
 
-For example your SDK locate at /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p. Run `slc signature trust --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p`
+For example your SDK locate at /home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p. Run `slc signature trust --sdk /home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p`
 
 Set toolchain For example sh slc configuration --gcc-toolchain=~/SimplicityStudio/developer/toolchains/gnu_arm/12.2.rel1_2023.7
 
