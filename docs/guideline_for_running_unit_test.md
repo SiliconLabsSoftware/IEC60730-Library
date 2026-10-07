@@ -127,7 +127,7 @@ cmake --build . --target unit_test_iec60730_invariable_memory -j4
 
 ## Automatically run unit tests
 
-Run the helper script **from the `test/` directory** (it resolves paths relative to that location):
+Run the helper script from `test/` (recommended). Paths are anchored to the script location, so invoking `bash test/execute_unit_test.sh ...` from the repo root also works:
 
 ```sh
 cd test

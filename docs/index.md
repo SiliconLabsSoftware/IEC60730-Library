@@ -23,6 +23,15 @@ See [License](./license.md).
 
 See [release_note.md](./release_note.md).
 
+## Versioning
+
+| Artifact | Version | Where |
+| --- | --- | --- |
+| SDK Extension (package) | **2.2.0** | `iec60730.slce` |
+| Runtime library | **2.0.0** | `IE60730_LIBRARY_VERSION` / `SL_IEC60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h` |
+
+This release updates the **SDK Extension** to 2.2.0 (BG21/BG24, dual-SDK profiles, tests). The library API/runtime version stays at **2.0.0**.
+
 ## IEC60730 certificate
 
 The Silicon Labs Appliances homepage will host the final certificate and detailed report when they are available.
@@ -78,7 +87,7 @@ See [IEC60730 safety library integration to SDK](./iec60730_safety_library_integ
 #### Install Simplicity CLI (`slc`)
 
 - Follow the Simplicity Studio 6 User Guide: [Install Simplicity Studio](https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio).
-- On Linux, install Amazon Corretto 17 if required: [Amazon Corretto 17 downloads](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
+- **Java:** Docker / SLT bootstrap uses **Java 21**. For Simplicity Studio–only workflows, install the JDK your Studio/`slc` package requires (often Amazon Corretto 17 on Linux): [Amazon Corretto 17 downloads](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
 
 #### Configure `slc`
 

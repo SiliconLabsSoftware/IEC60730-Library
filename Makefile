@@ -23,10 +23,14 @@ BUILD_MODE ?= all
 # Execution backend: compose (Docker) or native (host).
 RUNNER ?= compose
 
-# Override per device family when the flash memory map differs
+# Override per device family when the flash memory map differs.
+# BG21 flash starts at 0x00000000; BG24 (and default) at 0x08000000.
+# Allow an explicit environment override; otherwise key off BOARD_NAME.
+ifndef FLASH_REGIONS_TEST
 FLASH_REGIONS_TEST := 0x08000000
-ifeq ($(BOARD_NAME),EFR32BG21A010F1024IM32)
+ifneq ($(findstring EFR32BG21,$(BOARD_NAME)),)
 FLASH_REGIONS_TEST := 0x00000000
+endif
 endif
 export FLASH_REGIONS_TEST
 
@@ -96,7 +100,7 @@ define RUN_SCRIPT
 			echo "Use: make RUNNER=native $(1)"; \
 			exit 1; \
 		fi; \
-		mkdir -p "$(HOME)/.cache/iec60730"; \
+		mkdir -p "$(HOME)/.silabs" "$(HOME)/.cache/iec60730"; \
 		printf '%s\n' "$$$(2)" | $(DOCKER_COMPOSE) run --rm -T $(DEV_CONTAINER) /bin/bash; \
 	elif [ "$(RUNNER)" = "native" ]; then \
 		printf '%s\n' "$$$(2)" | /bin/bash; \

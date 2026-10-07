@@ -27,6 +27,15 @@ See [LICENSE.md](LICENSE.md).
 
 See [docs/release_note.md](./docs/release_note.md).
 
+## Versioning
+
+| Artifact | Version | Where |
+| --- | --- | --- |
+| SDK Extension (package) | **2.2.0** | `iec60730.slce` |
+| Runtime library | **2.0.0** | `IE60730_LIBRARY_VERSION` / `SL_IEC60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h` |
+
+This release updates the **SDK Extension** to 2.2.0 (BG21/BG24, dual-SDK profiles, tests). The library API/runtime version stays at **2.0.0**.
+
 ## IEC60730 certificate
 
 The Silicon Labs Appliances homepage will host the final certificate and detailed report when they are available.
@@ -37,7 +46,14 @@ After integrating the IEC60730 library into a product, OEMs must certify the com
 
 ## Supported families and software requirements
 
-API documentation (supported families, software requirements, demo build steps, compiler notes, and system architecture) is published on the project GitHub Pages site:
+Default Docker / CI / Makefile board names:
+
+| Device ID | Role |
+| --- | --- |
+| `EFR32BG21A010F1024IM32` | Default (`BOARD_NAME`) |
+| `EFR32BG24A010F1024IM40` | Alternate CI matrix board |
+
+SDK pins: Simplicity SDK **2026.6.0** (`recipe.toml`) and Gecko SDK **4.5.0**. Full family / API docs:
 
 - [Supported Families](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
 - [Software Requirements](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
@@ -82,7 +98,7 @@ See [docs/iec60730_safety_library_integration_to_sdk.md](./docs/iec60730_safety_
 ### 2. Install Simplicity CLI (`slc`)
 
 - Install Simplicity Studio and the Simplicity CLI: [Install Simplicity Studio](https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio).
-- On Linux, install Amazon Corretto 17 if required by your `slc` package: [Amazon Corretto 17 downloads](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
+- **Java:** Docker / SLT bootstrap provides **Java 21** (`java21` via SLT; image also installs `openjdk-21-jre-headless`). For Simplicity Studio–only workflows, install the JDK your Studio/`slc` package requires (often Amazon Corretto 17 on Linux): [Amazon Corretto 17 downloads](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
 
 #### Configure `slc`
 
@@ -152,9 +168,36 @@ slc generate \
 
 ## Docker / Makefile bootstrap build
 
-Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs tooling (`slc-cli`, `java21`, `gcc-arm-none-eabi`, `commander`, `cmake`, and `ninja`) is installed and managed by **SLT** during `make bootstrap`. Package versions are pinned in `recipe.toml`. SLT/SLC search paths are written to `recipe.slconf` during bootstrap.
+Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs tooling (`slc-cli`, `java21`, `gcc-arm-none-eabi`, `commander`, `cmake`, and `ninja`) is installed and managed by **SLT** during `make bootstrap`. Package pins live in `recipe.toml`. After bootstrap, SLT/SLC search paths are written to gitignored `recipe.slconf` at the repo root (not present in a clean clone).
 
-**Prerequisites:** Docker Engine 24+, Docker Compose v2, and network access to Silicon Labs package servers (and GitHub, if GSDK must be downloaded).
+**Supported host OS:** Documented Docker builds are validated on **Linux** (Ubuntu 24.04 recommended; used by CI). Windows and macOS can use Docker Desktop with the same Compose flow. Native host flash/run scripts are validated on Linux.
+
+**Prerequisites:**
+
+- Docker Engine 24+
+- **Docker Compose v2** (the `docker compose` CLI plugin — required by the root `Makefile`; Docker Engine alone is not enough)
+- Network access to Silicon Labs package servers (and GitHub, if GSDK must be downloaded)
+
+`make bootstrap` / `make build` pre-create writable host dirs `~/.silabs` and `~/.cache/iec60730` (avoid a root-owned bind mount). If a previous failed run left `~/.silabs` owned by root, fix once with `sudo chown -R "$USER" ~/.silabs`.
+
+Verify Compose v2 before the first bootstrap:
+
+```sh
+docker compose version
+```
+
+If that fails (for example `compose is not a docker command`, or `unknown shorthand flag: 'f' in -f` when running `make bootstrap` / `docker compose -f ...`), install the plugin, then re-check:
+
+```sh
+# Ubuntu / Debian (package name may vary by distro)
+sudo apt-get update
+sudo apt-get install docker-compose-v2
+# or, from Docker's apt repository: docker-compose-plugin
+
+docker compose version
+```
+
+CI reference: [`.github/workflows/02-Build-Firmware.yaml`](./.github/workflows/02-Build-Firmware.yaml).
 
 ```sh
 # Layer A — build the image (once, or after Dockerfile changes)
@@ -186,7 +229,7 @@ make build-unit BUILD_ARGS="-DENABLE_CAL_CRC_32=ON"
 | `ssdk_2026_6` (default) | Simplicity SDK 2026.6.0 | SLT installs and locates the SDK |
 | `gecko_4_5` | Gecko SDK 4.5.0 | Maintained on GitHub; `script/set_gsdk.sh` resolves it |
 
-For Gecko SDK, either set a local install:
+For Simplicity SDK, an explicit host install can be passed through Compose as `SDK_PATH` (preserved by `script/set_env.sh`). For Gecko SDK, either set a local install:
 
 ```sh
 export GSDK_PATH=/path/to/gecko-sdk
@@ -204,4 +247,46 @@ Inside an already-running container or CI environment:
 make RUNNER=native bootstrap build
 ```
 
-Artifacts appear on the host under `build/` (bind-mounted workspace). Hardware flashing and on-device test execution remain host-side via `test/execute_unit_test.sh` and `test/execute_integration_test.sh`.
+### Build artifacts
+
+After `make build-unit` / `make build-integration`, firmware images land under the bind-mounted `build/` tree. Example (BG21, GCC):
+
+```text
+build/test/unit_test/build/EFR32BG21A010F1024IM32/GCC/unit_test_iec60730_post/unit_test_iec60730_post.s37
+build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_irq/NS/integration_test_iec60730_irq.s37
+```
+
+Invariable-memory images may end with `_crc16.s37` or `_crc32.s37` — flash the CRC-suffixed file when those options are enabled. See the unit/integration guidelines for details.
+
+### On-device test prerequisites (host)
+
+Compile can stay in Docker; flash and on-device execution run on the **host**:
+
+- Supported kit / device: `EFR32BG21A010F1024IM32` (default) or `EFR32BG24A010F1024IM40`
+- SEGGER J-Link (library path used by scripts: `/opt/SEGGER/JLink/libjlinkarm.so`)
+- Simplicity Commander (`commander`) on `PATH`
+- Adapter serial number (`ADAPTER_SN`) from the debugger
+
+### Flash and run on-device tests
+
+```sh
+cd test
+bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+# or
+bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+```
+
+Scripts resolve paths from their own location, so `bash test/execute_unit_test.sh ...` from the repo root also works. Prefer `cd test` to match the guidelines.
+
+**Success:** script exits `0` and writes reports under `log/` (for example `log/unit_test_iec60730_post.log`). Full options and CRC flags: [unit test guideline](./docs/guideline_for_running_unit_test.md), [integration test guideline](./docs/guideline_for_running_integration_test.md).
+
+## Troubleshooting
+
+| Symptom | What to try |
+| --- | --- |
+| Missing `slc` / SLT packages | Run `make bootstrap` before `make build-*`. |
+| `slc generate` fails with a mysterious path error | Prefer SLT’s `slc-cli`, not Heimdal’s `/usr/bin/slc`. `source script/set_env.sh` after bootstrap. |
+| `RUNNER=compose` inside a container | Use `make RUNNER=native …` when already inside the image or CI. |
+| Flash fails / no device | Ensure `commander` is on `PATH`, J-Link is installed, and `ADAPTER_SN` is correct. |
+| Permission errors under `~/.silabs` | Pre-create as your user, or `sudo chown -R "$USER" ~/.silabs` after a root-owned bind mount. |
+| Wrong `.s37` / missing CRC image | Use the artifact paths above; for invariable memory flash `*_crc16.s37` or `*_crc32.s37`. |

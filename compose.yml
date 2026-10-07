@@ -10,6 +10,7 @@ services:
 
     volumes:
       - .:/workspace
+      # Host dirs are pre-created by Makefile (user-owned) before first run.
       - ${HOME}/.silabs:/opt/silabs
 
       # Gecko SDK cache (gecko_4_5 profile): downloaded once by bootstrap,
@@ -24,6 +25,7 @@ services:
       SLT_INSTALL_DIR: /opt/silabs
       IEC60730_CACHE_DIR: /opt/iec60730-cache
       FLASH_REGIONS_TEST: ${FLASH_REGIONS_TEST}
+      # SSDK override: SDK_PATH. Gecko override: GSDK_PATH (via set_gsdk.sh).
       SDK_PATH: ${SDK_PATH:-}
 
     tty: true

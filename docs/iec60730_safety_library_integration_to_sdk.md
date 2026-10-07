@@ -73,7 +73,7 @@ SILICON LABS
 
 IEC 60730 is a safety standard used in household appliances. It defines diagnostic methods that help ensure safe device operation. This library provides tests for CPU registers, variable memory, invariable memory, program counter, clock, and interrupts.
 
-At the time of this writing, the IEC60730 Library SDK Extension has been tested on EFR32BG21 and EFR32BG24 devices using GNU Arm Embedded Toolchain v12.2.1 with both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
+At the time of this writing, the IEC60730 Library SDK Extension **v2.2.0** has been tested on EFR32BG21 and EFR32BG24 devices using GNU Arm Embedded Toolchain v12.2.1 with both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. The runtime library version reported by `SL_IEC60730_LIBRARY_VERSION` remains **2.0.0**; only the SDK Extension package version is **2.2.0**.
 
 ## 2. Install the required software
 
@@ -470,7 +470,7 @@ Implement `sl_iec60730_safe_state` to handle detected faults. See `oem_iec60730_
 | 1.1.0 | June 2024 | Adding Section 3 and Section 4 for support creates a Library Extension Updated other sections for suit with the released package EFR32xG12 and EFR32xG24 devices. |
 | 2.0.0 | Nov 2024 | Rewrite the documentation by the re-factory code of the library support device EFR32MG families. |
 | 2.1.0 | Aug 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32FG23 device family. |
-| 2.2.0 | Sep 2026 | Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support. Documented that SLT provides Simplicity SDK 2026.6.0 clone/setup, while GSDK 4.5.0 is maintained on GitHub and resolved separately. |
+| 2.2.0 | Sep 2026 | SDK Extension packaging release (library runtime version remains 2.0.0). Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support. Documented that SLT provides Simplicity SDK 2026.6.0 clone/setup, while GSDK 4.5.0 is maintained on GitHub and resolved separately. |
 
 
 

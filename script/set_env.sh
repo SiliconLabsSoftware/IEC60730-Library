@@ -34,7 +34,14 @@ if [ ! -f "${_set_env_repo_root}/sdk.env" ]; then
         ssdk_2026_6 || return 1
 fi
 
+# Profiles often set SDK_PATH= (empty) meaning "resolve later". Preserve a
+# non-empty caller/Compose override across sourcing sdk.env.
+_set_env_sdk_path_preset="${SDK_PATH-}"
 source "${_set_env_repo_root}/sdk.env"
+if [ -n "${_set_env_sdk_path_preset}" ]; then
+    SDK_PATH="${_set_env_sdk_path_preset}"
+fi
+unset _set_env_sdk_path_preset
 
 
 _set_env_resolve_slt_dir()
@@ -233,8 +240,13 @@ export TOOL_DIRS="${_set_env_dir_gcc_arm_none_eabi}/bin"
 export TOOL_CHAINS="${TOOL_CHAINS:-GCC}"
 
 
-# Note: Preserve FLASH_REGIONS_TEST from the build environment.
-export FLASH_REGIONS_TEST="${FLASH_REGIONS_TEST:-}"
+# Preserve a non-empty FLASH_REGIONS_TEST from the build environment.
+# Leave unset when empty so CMake can apply its board/default fallback.
+if [ -n "${FLASH_REGIONS_TEST:-}" ]; then
+    export FLASH_REGIONS_TEST
+else
+    unset FLASH_REGIONS_TEST
+fi
 
 # Note: Ensure Docker containers run with the same IDs
 export DOCKER_UID=$(id -u)

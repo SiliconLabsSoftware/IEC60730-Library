@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage (run from the test/ directory):
+# Usage (recommended from test/; also safe from repo root):
 #   bash execute_integration_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
 #
 #   BOARD_NAME  : EFR32BG21A010F1024IM32 or EFR32BG24A010F1024IM40
@@ -11,10 +11,11 @@
 #   OPTIONS     : optional CMake flags, e.g. "-DENABLE_CAL_CRC_32=ON"
 #
 # Examples:
-#   bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
-#   bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+#   cd test && bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
+#   bash test/execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
 
-BASH_DIRECTION=$(pwd)
+# Paths are anchored to this script's directory so cwd may be test/ or repo root.
+BASH_DIRECTION="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BOARD_NAME=$1
 TASK=$2
 COMPONENT=$3
@@ -27,17 +28,15 @@ if [[ "$COMPILER" == "IAR" ]]; then
     exit 1
 fi
 JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-TEST_PATH=$(pwd)/test_script
-LOG_PATH=$(pwd)/../log
-LOG_FILE_TEMP=$(pwd)/../log/temp.log
+TEST_PATH=$BASH_DIRECTION/test_script
+LOG_PATH=$BASH_DIRECTION/../log
+LOG_FILE_TEMP=$LOG_PATH/temp.log
 LOG_BUILD=$LOG_PATH/build_integration_test_components.log
 LOG_FILE=$LOG_PATH/build_integration_test_components.log
-IMAGE_PATH=$(pwd)/../build/test/integration_test/build/$BOARD_NAME/$COMPILER
+IMAGE_PATH=$BASH_DIRECTION/../build/test/integration_test/build/$BOARD_NAME/$COMPILER
 DEVICE_NAME=
 
-if [ -d "$LOG_PATH" ];then
-  mkdir -p $LOG_PATH
-fi
+mkdir -p "$LOG_PATH"
 
 #echo "OPTION_INTEGRATION_TEST: $OPTION_INTEGRATION_TEST"
 
@@ -190,9 +189,9 @@ function run
         fi
 
         if [[ "$OPTION_INTEGRATION_TEST" == *"TEST_SECURE_PERIPHERALS_ENABLE=ON"* ]];then
-          IMAGE_PATH=$(pwd)/../build/test/integration_test/build/$BOARD_NAME/$compiler/$component/S
+          IMAGE_PATH=$BASH_DIRECTION/../build/test/integration_test/build/$BOARD_NAME/$compiler/$component/S
         else
-          IMAGE_PATH=$(pwd)/../build/test/integration_test/build/$BOARD_NAME/$compiler/$component/NS
+          IMAGE_PATH=$BASH_DIRECTION/../build/test/integration_test/build/$BOARD_NAME/$compiler/$component/NS
         fi
         #echo "OPTION_INTEGRATION_TEST: $OPTION_INTEGRATION_TEST"
         flash_image $component $compiler "$arg"

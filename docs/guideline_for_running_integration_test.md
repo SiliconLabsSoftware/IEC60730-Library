@@ -173,7 +173,7 @@ INTEGRATION_TEST_ENABLE_CAL_CRC_32=enable python3 integration_test_iec60730_inva
 
 ## Automatically run integration tests
 
-Run the helper script **from the `test/` directory**:
+Run the helper script from `test/` (recommended). Paths are anchored to the script location, so invoking `bash test/execute_integration_test.sh ...` from the repo root also works:
 
 ```sh
 cd test

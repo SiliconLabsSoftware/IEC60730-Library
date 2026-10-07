@@ -1,5 +1,6 @@
-2.2.0 Release
+2.2.0 Release (SDK Extension)
 
+- Package / SDK Extension version: **2.2.0** (`iec60730.slce`). Runtime library version remains **2.0.0** (`IE60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h`).
 - Add support for EFR32BG21 and EFR32BG24 devices.
 - Supported compiler: GCC.
 - Add dual SDK support using IEC60730 Library SDK Extension v2.2.0 with Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.

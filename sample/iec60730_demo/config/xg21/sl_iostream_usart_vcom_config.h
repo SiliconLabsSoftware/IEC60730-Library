@@ -26,12 +26,11 @@
 #define SL_GPIO_PORT_F gpioPortF
 #endif
 
-/* USART settings giữ nguyên */
-
+/* USART settings (COS stub: no hardware flow control). */
 #define SL_IOSTREAM_USART_VCOM_BAUDRATE              115200
 #define SL_IOSTREAM_USART_VCOM_PARITY                usartNoParity
 #define SL_IOSTREAM_USART_VCOM_STOP_BITS             usartStopbits1
-#define SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE     usartHwFlowControlCtsAndRts
+#define SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE     usartHwFlowControlNone
 
 #define SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE        32
 #define SL_IOSTREAM_USART_VCOM_CONVERT_BY_DEFAULT_LF_TO_CRLF 0

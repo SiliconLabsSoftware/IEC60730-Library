@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage (run from the test/ directory):
+# Usage (recommended from test/; also safe from repo root):
 #   bash execute_unit_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
 #
 #   BOARD_NAME  : EFR32BG21A010F1024IM32 or EFR32BG24A010F1024IM40
@@ -11,10 +11,11 @@
 #   OPTIONS     : optional CMake flags, e.g. "-DENABLE_CAL_CRC_32=ON"
 #
 # Examples:
-#   bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
-#   bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+#   cd test && bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
+#   bash test/execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
 
-BASH_DIRECTION=$(pwd)
+# Paths are anchored to this script's directory so cwd may be test/ or repo root.
+BASH_DIRECTION="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BOARD_NAME=$1
 TASK=$2
 COMPONENT=$3
@@ -27,11 +28,11 @@ if [[ "$COMPILER" == "IAR" ]]; then
     exit 1
 fi
 JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-TEST_PATH=$(pwd)/test_script
+TEST_PATH=$BASH_DIRECTION/test_script
 TEST_SCRIPT=$TEST_PATH/unit_test_iec60730_get_report.py
-LOG_PATH=$(pwd)/../log
+LOG_PATH=$BASH_DIRECTION/../log
 LOG_FILE=$LOG_PATH/build_unit_test_components.log
-IMAGE_PATH=$(pwd)/../build/test/unit_test/build/$BOARD_NAME/$COMPILER
+IMAGE_PATH=$BASH_DIRECTION/../build/test/unit_test/build/$BOARD_NAME/$COMPILER
 DEVICE_NAME=
 
 function get_device_name

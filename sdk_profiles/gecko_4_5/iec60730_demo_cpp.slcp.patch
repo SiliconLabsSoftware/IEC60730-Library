@@ -13,7 +13,7 @@ description: >
 author: Silicon Laboratories, Inc.
 
 sdk_extension:
-  - {id: iec60730, version: 2.2.0}
+  - {id: iec60730, version: 2.2.0, vendor: silabs}
 
 sdk:
   id: gecko_sdk
@@ -113,6 +113,10 @@ configuration:
     value: 0
     condition:
       - device_series_2
+
+  # CTS/RTS blocks USART_Tx when VCOM/board controller is not driven (COS stub).
+  - name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
+    value: usartHwFlowControlNone
 
 define:
   - name: HAL_CONFIG_HEADER
