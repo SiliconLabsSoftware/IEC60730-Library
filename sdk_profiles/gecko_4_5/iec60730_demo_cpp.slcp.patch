@@ -13,7 +13,7 @@ description: >
 author: Silicon Laboratories, Inc.
 
 sdk_extension:
-  - {id: iec60730, version: 2.2.0, vendor: silabs}
+  - {id: iec60730, version: 2.2.0}
 
 sdk:
   id: gecko_sdk

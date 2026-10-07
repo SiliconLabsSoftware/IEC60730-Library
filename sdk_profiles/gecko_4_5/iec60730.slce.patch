@@ -1,6 +1,5 @@
 id: "iec60730"
 version: 2.2.0
-vendor: silabs
 description: "IEC60730 extension for Simplicity SDK Suite"
 label: "Silicon Labs Safety Libraries IEC60730"
 sdk:
