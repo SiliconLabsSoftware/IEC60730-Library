@@ -52,15 +52,17 @@ check_slt_installation()
     local search_root="${SLT_INSTALL_DIR:-${HOME}/.silabs}"
 
     #
-    # Explicit / Compose install root (bin/slt or slt in root)
+    # Explicit / Compose install root (bin/slt or slt in root).
+    # Require a regular file: ~/.silabs/slt is often an SLT data directory
+    # (installs/engines), and -x alone is true for directories.
     #
-    if [ -x "${search_root}/bin/slt" ]; then
+    if [ -f "${search_root}/bin/slt" ] && [ -x "${search_root}/bin/slt" ]; then
         SLT_INSTALL_DIR="${search_root}/bin"
         export SLT_INSTALL_DIR
         return 0
     fi
 
-    if [ -x "${search_root}/slt" ]; then
+    if [ -f "${search_root}/slt" ] && [ -x "${search_root}/slt" ]; then
         SLT_INSTALL_DIR="${search_root}"
         export SLT_INSTALL_DIR
         return 0
@@ -69,7 +71,7 @@ check_slt_installation()
     #
     # New layout under HOME
     #
-    if [ -x "${HOME}/.silabs/bin/slt" ]; then
+    if [ -f "${HOME}/.silabs/bin/slt" ] && [ -x "${HOME}/.silabs/bin/slt" ]; then
         SLT_INSTALL_DIR="${HOME}/.silabs/bin"
         export SLT_INSTALL_DIR
         return 0
@@ -88,7 +90,7 @@ check_slt_installation()
             | head -n1
     )"
 
-    if [ -n "${slt_bin}" ]; then
+    if [ -n "${slt_bin}" ] && [ -x "${slt_bin}" ]; then
         SLT_INSTALL_DIR="$(dirname "${slt_bin}")"
         export SLT_INSTALL_DIR
         return 0
