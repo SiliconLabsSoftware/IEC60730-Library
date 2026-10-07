@@ -49,14 +49,16 @@ _set_env_resolve_slt_dir()
     local search_root="${1:-${HOME}/.silabs}"
 
     #
-    # Prefer an explicit install root (e.g. Compose SLT_INSTALL_DIR=/opt/silabs)
+    # Prefer an explicit install root (e.g. Compose SLT_INSTALL_DIR=/opt/silabs).
+    # Require a regular file: ~/.silabs/slt is often an SLT data directory
+    # (installs/engines), and -x alone is true for directories.
     #
-    if [ -x "${search_root}/bin/slt" ]; then
+    if [ -f "${search_root}/bin/slt" ] && [ -x "${search_root}/bin/slt" ]; then
         echo "${search_root}/bin"
         return 0
     fi
 
-    if [ -x "${search_root}/slt" ]; then
+    if [ -f "${search_root}/slt" ] && [ -x "${search_root}/slt" ]; then
         echo "${search_root}"
         return 0
     fi
@@ -64,7 +66,7 @@ _set_env_resolve_slt_dir()
     #
     # New Simplicity Installer layout under HOME
     #
-    if [ -x "${HOME}/.silabs/bin/slt" ]; then
+    if [ -f "${HOME}/.silabs/bin/slt" ] && [ -x "${HOME}/.silabs/bin/slt" ]; then
         echo "${HOME}/.silabs/bin"
         return 0
     fi
@@ -240,13 +242,10 @@ export TOOL_DIRS="${_set_env_dir_gcc_arm_none_eabi}/bin"
 export TOOL_CHAINS="${TOOL_CHAINS:-GCC}"
 
 
-# Preserve a non-empty FLASH_REGIONS_TEST from the build environment.
-# Leave unset when empty so CMake can apply its board/default fallback.
-if [ -n "${FLASH_REGIONS_TEST:-}" ]; then
-    export FLASH_REGIONS_TEST
-else
-    unset FLASH_REGIONS_TEST
-fi
+# Preserve FLASH_REGIONS_TEST from the build environment. Keep it defined
+# (possibly empty) so nounset-safe callers do not abort; CMake treats empty
+# as "use board/default fallback".
+export FLASH_REGIONS_TEST="${FLASH_REGIONS_TEST:-}"
 
 # Note: Ensure Docker containers run with the same IDs
 export DOCKER_UID=$(id -u)
