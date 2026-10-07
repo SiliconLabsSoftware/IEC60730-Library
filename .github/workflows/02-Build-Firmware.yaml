@@ -13,6 +13,9 @@ on:
         required: true
         default: 'main'
 
+permissions:
+  contents: read
+
 jobs:
   FW_build:
     name: FW_build (${{ matrix.profile }} / ${{ matrix.board }})
