@@ -8,6 +8,8 @@
       
       
       
+        <link rel="canonical" href="https://siliconlabssoftware.github.io/IEC60730-Library/support_calculate_crc.html">
+      
       
         <link rel="prev" href="iec60730_safety_library_integration_to_sdk.html">
       
@@ -18,12 +20,12 @@
         
       
       
-      <link rel="icon" href="images/silabs-soc.png">
+      <link rel="icon" href="images/redesign_logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Support calculate CRC - IEC60730 Safety Library</title>
+        <title>Support calculating CRC - IEC60730 Safety Library</title>
       
     
     
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#support-calculate-crc-by-srecord" class="md-skip">
+        <a href="#support-calculating-crc-with-srecord" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Support calculate CRC
+              Support calculating CRC
             
           </span>
         </div>
@@ -322,7 +324,7 @@
   <span class="md-ellipsis">
     
   
-    Support calculate CRC
+    Support calculating CRC
   
 
     
@@ -340,7 +342,7 @@
   <span class="md-ellipsis">
     
   
-    Support calculate CRC
+    Support calculating CRC
   
 
     
@@ -377,13 +379,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#arguments-to-bash-script" class="md-nav__link">
+  <a href="#script-arguments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Arguments to bash script
+        Script arguments
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Script arguments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -538,6 +557,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -576,13 +622,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#arguments-to-bash-script" class="md-nav__link">
+  <a href="#script-arguments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Arguments to bash script
+        Script arguments
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Script arguments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -603,29 +666,62 @@
 
 
 
-<h1 id="support-calculate-crc-by-srecord">Support calculate CRC by Srecord<a class="headerlink" href="#support-calculate-crc-by-srecord" title="Permanent link">&para;</a></h1>
+<h1 id="support-calculating-crc-with-srecord">Support Calculating CRC with SRecord<a class="headerlink" href="#support-calculating-crc-with-srecord" title="Permanent link">&para;</a></h1>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
-<p>On Linux</p>
+<p><strong>Linux:</strong></p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>srecord
 </code></pre></div>
-<p>On Window: Download Srecord to install</p>
-<h2 id="arguments-to-bash-script">Arguments to bash script<a class="headerlink" href="#arguments-to-bash-script" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="nv">PROJ_NAME</span><span class="o">=</span><span class="nv">$1</span>
-<span class="nv">BUILD_DIR</span><span class="o">=</span><span class="nv">$2</span>
-<span class="nv">SREC_PATH</span><span class="o">=</span><span class="nv">$3</span>
-<span class="nv">TOOL_CHAINS</span><span class="o">=</span><span class="nv">$4</span>
-<span class="nv">START_ADDR</span><span class="o">=</span><span class="nv">$6</span>
+<p><strong>Windows:</strong> download and install SRecord from <a href="https://srecord.sourceforge.net/">https://srecord.sourceforge.net/</a>.</p>
+<h2 id="script-arguments">Script arguments<a class="headerlink" href="#script-arguments" title="Permanent link">&para;</a></h2>
+<p>CRC helper scripts (<code>sl_iec60730_cal_crc16.sh</code> / <code>sl_iec60730_cal_crc32.sh</code>) expect:</p>
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$1</code></td>
+<td><code>PROJ_NAME</code></td>
+<td>Project / artifact base name</td>
+</tr>
+<tr>
+<td><code>$2</code></td>
+<td><code>BUILD_DIR</code></td>
+<td>Directory containing <code>*.bin</code>, <code>*.hex</code>, <code>*.s37</code>, and <code>*.map</code></td>
+</tr>
+<tr>
+<td><code>$3</code></td>
+<td><code>SREC_PATH</code></td>
+<td>Path to the SRecord <code>bin</code> directory (use <code>""</code> on Linux if already on <code>PATH</code>)</td>
+</tr>
+<tr>
+<td><code>$4</code></td>
+<td><code>TOOL_CHAINS</code></td>
+<td>Toolchain identifier (<code>GCC</code>)</td>
+</tr>
+<tr>
+<td><code>$5</code></td>
+<td>address list</td>
+<td>Flash start address, or start/end pairs for multiple regions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<p>Single continuous region:</p>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">PROJ_NAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BUILD_DIR</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"C:\srecord\bin"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000"</span>
 </code></pre></div>
-<p>For example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">PROJ_NAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BUILD_DIR</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"C:\srecord\bin"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000"</span>
-</code></pre></div>
-<p>Or if you want to calculate multiple regions:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">PROJ_NAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BUILD_DIR</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"C:\srecord\bin"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
+<p>Multiple regions (start/end pairs):</p>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">PROJ_NAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BUILD_DIR</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="s2">"C:\srecord\bin"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
 </code></pre></div>
 <blockquote>
 <p>[!NOTE]
-If you calculate multiple regions CRC, you need to enter the start and end addresses of each zone. For example, in the above command, srec will calculate a three-range CRC: 0x8000000 - 0x8000050; 0x80000a0 - 0x80000f0; 0x8000140 - 0x8000190.</p>
-<p>Path <code>${BUILD_DIR}</code> have the files <code>*.bin</code>, <code>*.hex</code>, and <code>*.s37</code>. A <code>*.map</code> file is also needed in this directory, so that bash can check to find the address of the <code>check_sum</code> variable to store the calculated CRC value.</p>
+For multiple regions, provide start and end addresses for each zone. The example above covers three ranges: <code>0x8000000–0x8000050</code>, <code>0x80000a0–0x80000f0</code>, and <code>0x8000140–0x8000190</code>.</p>
+<p><code>${BUILD_DIR}</code> must contain <code>*.bin</code>, <code>*.hex</code>, and <code>*.s37</code>, plus a <code>*.map</code> file so the script can locate the <code>check_sum</code> symbol used to store the reference CRC.</p>
+<p>Keep the address list identical to the Flash IMC regions configured in OEM code. See <a href="iec60730_safety_library_integration_to_sdk.html">IEC60730 safety library integration to SDK</a>.</p>
 </blockquote>
 
 

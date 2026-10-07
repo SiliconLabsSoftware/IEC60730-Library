@@ -8,6 +8,8 @@
       
       
       
+        <link rel="canonical" href="https://siliconlabssoftware.github.io/IEC60730-Library/guideline_for_running_integration_test.html">
+      
       
         <link rel="prev" href="guideline_for_running_unit_test.html">
       
@@ -18,7 +20,7 @@
         
       
       
-      <link rel="icon" href="images/silabs-soc.png">
+      <link rel="icon" href="images/redesign_logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#guideline-for-running-integration-test" class="md-skip">
+        <a href="#guideline-for-running-integration-tests" class="md-skip">
           Skip to content
         </a>
       
@@ -313,7 +315,7 @@
   <span class="md-ellipsis">
     
   
-    Support calculate CRC
+    Support calculating CRC
   
 
     
@@ -428,13 +430,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#export-variable" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export Variable
+        Prerequisites
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select-sdk-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Select SDK version
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Select SDK version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-environment-variables-reference-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual environment variables (reference only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flash-regions-and-board-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flash regions and board identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#watchdog-test-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Watchdog test environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -446,6 +498,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Manually run integration tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-cmake-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional CMake flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-python-test-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Python test helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -462,21 +542,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Note:
+        Examples
       
     </span>
   </a>
@@ -588,6 +657,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -615,13 +711,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#export-variable" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export Variable
+        Prerequisites
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select-sdk-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Select SDK version
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Select SDK version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-environment-variables-reference-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual environment variables (reference only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flash-regions-and-board-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flash regions and board identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#watchdog-test-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Watchdog test environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -633,6 +779,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Manually run integration tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-cmake-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional CMake flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-python-test-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Python test helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -649,21 +823,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Note:
+        Examples
       
     </span>
   </a>
@@ -703,243 +866,345 @@
 
 
 
-<h1 id="guideline-for-running-integration-test">Guideline for running integration test<a class="headerlink" href="#guideline-for-running-integration-test" title="Permanent link">&para;</a></h1>
-<h2 id="export-variable">Export Variable<a class="headerlink" href="#export-variable" title="Permanent link">&para;</a></h2>
+<h1 id="guideline-for-running-integration-tests">Guideline for Running Integration Tests<a class="headerlink" href="#guideline-for-running-integration-tests" title="Permanent link">&para;</a></h1>
+<p>This document describes how to build and run IEC60730 integration tests with <strong>IEC60730 Library SDK Extension v2.2.0</strong>.</p>
+<p>Supported SDKs:</p>
+<table>
+<thead>
+<tr>
+<th>SDK</th>
+<th>Version</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simplicity SDK (SSDK / SimSDK)</td>
+<td>2026.6.0</td>
+<td>Clone/setup through SLT (<code>make bootstrap</code> / <code>recipe.toml</code>)</td>
+</tr>
+<tr>
+<td>Gecko SDK (GSDK)</td>
+<td>4.5.0</td>
+<td>Maintained on GitHub — set <code>GSDK_PATH</code> or allow cache/download</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>[!NOTE]
-Before running CMake, you need to export some variables first.</p>
+<strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.
+<strong>GSDK 4.5.0 is maintained on GitHub</strong>, so resolve it with <code>GSDK_PATH</code>, a Docker mount, or <code>script/set_gsdk.sh</code> (see the repository <a href="../README.md">README</a>).</p>
 </blockquote>
-<p>Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH_REGIONS_TEST (flash start address support calculate CRC for module invariable memory), JLINK_PATH and path to <code>slc-cli</code> tool a before run config CMake.</p>
-<p>If you want to calculate from the start address to the end address of Flash:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/home/svc_sqa_automation/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
+<p>The build and execution flow is the same for both SDKs after you select the matching profile and environment.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>GCC Arm Embedded Toolchain (<code>arm-none-eabi-gcc</code>)</li>
+<li>SEGGER J-Link software</li>
+<li>SRecord (<code>srecord</code>)</li>
+<li>Simplicity CLI (<code>slc</code>) on <code>PATH</code></li>
+<li>Ethernet connectivity to the target for watchdog integration tests (<code>HOST_IP</code>)</li>
+</ul>
+<h2 id="select-sdk-version">Select SDK version<a class="headerlink" href="#select-sdk-version" title="Permanent link">&para;</a></h2>
+<p>Apply the SDK profile that matches your target SDK, then load the environment.
+The committed default is <strong><code>ssdk_2026_6</code></strong>.</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6
+<span class="c1"># or</span>
+make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
+
+<span class="nb">source</span><span class="w"> </span>script/set_env.sh
 </code></pre></div>
-<p>Or if you want to calculate multiple regions:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
+<blockquote>
+<p>[!IMPORTANT]
+<code>make apply-sdk-profile</code> <strong>overwrites tracked files</strong> (SLCPs, demos, <code>sdk.env</code>, etc.) from <code>sdk_profiles/&lt;profile&gt;/</code> snapshots and cleans <code>build/</code> / <code>autogen/</code> / <code>src/</code>. Do <strong>not</strong> commit those changes unless you mean to change the default profile. Restore with <code>make apply-sdk-profile PROFILE=ssdk_2026_6</code> before committing other work. Details: <a href="../README.md#dual-sdk-support">README — Dual SDK support</a>.</p>
+<p>[!NOTE]
+Prefer <code>source script/set_env.sh</code> over hard-coded machine paths.
+When configuring CMake manually, export the required variables before running CMake.
+<code>cmake/toolchain.cmake</code> can also discover <code>arm-none-eabi-gcc</code> from <code>PATH</code>.
+Prefer <code>make BOARD_NAME=... build-integration</code> so <code>FLASH_REGIONS_TEST</code> is set for BG21/BG24; if you invoke CMake directly, export <code>FLASH_REGIONS_TEST</code> yourself (see table below).</p>
+</blockquote>
+<h3 id="manual-environment-variables-reference-only">Manual environment variables (reference only)<a class="headerlink" href="#manual-environment-variables-reference-only" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SDK_PATH</code></td>
+<td>Root of GSDK 4.5.0 or Simplicity SDK 2026.6.0</td>
+</tr>
+<tr>
+<td><code>TOOL_DIRS</code></td>
+<td>Directory containing <code>arm-none-eabi-gcc</code></td>
+</tr>
+<tr>
+<td><code>TOOL_CHAINS</code></td>
+<td><code>GCC</code></td>
+</tr>
+<tr>
+<td><code>JLINK_PATH</code></td>
+<td>Path to <code>libjlinkarm.so</code></td>
+</tr>
+<tr>
+<td><code>FLASH_REGIONS_TEST</code></td>
+<td>Flash start address used for IMC CRC calculation</td>
+</tr>
+<tr>
+<td><code>HOST_IP</code></td>
+<td>Target board IP address (watchdog tests)</td>
+</tr>
+<tr>
+<td><code>ADAPTER_SN</code></td>
+<td>J-Link / adapter serial number</td>
+</tr>
+<tr>
+<td><code>CHIP</code></td>
+<td>Board/device part number used by test scripts</td>
+</tr>
+<tr>
+<td><code>LST_PATH</code></td>
+<td>Path to the built watchdog test listing directory (<code>S</code> or <code>NS</code>)</td>
+</tr>
+<tr>
+<td><code>PATH</code></td>
+<td>Must include <code>slc</code></td>
+</tr>
+</tbody>
+</table>
+<p>Example shapes (replace paths with your local installs):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># GSDK 4.5.0</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/path/to/gecko-sdk
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
+<span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/path/to/slc_cli:<span class="nv">$PATH</span>
+
+<span class="c1"># Simplicity SDK 2026.6.0 (typically from SLT)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span><span class="k">$(</span>slt<span class="w"> </span>where<span class="w"> </span>simplicity-sdk<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
+<span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/path/to/slc_cli:<span class="nv">$PATH</span>
 </code></pre></div>
-<p>with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4264c (chip EFR32FG23) or board name brd4187C (chip EFR32MG24)</p>
-<p>To run integration tests manually, for the watchdog module, you need to connect the device to ethernet. Export CHIP, ADAPTER_SN, LST_PATH, JLINK_PATH, and the device's IP address and run the test script, for example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32FG23B020F512IM48<span class="w"> </span><span class="nv">ADAPTER_SN</span><span class="o">=</span><span class="m">440111030</span>
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span><span class="m">192</span>.168.1.69
+<h3 id="flash-regions-and-board-identity">Flash regions and board identity<a class="headerlink" href="#flash-regions-and-board-identity" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Flash start</th>
+<th>Example CHIP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EFR32BG24A010F1024IM40</code></td>
+<td><code>0x8000000</code></td>
+<td><code>EFR32BG24A010F1024IM40</code></td>
+</tr>
+<tr>
+<td><code>EFR32BG21A010F1024IM32</code></td>
+<td><code>0x0000000</code></td>
+<td><code>EFR32BG21A010F1024IM32</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000<span class="w">   </span><span class="c1"># BG24</span>
+<span class="c1"># or</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x0000000<span class="w">   </span><span class="c1"># BG21</span>
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32BG24A010F1024IM40
+<span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span>&lt;board_ip&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">ADAPTER_SN</span><span class="o">=</span>&lt;adapter_serial&gt;
 </code></pre></div>
-<p>If test secure peripherals or non-secure peripherals:</p>
-<p><div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>/home/svc_sqa_automation/SQA/Hieu/IEC60730-Library/build/test/integration_test/build/brd4264c/GCC/integration_test_iec60730_watchdog/NS
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>/home/svc_sqa_automation/SQA/Hieu/IEC60730-Library/build/test/integration_test/build/brd4264c/GCC/integration_test_iec60730_watchdog/S
-</code></pre></div></p>
 <blockquote>
 <p>[!NOTE]
-Environment variables need to be exported during test execution:</p>
-<blockquote>
-<p>export TOOL_CHAINS= GCC</p>
-<p>export TOOL_DIRS= <path_to_tool_chains></p>
-<p>export FLASH_REGIONS_TEST= <start_address_flash_board></p>
-<p>export HOST_IP= <ip_board></p>
-<p>export JLINK_PATH= <path_to_jlink></p>
+The current integration test implementation supports CRC calculation for a <strong>single</strong> continuous flash region. Set <code>FLASH_REGIONS_TEST</code> to the device flash start address only.</p>
 </blockquote>
-</blockquote>
+<h3 id="watchdog-test-environment">Watchdog test environment<a class="headerlink" href="#watchdog-test-environment" title="Permanent link">&para;</a></h3>
+<p>Watchdog integration tests require Ethernet access to the device. Export <code>CHIP</code>, <code>ADAPTER_SN</code>, <code>JLINK_PATH</code>, <code>HOST_IP</code>, and <code>LST_PATH</code> before running the Python test script.</p>
+<p><code>LST_PATH</code> points at the built watchdog output directory under <code>build/</code>, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Non-secure peripherals (default)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span><span class="nv">$PWD</span>/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/NS
+
+<span class="c1"># Secure peripherals</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span><span class="nv">$PWD</span>/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/S
+</code></pre></div>
+<p>Adjust the board name and <code>S</code>/<code>NS</code> suffix to match your build.</p>
 <h2 id="manually-run-integration-tests">Manually run integration tests<a class="headerlink" href="#manually-run-integration-tests" title="Permanent link">&para;</a></h2>
-<p>CMake config</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>prepare
-$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4264c
-</code></pre></div>
-<p>CMake Build</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_program_counter<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_irq<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_system_clock<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_watchdog<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_cpu_registers<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_variable_memory<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_invariable_memory<span class="w"> </span>-j4
-</code></pre></div>
-<p>To support running integration tests for the watchdog module, there are 2 options when running the CMake config:</p>
-<ul>
-<li>
-<p>TEST_SECURE_PERIPHERALS_ENABLE: enable test secure peripherals</p>
-</li>
-<li>
-<p>INTEGRATION_TEST_WDOG1_ENABLE: enable watchdog 1 to test if the device supports</p>
-</li>
-</ul>
-<p>To support running integration tests for the variable memory module, there is 1 option when running CMake config:</p>
-<ul>
-<li>INTEGRATION_TEST_USE_MARCHX_DISABLE: disable using MarchX algorithm</li>
-</ul>
-<p>By default, the Variable Memory Check module uses the MarchX algorithm.
-To disable MarchX, enable the following Cmake option. For example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4264c
-</code></pre></div>
-<p>For devices that have a Trust zone implemented, secure and non-secure peripherals need to be tested.
-Default enable checks non-secure peripherals. To check secure peripherals enable this option when running CMake config: TEST_SECURE_PERIPHERALS_ENABLE. For example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4264c
-</code></pre></div>
-<p>For devices that support 2 watchdogs, if you want to test both watchdogs, enable option INTEGRATION_TEST_WDOG1_ENABLE to ON when running Cmake config:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4264c
-</code></pre></div>
-<p>To run integration tests for the watchdog module you need to connect the device to ethernet. Export CHIP, ADAPTER_SN, LST_PATH, JLINK_PATH, and the device's IP address and run the test script, for example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32FG23B020F512IM48
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">ADAPTER_SN</span><span class="o">=</span><span class="m">440111030</span>
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span><span class="m">192</span>.168.1.69
-</code></pre></div>
-<p>If test secure peripherals or non-secure peripherals:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>~/devs_safety_lib/build/test/integration_test/build/brd4264c/integration_test_iec60730_watchdog/S
+<p>From the repository root:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>prepare
+<span class="nb">cd</span><span class="w"> </span>build
 
-or
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32
 
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span>~/devs_safety_lib/build/test/integration_test/build/brd4264c/integration_test_iec60730_watchdog/NS
+<span class="c1"># or BG24</span>
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG24A010F1024IM40
 </code></pre></div>
-<p>By default, the device enables watchdog 0 and test watchdog 0. If you want to test Watchdog 1 use this command:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">INTEGRATION_TEST_WDOG1_ENABLE</span><span class="o">=</span><span class="nb">enable</span><span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_watchdog.py<span class="w"> </span>GCC
+<p>Build targets:</p>
+<div class="highlight"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_program_counter<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_irq<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_system_clock<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_watchdog<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_cpu_registers<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_variable_memory<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_invariable_memory<span class="w"> </span>-j4
 </code></pre></div>
-<p>If you want to test the variable memory module with disable using the MarchX algorithm:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">INTEGRATION_TEST_USE_MARCHX_DISABLE</span><span class="o">=</span>disable<span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_variable_memory.py<span class="w"> </span>GCC
+<h3 id="optional-cmake-flags">Optional CMake flags<a class="headerlink" href="#optional-cmake-flags" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TEST_SECURE_PERIPHERALS_ENABLE</code></td>
+<td>Test secure peripherals (TrustZone). Default is non-secure.</td>
+</tr>
+<tr>
+<td><code>INTEGRATION_TEST_WDOG1_ENABLE</code></td>
+<td>Enable Watchdog 1 testing when the device supports it</td>
+</tr>
+<tr>
+<td><code>INTEGRATION_TEST_USE_MARCHX_DISABLE</code></td>
+<td>Disable the MarchX algorithm for variable memory tests</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight"><pre><span></span><code>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32
+
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG24A010F1024IM40
 </code></pre></div>
-<p>If you want to test the invariable memory module with calculate crc32:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">INTEGRATION_TEST_ENABLE_CAL_CRC_32</span><span class="o">=</span><span class="nb">enable</span><span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_variable_memory.py<span class="w"> </span>GCC
+<h3 id="manual-python-test-helpers">Manual Python test helpers<a class="headerlink" href="#manual-python-test-helpers" title="Permanent link">&para;</a></h3>
+<p>From <code>test/test_script/</code> (after building images and exporting env vars):</p>
+<div class="highlight"><pre><span></span><code><span class="nv">INTEGRATION_TEST_WDOG1_ENABLE</span><span class="o">=</span><span class="nb">enable</span><span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_watchdog.py<span class="w"> </span>GCC
+<span class="nv">INTEGRATION_TEST_USE_MARCHX_DISABLE</span><span class="o">=</span>disable<span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_variable_memory.py<span class="w"> </span>GCC
+<span class="nv">INTEGRATION_TEST_ENABLE_CAL_CRC_32</span><span class="o">=</span><span class="nb">enable</span><span class="w"> </span>python3<span class="w"> </span>integration_test_iec60730_invariable_memory.py<span class="w"> </span>GCC
 </code></pre></div>
 <h2 id="automatically-run-integration-tests">Automatically run integration tests<a class="headerlink" href="#automatically-run-integration-tests" title="Permanent link">&para;</a></h2>
-<p>Command run</p>
-<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>execute_test.sh<span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="nv">$2</span><span class="w"> </span><span class="nv">$3</span><span class="w"> </span><span class="nv">$4</span><span class="w"> </span><span class="nv">$5</span><span class="w"> </span><span class="nv">$6</span>
+<p>Run the helper script from <code>test/</code> (recommended). Paths are anchored to the script location, so invoking <code>bash test/execute_integration_test.sh ...</code> from the repo root also works:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>&lt;BOARD_NAME&gt;<span class="w"> </span>&lt;TASK&gt;<span class="w"> </span>&lt;COMPONENTS&gt;<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>&lt;COMPILER&gt;<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
-<p>With the input arguments, there is the following information.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$1</code> BOARD_NAME</td>
+<td><code>EFR32BG21A010F1024IM32</code> or <code>EFR32BG24A010F1024IM40</code></td>
+</tr>
+<tr>
+<td><code>$2</code> TASK</td>
+<td><code>all</code>, <code>gen-only</code>, <code>run-only</code></td>
+</tr>
+<tr>
+<td><code>$3</code> COMPONENTS</td>
+<td><code>all</code>, or a single integration target</td>
+</tr>
+<tr>
+<td><code>$4</code> ADAPTER_SN</td>
+<td>Adapter serial number</td>
+</tr>
+<tr>
+<td><code>$5</code> COMPILER</td>
+<td><code>GCC</code></td>
+</tr>
+<tr>
+<td><code>$6</code> OPTIONS</td>
+<td>Optional CMake flags (quoted)</td>
+</tr>
+</tbody>
+</table>
+<p>Supported component targets:</p>
 <ul>
-<li>$1: BOARD_NAME: brd4264c or EFR32FG23B020F512IM48</li>
-<li>$2: task: all, gen-only, run-only</li>
-<li>$3: components: all, unit_test_iec60730_bist, unit_test_iec60730_post, ...</li>
-<li>$4: ADAPTER_SN</li>
-<li>$5: compiler: GCC</li>
-<li>$6: OPTION_SUPPORT_INTEGRATION_TEST: "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON - INTEGRATION_TEST_USE_MARCHX_DISABLE=ON"</li>
+<li><code>integration_test_iec60730_program_counter</code></li>
+<li><code>integration_test_iec60730_irq</code></li>
+<li><code>integration_test_iec60730_system_clock</code></li>
+<li><code>integration_test_iec60730_watchdog</code></li>
+<li><code>integration_test_iec60730_cpu_registers</code></li>
+<li><code>integration_test_iec60730_variable_memory</code></li>
+<li><code>integration_test_iec60730_invariable_memory</code></li>
 </ul>
-<p>Which, components list that support testing includes:</p>
+<p>Optional CMake flags for <code>$6</code>:</p>
 <ul>
-<li>
-<p>integration_test_iec60730_program_counter</p>
-</li>
-<li>
-<p>integration_test_iec60730_irq</p>
-</li>
-<li>
-<p>integration_test_iec60730_system_clock</p>
-</li>
-<li>
-<p>integration_test_iec60730_watchdog</p>
-</li>
-<li>
-<p>integration_test_iec60730_cpu_registers</p>
-</li>
-<li>
-<p>integration_test_iec60730_variable_memory</p>
-</li>
-<li>
-<p>integration_test_iec60730_invariable_memory</p>
-</li>
+<li><code>-DENABLE_CAL_CRC_32=ON</code></li>
+<li><code>-DENABLE_CRC_USE_SW=ON</code></li>
+<li><code>-DTEST_SECURE_PERIPHERALS_ENABLE=ON</code></li>
+<li><code>-DINTEGRATION_TEST_WDOG1_ENABLE=ON</code></li>
+<li><code>-DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON</code></li>
 </ul>
-<p>Before running the bash file, you need to install Jlink, Srecord, and slc tool, refer <a href="index.html">Overview</a> to set up some environment variables as follows:
-If the compiler is GCC
-- If the compiler is GCC:</p>
-<p>If you want to calculate from the start address to the end address of Flash:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/home/svc_sqa_automation/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span><span class="m">192</span>.168.1.69
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32FG23B020F512IM48
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">ADAPTER_SN</span><span class="o">=</span><span class="m">440111030</span>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
+
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG24A010F1024IM40<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
+
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
+
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG24A010F1024IM40<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
 </code></pre></div>
-<p>Or if you want to calculate multiple regions:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
-</code></pre></div>
-<blockquote>
-<p>[!NOTE]
-In the current integration test file, only enable computation of one region: from the start address of ​​the flash to the end of the flash. Therefore, export the flash's starting address. For example, chip EFR32MG24, ERF32FG23:</p>
-<blockquote>
-<p>$ export FLASH_REGIONS_TEST=0x8000000</p>
-</blockquote>
-</blockquote>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<ul>
-<li>With GCC toolchain:</li>
-</ul>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC
-</code></pre></div>
-<h3 id="note">Note:<a class="headerlink" href="#note" title="Permanent link">&para;</a></h3>
-<p>In case you want to build CRC32 run this command. For example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
-</code></pre></div>
-<p>Or case you want to use the above integration test support options, run this command. For example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
-</code></pre></div>
+<p>For environment setup details, see also <a href="index.html">Overview</a>.</p>
 <h2 id="crc-calculation-options">CRC calculation options<a class="headerlink" href="#crc-calculation-options" title="Permanent link">&para;</a></h2>
-<p>When running build CMake to run unit tests and integration tests for invariable memory modules, the CRC calculation image file will have the suffix _crc16 or _crc32, you must flash the image file with this suffix.</p>
-<p>With the commands above, the default value supports the calculation CRC-16. If you want to change to calculate for CRC-32 bits, use the CMake config command below:</p>
-<ul>
-<li>With integration test:</li>
-</ul>
-<p>by manually</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<p>When building invariable-memory integration tests, CRC post-processing produces images with a <code>_crc16</code> or <code>_crc32</code> suffix. Flash the image that includes the CRC suffix.</p>
+<p>Default CRC mode is CRC-16. Enable CRC-32 or software CRC with:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENABLE_CAL_CRC_32</code></td>
+<td>Use CRC-32 instead of CRC-16</td>
+</tr>
+<tr>
+<td><code>ENABLE_CRC_USE_SW</code></td>
+<td>Use software CRC instead of GPCRC hardware</td>
+</tr>
+<tr>
+<td><code>ENABLE_SW_CRC_TABLE</code></td>
+<td>Use a precomputed software CRC table (<strong>requires</strong> <code>ENABLE_CRC_USE_SW=ON</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Manual CMake example:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>build
+
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4264c<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
-
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4264c<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON
-
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4264c<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_SW_CRC_TABLE<span class="o">=</span>ON
-
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4264c<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_SW_CRC_TABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
 </code></pre></div>
-<p>or by automatically</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
-
-$<span class="w"> </span>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON"</span>
-
-$<span class="w"> </span>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"</span>
-
-$<span class="w"> </span>bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
-</code></pre></div>
-<p>Here are some options to support running tests of invariable memory modules:</p>
-<ul>
-<li>
-<p>ENABLE_CAL_CRC_32</p>
-</li>
-<li>
-<p>ENABLE_CRC_USE_SW (if this option is ON, you can enable option: ENABLE_SW_CRC_TABLE for using the pre-defined table for calculating or not)</p>
-</li>
-</ul>
 <blockquote>
 <p>[!NOTE]
-Only use the ENABLE_SW_CRC_TABLE option when the ENABLE_CRC_USE_SW option is ON, otherwise, an error will be reported during the build process.</p>
+Enable <code>ENABLE_SW_CRC_TABLE</code> only when <code>ENABLE_CRC_USE_SW</code> is <code>ON</code>. Otherwise the build fails.</p>
 </blockquote>
 
 

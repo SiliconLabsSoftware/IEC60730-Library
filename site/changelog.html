@@ -8,13 +8,17 @@
       
       
       
+        <link rel="canonical" href="https://siliconlabssoftware.github.io/IEC60730-Library/changelog.html">
+      
+      
+        <link rel="prev" href="release_note.html">
       
       
       
         
       
       
-      <link rel="icon" href="images/silabs-soc.png">
+      <link rel="icon" href="images/redesign_logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
@@ -304,7 +308,7 @@
   <span class="md-ellipsis">
     
   
-    Support calculate CRC
+    Support calculating CRC
   
 
     
@@ -460,6 +464,41 @@
   
 
     
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="changelog.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -495,86 +534,52 @@
 
   <h1>Changelog</h1>
 
+<p>2.2.0 Release (SDK Extension)</p>
+<ul>
+<li>Package / SDK Extension version: <strong>2.2.0</strong> (<code>iec60730.slce</code>). Runtime library version remains <strong>2.0.0</strong> (<code>IE60730_LIBRARY_VERSION</code> in <code>lib/inc/sl_iec60730.h</code>).</li>
+<li>Add support for EFR32BG21 and EFR32BG24 devices.</li>
+<li>Supported compiler: GCC.</li>
+<li>Add dual SDK support using IEC60730 Library SDK Extension v2.2.0 with Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.</li>
+<li>Add unit test and integration test support for EFR32BG21 and EFR32BG24 devices.</li>
+<li>Add Makefile support for switching between GSDK 4.5.0 and Simplicity SDK 2026.6.0 using SDK profiles (<code>gecko_4_5</code>, <code>ssdk_2026_6</code>).</li>
+<li>SLT provides clone/setup for Simplicity SDK (SimSDK) 2026.6.0. GSDK 4.5.0 is maintained on GitHub and resolved via <code>GSDK_PATH</code>, Docker mount, local cache, or download (<code>script/set_gsdk.sh</code>).</li>
+</ul>
 <p>2.1.0 Release</p>
 <ul>
-<li>
-<p>Add supported Devices: EFR32FG23 family (confirmed device: EFR32FG23B)</p>
-</li>
-<li>
-<p>Supported Compilers: GCC</p>
-</li>
-<li>
-<p>Update the IEC60730 Library Simplicity SDK extension to version 2.0.0 to align with Simplicity SDK 2026.6.0</p>
-</li>
-<li>
-<p>Support unit testing and integration testing for EFR32FG23</p>
-</li>
+<li>Add supported devices: EFR32FG23 family (confirmed device: EFR32FG23B).</li>
+<li>Supported compilers: GCC.</li>
+<li>Update the IEC60730 Library Simplicity SDK extension to version 2.0.0 to align with Simplicity SDK 2026.6.0.</li>
+<li>Support unit testing and integration testing for EFR32FG23.</li>
 </ul>
 <p>2.0.0 Release</p>
 <ul>
-<li>
-<p>Supported Device: EFR32MG families</p>
-</li>
-<li>
-<p>Supported Compilers: GCC</p>
-</li>
-<li>
-<p>Update project from make file to CMake file</p>
-</li>
-<li>
-<p>Rewrite the library IEC60730 code</p>
-</li>
-<li>
-<p>Update GSDK extension for the IEC60730 Library following the changes of the source library</p>
-</li>
-<li>
-<p>Support unit test, integration test</p>
-</li>
-<li>
-<p>Support check coding convention</p>
-</li>
-<li>
-<p>Support mkdocs</p>
-</li>
+<li>Supported devices: EFR32MG families.</li>
+<li>Supported compilers: GCC.</li>
+<li>Update project from Makefile to CMake.</li>
+<li>Rewrite the IEC60730 library code.</li>
+<li>Update the GSDK extension for the IEC60730 Library to follow source-library changes.</li>
+<li>Support unit test and integration test.</li>
+<li>Support coding-convention checks.</li>
+<li>Support MkDocs.</li>
 </ul>
 <p>1.2.0 Release</p>
 <ul>
-<li>
-<p>Supported Devices: EFR32xG24, EFM32xG12</p>
-</li>
-<li>
-<p>Supported Compilers: GCC, IAR</p>
-</li>
-<li>
-<p>Added GSDK extension for the IEC60730 Library.</p>
-</li>
-<li>
-<p>Integrated demo app to the GSDK extension.</p>
-</li>
+<li>Supported devices: EFR32xG24, EFM32xG12.</li>
+<li>Supported compilers: GCC, IAR.</li>
+<li>Added GSDK extension for the IEC60730 Library.</li>
+<li>Integrated demo app into the GSDK extension.</li>
 </ul>
 <p>1.1.0 Release</p>
 <ul>
-<li>
-<p>Supported IEC60730 standard</p>
-</li>
-<li>
-<p>Supported Devices: EFR32xG22, EFM32PG22</p>
-</li>
-<li>
-<p>Supported Compilers: GCC, IAR</p>
-</li>
+<li>Supported IEC60730 standard.</li>
+<li>Supported devices: EFR32xG22, EFM32PG22.</li>
+<li>Supported compilers: GCC, IAR.</li>
 </ul>
 <p>1.0.0 Release</p>
 <ul>
-<li>
-<p>Supported IEC60730 standard</p>
-</li>
-<li>
-<p>Supported Devices: EFR32xG21, EFR32xG23</p>
-</li>
-<li>
-<p>Supported Compilers: GCC, IAR</p>
-</li>
+<li>Supported IEC60730 standard.</li>
+<li>Supported devices: EFR32xG21, EFR32xG23.</li>
+<li>Supported compilers: GCC, IAR.</li>
 </ul>
 
 

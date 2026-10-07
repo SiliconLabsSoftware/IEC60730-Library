@@ -1,164 +1,212 @@
-# Guideline for running unit test
+# Guideline for Running Unit Tests
 
-## Export Variable
+This document describes how to build and run IEC60730 unit tests with **IEC60730 Library SDK Extension v2.2.0**.
+
+Supported SDKs:
+
+| SDK | Version | Notes |
+| --- | --- | --- |
+| Simplicity SDK (SSDK / SimSDK) | 2026.6.0 | Clone/setup through SLT (`make bootstrap` / `recipe.toml`) |
+| Gecko SDK (GSDK) | 4.5.0 | Maintained on GitHub — set `GSDK_PATH` or allow cache/download |
 
 > [!NOTE]
-> Before running CMake, you need to export some variables first.
+> **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup.
+> **GSDK 4.5.0 is maintained on GitHub**, so resolve it with `GSDK_PATH`, a Docker mount, or `script/set_gsdk.sh` (see the repository [README](../README.md)).
 
-Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH_REGIONS_TEST (flash start address support calculate CRC for module invariable memory), JLINK_PATH and path to `slc-cli` tool a before run config CMake.
+The build and execution flow is the same for both SDKs after you select the matching profile and environment.
 
-If you want to calculate from the start address to the end address of Flash:
+## Prerequisites
+
+- GCC Arm Embedded Toolchain (`arm-none-eabi-gcc`)
+- Semtech/SEGGER J-Link software (for on-device execution)
+- SRecord (`srecord`) for CRC image post-processing
+- Simplicity CLI (`slc`) on `PATH`
+- Simplicity Commander (`commander`) on `PATH` when the script queries device info
+
+## Select SDK version
+
+Apply the SDK profile that matches your target SDK, then load the environment.
+The committed default is **`ssdk_2026_6`**.
 
 ```sh
-$ export SDK_PATH=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ export TOOL_DIRS=/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$ export TOOL_CHAINS=GCC
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export PATH=$PATH:/home/svc_sqa_automation/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
-$ export FLASH_REGIONS_TEST=0x8000000
+make apply-sdk-profile PROFILE=ssdk_2026_6
+# or
+make apply-sdk-profile PROFILE=gecko_4_5
+
+source script/set_env.sh
 ```
 
-Or if you want to calculate multiple regions:
+`script/set_env.sh` configures `SDK_PATH`, toolchain paths, and related variables for the active profile.
+
+> [!IMPORTANT]
+> `make apply-sdk-profile` **overwrites tracked files** (SLCPs, demos, `sdk.env`, etc.) from `sdk_profiles/<profile>/` snapshots and cleans `build/` / `autogen/` / `src/`. Do **not** commit those changes unless you mean to change the default profile. Restore with `make apply-sdk-profile PROFILE=ssdk_2026_6` before committing other work. Details: [README — Dual SDK support](../README.md#dual-sdk-support).
+
+> [!NOTE]
+> Prefer `source script/set_env.sh` over hard-coded machine paths.
+> When configuring CMake manually, export the required variables before running CMake.
+> `cmake/toolchain.cmake` can also discover `arm-none-eabi-gcc` from `PATH`.
+> Prefer `make BOARD_NAME=... build-unit` so `FLASH_REGIONS_TEST` is set for BG21/BG24; if you invoke CMake directly, export `FLASH_REGIONS_TEST` yourself (see table below).
+
+### Manual environment variables (reference only)
+
+If you configure the environment manually:
+
+| Variable | Purpose |
+| --- | --- |
+| `SDK_PATH` | Root of GSDK 4.5.0 or Simplicity SDK 2026.6.0 |
+| `TOOL_DIRS` | Directory containing `arm-none-eabi-gcc` |
+| `TOOL_CHAINS` | `GCC` |
+| `JLINK_PATH` | Path to `libjlinkarm.so` |
+| `FLASH_REGIONS_TEST` | Flash start address used for IMC CRC calculation |
+| `PATH` | Must include `slc` |
+
+Example shapes (replace paths with your local installs):
 
 ```sh
-$ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
+# GSDK 4.5.0
+export SDK_PATH=/path/to/gecko-sdk
+export TOOL_DIRS=/path/to/arm-gnu-toolchain/bin
+export TOOL_CHAINS=GCC
+export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+export PATH=/path/to/slc_cli:$PATH
+
+# Simplicity SDK 2026.6.0 (typically from SLT)
+export SDK_PATH=$(slt where simplicity-sdk)
+export TOOL_DIRS=/path/to/arm-gnu-toolchain/bin
+export TOOL_CHAINS=GCC
+export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+export PATH=/path/to/slc_cli:$PATH
 ```
 
-with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4187c (chip EFR32MG24) and brd4264c (chip EFR32FG23)
+### Flash regions (`FLASH_REGIONS_TEST`)
+
+| Device | Flash start |
+| --- | --- |
+| `EFR32BG24A010F1024IM40` | `0x8000000` |
+| `EFR32BG21A010F1024IM32` | `0x0000000` |
+
+```sh
+# BG24
+export FLASH_REGIONS_TEST=0x8000000
+
+# BG21
+export FLASH_REGIONS_TEST=0x0000000
+```
+
+> [!NOTE]
+> The current unit test implementation supports CRC calculation for a **single** continuous flash region (start address to end of flash). Set `FLASH_REGIONS_TEST` to the device flash start address only.
 
 ## Manually run unit tests
 
-Before building the unit tests, prepare the workspace and generate the build files. For example cmake config for board name brd4264c (chip EFR32FG23).
+From the repository root:
 
 ```sh
-$ make prepare
-$ cd build
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c
+make prepare
+cd build
+
+# BG21
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_UNIT_TESTING=ON \
+  -DBOARD_NAME=EFR32BG21A010F1024IM32
+
+# BG24
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_UNIT_TESTING=ON \
+  -DBOARD_NAME=EFR32BG24A010F1024IM40
 ```
 
-CMake Build Individual components
+Build individual components:
 
 ```sh
-$ cmake --build . --target unit_test_iec60730_post -j4
-$ cmake --build . --target unit_test_iec60730_bist -j4
-$ cmake --build . --target unit_test_iec60730_program_counter -j4
-$ cmake --build . --target unit_test_iec60730_safety_check -j4
-$ cmake --build . --target unit_test_iec60730_irq -j4
-$ cmake --build . --target unit_test_iec60730_system_clock -j4
-$ cmake --build . --target unit_test_iec60730_watchdog -j4
-$ cmake --build . --target unit_test_iec60730_cpu_registers -j4
-$ cmake --build . --target unit_test_iec60730_variable_memory -j4
-$ cmake --build . --target unit_test_iec60730_invariable_memory -j4
+cmake --build . --target unit_test_iec60730_post -j4
+cmake --build . --target unit_test_iec60730_bist -j4
+cmake --build . --target unit_test_iec60730_program_counter -j4
+cmake --build . --target unit_test_iec60730_safety_check -j4
+cmake --build . --target unit_test_iec60730_irq -j4
+cmake --build . --target unit_test_iec60730_system_clock -j4
+cmake --build . --target unit_test_iec60730_watchdog -j4
+cmake --build . --target unit_test_iec60730_cpu_registers -j4
+cmake --build . --target unit_test_iec60730_variable_memory -j4
+cmake --build . --target unit_test_iec60730_invariable_memory -j4
 ```
 
 ## Automatically run unit tests
 
-Command run
+Run the helper script from `test/` (recommended). Paths are anchored to the script location, so invoking `bash test/execute_unit_test.sh ...` from the repo root also works:
 
 ```sh
-$ bash execute_test.sh $1 $2 $3 $4 $5 $6
+cd test
+bash execute_unit_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
 ```
 
-With the input arguments, there is the following information.
+| Argument | Values |
+| --- | --- |
+| `$1` BOARD_NAME | `EFR32BG21A010F1024IM32` or `EFR32BG24A010F1024IM40` |
+| `$2` TASK | `all`, `gen-only`, `run-only` |
+| `$3` COMPONENTS | `all`, or a single target such as `unit_test_iec60730_bist` |
+| `$4` ADAPTER_SN | J-Link / adapter serial number |
+| `$5` COMPILER | `GCC` (IAR is not supported) |
+| `$6` OPTIONS | Optional CMake flags (quoted) |
 
-- $1: BOARD_NAME: brd4264c or EFR32FG23B020F512IM48
-- $2: task: all, gen-only, run-only
-- $3: components: all, unit_test_iec60730_bist, unit_test_iec60730_post, ...
-- $4: ADAPTER_SN
-- $5: compiler: GCC
-- $6: OPTION_SUPPORT_UNIT_TEST: "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW"
+Supported component targets:
 
-Which, components list that supports unit testing includes:
+- `unit_test_iec60730_post`
+- `unit_test_iec60730_bist`
+- `unit_test_iec60730_program_counter`
+- `unit_test_iec60730_safety_check`
+- `unit_test_iec60730_irq`
+- `unit_test_iec60730_system_clock`
+- `unit_test_iec60730_watchdog`
+- `unit_test_iec60730_cpu_registers`
+- `unit_test_iec60730_variable_memory`
+- `unit_test_iec60730_invariable_memory`
 
-- unit_test_iec60730_post
-
-- unit_test_iec60730_bist
-
-- unit_test_iec60730_program_counter
-
-- unit_test_iec60730_safety_check
-
-- unit_test_iec60730_irq
-
-- unit_test_iec60730_system_clock
-
-- unit_test_iec60730_watchdog
-
-- unit_test_iec60730_cpu_registers
-
-- unit_test_iec60730_variable_memory
-
-- unit_test_iec60730_invariable_memory
-
-Before running the bash file, you need to install Jlink, Srecord, and slc tool, refer [Overview](./index.md) to set up some environment variables as follows:
-If the compiler is GCC
-- If the compiler is GCC:
-
-If you want to calculate from the start address to the end address of Flash:
+### Examples
 
 ```sh
-$ export SDK_PATH=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ export TOOL_DIRS=/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$ export TOOL_CHAINS=GCC
-$ export FLASH_REGIONS_TEST=0x8000000
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+cd test
+
+# Build and run all unit tests
+bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+bash execute_unit_test.sh EFR32BG24A010F1024IM40 all all <ADAPTER_SN> GCC
+
+# CRC / software CRC options
+bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CAL_CRC_32=ON"
+bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON"
+bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
+bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
 ```
 
-Or if you want to calculate multiple regions:
-
-```sh
-$ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
-```
-
-> [!NOTE]
-> In the current unit test file, only enable computation in one region: from the start address of ​​the flash to the end of the flash. Therefore, just export the flash's starting address. For example, chip EFR32MG24, chip EFR32MG23:
->> $ export FLASH_REGIONS_TEST=0x8000000
-
-### Example
-
-- With GCC toolchain:
-
-```sh
-$ bash execute_unit_test.sh brd4264C all all 440111030 GCC
-```
+For environment setup details, see also [Overview](./index.md).
 
 ## CRC calculation options
 
-When running build CMake to run unit tests and integration tests for invariable memory modules, the CRC calculation image file will have the suffix _crc16 or _crc32, you must flash the image file with this suffix.
+When building invariable-memory unit tests, CRC post-processing produces images with a `_crc16` or `_crc32` suffix. Flash the image that includes the CRC suffix.
 
-With the commands above, the default value supports the calculation CRC-16. If you want to change to calculate for CRC-32 bits, use the CMake config command below:
+Default CRC mode is CRC-16. Enable CRC-32 or software CRC with CMake options:
 
-- With unit test:
+| Option | Description |
+| --- | --- |
+| `ENABLE_CAL_CRC_32` | Use CRC-32 instead of CRC-16 |
+| `ENABLE_CRC_USE_SW` | Use software CRC instead of GPCRC hardware |
+| `ENABLE_SW_CRC_TABLE` | Use a precomputed software CRC table (**requires** `ENABLE_CRC_USE_SW=ON`) |
 
-by manually
-
-```sh
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CAL_CRC_32=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CRC_USE_SW=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4187c -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON
-```
-
-or by automatically
+Manual CMake examples:
 
 ```sh
-$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+cd build
 
-$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CRC_USE_SW=ON"
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_UNIT_TESTING=ON \
+  -DBOARD_NAME=EFR32BG21A010F1024IM32 \
+  -DENABLE_CAL_CRC_32=ON
 
-$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
-
-$ bash execute_unit_test.sh brd4264c all all 440111030 GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_UNIT_TESTING=ON \
+  -DBOARD_NAME=EFR32BG21A010F1024IM32 \
+  -DENABLE_CRC_USE_SW=ON \
+  -DENABLE_SW_CRC_TABLE=ON
 ```
-
-Here are some options to support running tests of invariable memory modules:
-
-- ENABLE_CAL_CRC_32
-
-- ENABLE_CRC_USE_SW (if this option is ON, you can enable option: ENABLE_SW_CRC_TABLE for using the pre-defined table for calculating or not)
 
 > [!NOTE]
-> Only use the ENABLE_SW_CRC_TABLE option when the ENABLE_CRC_USE_SW option is ON, otherwise, an error will be reported during the build process.
+> Enable `ENABLE_SW_CRC_TABLE` only when `ENABLE_CRC_USE_SW` is `ON`. Otherwise the build fails.

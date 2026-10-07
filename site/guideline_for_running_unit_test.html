@@ -8,6 +8,8 @@
       
       
       
+        <link rel="canonical" href="https://siliconlabssoftware.github.io/IEC60730-Library/guideline_for_running_unit_test.html">
+      
       
         <link rel="prev" href="support_calculate_crc.html">
       
@@ -18,7 +20,7 @@
         
       
       
-      <link rel="icon" href="images/silabs-soc.png">
+      <link rel="icon" href="images/redesign_logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#guideline-for-running-unit-test" class="md-skip">
+        <a href="#guideline-for-running-unit-tests" class="md-skip">
           Skip to content
         </a>
       
@@ -313,7 +315,7 @@
   <span class="md-ellipsis">
     
   
-    Support calculate CRC
+    Support calculating CRC
   
 
     
@@ -401,13 +403,52 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#export-variable" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export Variable
+        Prerequisites
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select-sdk-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Select SDK version
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Select SDK version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-environment-variables-reference-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual environment variables (reference only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flash-regions-flash_regions_test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flash regions (FLASH_REGIONS_TEST)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -435,10 +476,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
+        Examples
       
     </span>
   </a>
@@ -577,6 +618,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -604,13 +672,52 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#export-variable" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export Variable
+        Prerequisites
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select-sdk-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Select SDK version
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Select SDK version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-environment-variables-reference-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual environment variables (reference only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flash-regions-flash_regions_test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flash regions (FLASH_REGIONS_TEST)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -638,10 +745,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
+        Examples
       
     </span>
   </a>
@@ -681,151 +788,278 @@
 
 
 
-<h1 id="guideline-for-running-unit-test">Guideline for running unit test<a class="headerlink" href="#guideline-for-running-unit-test" title="Permanent link">&para;</a></h1>
-<h2 id="export-variable">Export Variable<a class="headerlink" href="#export-variable" title="Permanent link">&para;</a></h2>
+<h1 id="guideline-for-running-unit-tests">Guideline for Running Unit Tests<a class="headerlink" href="#guideline-for-running-unit-tests" title="Permanent link">&para;</a></h1>
+<p>This document describes how to build and run IEC60730 unit tests with <strong>IEC60730 Library SDK Extension v2.2.0</strong>.</p>
+<p>Supported SDKs:</p>
+<table>
+<thead>
+<tr>
+<th>SDK</th>
+<th>Version</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simplicity SDK (SSDK / SimSDK)</td>
+<td>2026.6.0</td>
+<td>Clone/setup through SLT (<code>make bootstrap</code> / <code>recipe.toml</code>)</td>
+</tr>
+<tr>
+<td>Gecko SDK (GSDK)</td>
+<td>4.5.0</td>
+<td>Maintained on GitHub — set <code>GSDK_PATH</code> or allow cache/download</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>[!NOTE]
-Before running CMake, you need to export some variables first.</p>
+<strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.
+<strong>GSDK 4.5.0 is maintained on GitHub</strong>, so resolve it with <code>GSDK_PATH</code>, a Docker mount, or <code>script/set_gsdk.sh</code> (see the repository <a href="../README.md">README</a>).</p>
 </blockquote>
-<p>Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH_REGIONS_TEST (flash start address support calculate CRC for module invariable memory), JLINK_PATH and path to <code>slc-cli</code> tool a before run config CMake.</p>
-<p>If you want to calculate from the start address to the end address of Flash:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/home/svc_sqa_automation/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
+<p>The build and execution flow is the same for both SDKs after you select the matching profile and environment.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>GCC Arm Embedded Toolchain (<code>arm-none-eabi-gcc</code>)</li>
+<li>Semtech/SEGGER J-Link software (for on-device execution)</li>
+<li>SRecord (<code>srecord</code>) for CRC image post-processing</li>
+<li>Simplicity CLI (<code>slc</code>) on <code>PATH</code></li>
+<li>Simplicity Commander (<code>commander</code>) on <code>PATH</code> when the script queries device info</li>
+</ul>
+<h2 id="select-sdk-version">Select SDK version<a class="headerlink" href="#select-sdk-version" title="Permanent link">&para;</a></h2>
+<p>Apply the SDK profile that matches your target SDK, then load the environment.
+The committed default is <strong><code>ssdk_2026_6</code></strong>.</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6
+<span class="c1"># or</span>
+make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
+
+<span class="nb">source</span><span class="w"> </span>script/set_env.sh
 </code></pre></div>
-<p>Or if you want to calculate multiple regions:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
+<p><code>script/set_env.sh</code> configures <code>SDK_PATH</code>, toolchain paths, and related variables for the active profile.</p>
+<blockquote>
+<p>[!IMPORTANT]
+<code>make apply-sdk-profile</code> <strong>overwrites tracked files</strong> (SLCPs, demos, <code>sdk.env</code>, etc.) from <code>sdk_profiles/&lt;profile&gt;/</code> snapshots and cleans <code>build/</code> / <code>autogen/</code> / <code>src/</code>. Do <strong>not</strong> commit those changes unless you mean to change the default profile. Restore with <code>make apply-sdk-profile PROFILE=ssdk_2026_6</code> before committing other work. Details: <a href="../README.md#dual-sdk-support">README — Dual SDK support</a>.</p>
+<p>[!NOTE]
+Prefer <code>source script/set_env.sh</code> over hard-coded machine paths.
+When configuring CMake manually, export the required variables before running CMake.
+<code>cmake/toolchain.cmake</code> can also discover <code>arm-none-eabi-gcc</code> from <code>PATH</code>.
+Prefer <code>make BOARD_NAME=... build-unit</code> so <code>FLASH_REGIONS_TEST</code> is set for BG21/BG24; if you invoke CMake directly, export <code>FLASH_REGIONS_TEST</code> yourself (see table below).</p>
+</blockquote>
+<h3 id="manual-environment-variables-reference-only">Manual environment variables (reference only)<a class="headerlink" href="#manual-environment-variables-reference-only" title="Permanent link">&para;</a></h3>
+<p>If you configure the environment manually:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SDK_PATH</code></td>
+<td>Root of GSDK 4.5.0 or Simplicity SDK 2026.6.0</td>
+</tr>
+<tr>
+<td><code>TOOL_DIRS</code></td>
+<td>Directory containing <code>arm-none-eabi-gcc</code></td>
+</tr>
+<tr>
+<td><code>TOOL_CHAINS</code></td>
+<td><code>GCC</code></td>
+</tr>
+<tr>
+<td><code>JLINK_PATH</code></td>
+<td>Path to <code>libjlinkarm.so</code></td>
+</tr>
+<tr>
+<td><code>FLASH_REGIONS_TEST</code></td>
+<td>Flash start address used for IMC CRC calculation</td>
+</tr>
+<tr>
+<td><code>PATH</code></td>
+<td>Must include <code>slc</code></td>
+</tr>
+</tbody>
+</table>
+<p>Example shapes (replace paths with your local installs):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># GSDK 4.5.0</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/path/to/gecko-sdk
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
+<span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/path/to/slc_cli:<span class="nv">$PATH</span>
+
+<span class="c1"># Simplicity SDK 2026.6.0 (typically from SLT)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span><span class="k">$(</span>slt<span class="w"> </span>where<span class="w"> </span>simplicity-sdk<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
+<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
+<span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/path/to/slc_cli:<span class="nv">$PATH</span>
 </code></pre></div>
-<p>with FLASH_REGIONS_TEST=0x8000000 is the flash start address of board name brd4187c (chip EFR32MG24) and brd4264c (chip EFR32FG23)</p>
+<h3 id="flash-regions-flash_regions_test">Flash regions (<code>FLASH_REGIONS_TEST</code>)<a class="headerlink" href="#flash-regions-flash_regions_test" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Flash start</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EFR32BG24A010F1024IM40</code></td>
+<td><code>0x8000000</code></td>
+</tr>
+<tr>
+<td><code>EFR32BG21A010F1024IM32</code></td>
+<td><code>0x0000000</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># BG24</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
+
+<span class="c1"># BG21</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x0000000
+</code></pre></div>
+<blockquote>
+<p>[!NOTE]
+The current unit test implementation supports CRC calculation for a <strong>single</strong> continuous flash region (start address to end of flash). Set <code>FLASH_REGIONS_TEST</code> to the device flash start address only.</p>
+</blockquote>
 <h2 id="manually-run-unit-tests">Manually run unit tests<a class="headerlink" href="#manually-run-unit-tests" title="Permanent link">&para;</a></h2>
-<p>Before building the unit tests, prepare the workspace and generate the build files. For example cmake config for board name brd4264c (chip EFR32FG23).</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>make<span class="w"> </span>prepare
-$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c
+<p>From the repository root:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>prepare
+<span class="nb">cd</span><span class="w"> </span>build
+
+<span class="c1"># BG21</span>
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32
+
+<span class="c1"># BG24</span>
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG24A010F1024IM40
 </code></pre></div>
-<p>CMake Build Individual components</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_post<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_bist<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_program_counter<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_safety_check<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_irq<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_system_clock<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_watchdog<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_cpu_registers<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_variable_memory<span class="w"> </span>-j4
-$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_invariable_memory<span class="w"> </span>-j4
+<p>Build individual components:</p>
+<div class="highlight"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_post<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_bist<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_program_counter<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_safety_check<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_irq<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_system_clock<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_watchdog<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_cpu_registers<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_variable_memory<span class="w"> </span>-j4
+cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_invariable_memory<span class="w"> </span>-j4
 </code></pre></div>
 <h2 id="automatically-run-unit-tests">Automatically run unit tests<a class="headerlink" href="#automatically-run-unit-tests" title="Permanent link">&para;</a></h2>
-<p>Command run</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>execute_test.sh<span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="nv">$2</span><span class="w"> </span><span class="nv">$3</span><span class="w"> </span><span class="nv">$4</span><span class="w"> </span><span class="nv">$5</span><span class="w"> </span><span class="nv">$6</span>
+<p>Run the helper script from <code>test/</code> (recommended). Paths are anchored to the script location, so invoking <code>bash test/execute_unit_test.sh ...</code> from the repo root also works:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>&lt;BOARD_NAME&gt;<span class="w"> </span>&lt;TASK&gt;<span class="w"> </span>&lt;COMPONENTS&gt;<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>&lt;COMPILER&gt;<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
-<p>With the input arguments, there is the following information.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$1</code> BOARD_NAME</td>
+<td><code>EFR32BG21A010F1024IM32</code> or <code>EFR32BG24A010F1024IM40</code></td>
+</tr>
+<tr>
+<td><code>$2</code> TASK</td>
+<td><code>all</code>, <code>gen-only</code>, <code>run-only</code></td>
+</tr>
+<tr>
+<td><code>$3</code> COMPONENTS</td>
+<td><code>all</code>, or a single target such as <code>unit_test_iec60730_bist</code></td>
+</tr>
+<tr>
+<td><code>$4</code> ADAPTER_SN</td>
+<td>J-Link / adapter serial number</td>
+</tr>
+<tr>
+<td><code>$5</code> COMPILER</td>
+<td><code>GCC</code> (IAR is not supported)</td>
+</tr>
+<tr>
+<td><code>$6</code> OPTIONS</td>
+<td>Optional CMake flags (quoted)</td>
+</tr>
+</tbody>
+</table>
+<p>Supported component targets:</p>
 <ul>
-<li>$1: BOARD_NAME: brd4264c or EFR32FG23B020F512IM48</li>
-<li>$2: task: all, gen-only, run-only</li>
-<li>$3: components: all, unit_test_iec60730_bist, unit_test_iec60730_post, ...</li>
-<li>$4: ADAPTER_SN</li>
-<li>$5: compiler: GCC</li>
-<li>$6: OPTION_SUPPORT_UNIT_TEST: "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW"</li>
+<li><code>unit_test_iec60730_post</code></li>
+<li><code>unit_test_iec60730_bist</code></li>
+<li><code>unit_test_iec60730_program_counter</code></li>
+<li><code>unit_test_iec60730_safety_check</code></li>
+<li><code>unit_test_iec60730_irq</code></li>
+<li><code>unit_test_iec60730_system_clock</code></li>
+<li><code>unit_test_iec60730_watchdog</code></li>
+<li><code>unit_test_iec60730_cpu_registers</code></li>
+<li><code>unit_test_iec60730_variable_memory</code></li>
+<li><code>unit_test_iec60730_invariable_memory</code></li>
 </ul>
-<p>Which, components list that supports unit testing includes:</p>
-<ul>
-<li>
-<p>unit_test_iec60730_post</p>
-</li>
-<li>
-<p>unit_test_iec60730_bist</p>
-</li>
-<li>
-<p>unit_test_iec60730_program_counter</p>
-</li>
-<li>
-<p>unit_test_iec60730_safety_check</p>
-</li>
-<li>
-<p>unit_test_iec60730_irq</p>
-</li>
-<li>
-<p>unit_test_iec60730_system_clock</p>
-</li>
-<li>
-<p>unit_test_iec60730_watchdog</p>
-</li>
-<li>
-<p>unit_test_iec60730_cpu_registers</p>
-</li>
-<li>
-<p>unit_test_iec60730_variable_memory</p>
-</li>
-<li>
-<p>unit_test_iec60730_invariable_memory</p>
-</li>
-</ul>
-<p>Before running the bash file, you need to install Jlink, Srecord, and slc tool, refer <a href="index.html">Overview</a> to set up some environment variables as follows:
-If the compiler is GCC
-- If the compiler is GCC:</p>
-<p>If you want to calculate from the start address to the end address of Flash:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/home/svc_sqa_automation/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
+
+<span class="c1"># Build and run all unit tests</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG24A010F1024IM40<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
+
+<span class="c1"># CRC / software CRC options</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON"</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
 </code></pre></div>
-<p>Or if you want to calculate multiple regions:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
-</code></pre></div>
-<blockquote>
-<p>[!NOTE]
-In the current unit test file, only enable computation in one region: from the start address of ​​the flash to the end of the flash. Therefore, just export the flash's starting address. For example, chip EFR32MG24, chip EFR32MG23:</p>
-<blockquote>
-<p>$ export FLASH_REGIONS_TEST=0x8000000</p>
-</blockquote>
-</blockquote>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<ul>
-<li>With GCC toolchain:</li>
-</ul>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4264C<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC
-</code></pre></div>
+<p>For environment setup details, see also <a href="index.html">Overview</a>.</p>
 <h2 id="crc-calculation-options">CRC calculation options<a class="headerlink" href="#crc-calculation-options" title="Permanent link">&para;</a></h2>
-<p>When running build CMake to run unit tests and integration tests for invariable memory modules, the CRC calculation image file will have the suffix _crc16 or _crc32, you must flash the image file with this suffix.</p>
-<p>With the commands above, the default value supports the calculation CRC-16. If you want to change to calculate for CRC-32 bits, use the CMake config command below:</p>
-<ul>
-<li>With unit test:</li>
-</ul>
-<p>by manually</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
+<p>When building invariable-memory unit tests, CRC post-processing produces images with a <code>_crc16</code> or <code>_crc32</code> suffix. Flash the image that includes the CRC suffix.</p>
+<p>Default CRC mode is CRC-16. Enable CRC-32 or software CRC with CMake options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENABLE_CAL_CRC_32</code></td>
+<td>Use CRC-32 instead of CRC-16</td>
+</tr>
+<tr>
+<td><code>ENABLE_CRC_USE_SW</code></td>
+<td>Use software CRC instead of GPCRC hardware</td>
+</tr>
+<tr>
+<td><code>ENABLE_SW_CRC_TABLE</code></td>
+<td>Use a precomputed software CRC table (<strong>requires</strong> <code>ENABLE_CRC_USE_SW=ON</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Manual CMake examples:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>build
 
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
 
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span>-DENABLE_SW_CRC_TABLE<span class="o">=</span>ON
-
-$<span class="w"> </span>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4187c<span class="w"> </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span>-DENABLE_SW_CRC_TABLE<span class="o">=</span>ON<span class="w"> </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DENABLE_SW_CRC_TABLE<span class="o">=</span>ON
 </code></pre></div>
-<p>or by automatically</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
-
-$<span class="w"> </span>bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON"</span>
-
-$<span class="w"> </span>bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"</span>
-
-$<span class="w"> </span>bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4264c<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span><span class="m">440111030</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
-</code></pre></div>
-<p>Here are some options to support running tests of invariable memory modules:</p>
-<ul>
-<li>
-<p>ENABLE_CAL_CRC_32</p>
-</li>
-<li>
-<p>ENABLE_CRC_USE_SW (if this option is ON, you can enable option: ENABLE_SW_CRC_TABLE for using the pre-defined table for calculating or not)</p>
-</li>
-</ul>
 <blockquote>
 <p>[!NOTE]
-Only use the ENABLE_SW_CRC_TABLE option when the ENABLE_CRC_USE_SW option is ON, otherwise, an error will be reported during the build process.</p>
+Enable <code>ENABLE_SW_CRC_TABLE</code> only when <code>ENABLE_CRC_USE_SW</code> is <code>ON</code>. Otherwise the build fails.</p>
 </blockquote>
 
 

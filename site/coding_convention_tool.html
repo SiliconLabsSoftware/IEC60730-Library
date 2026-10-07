@@ -8,6 +8,8 @@
       
       
       
+        <link rel="canonical" href="https://siliconlabssoftware.github.io/IEC60730-Library/coding_convention_tool.html">
+      
       
         <link rel="prev" href="guideline_for_running_integration_test.html">
       
@@ -18,7 +20,7 @@
         
       
       
-      <link rel="icon" href="images/silabs-soc.png">
+      <link rel="icon" href="images/redesign_logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#guideline-for-running-check-coding-convention" class="md-skip">
+        <a href="#guideline-for-running-coding-convention-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -313,7 +315,7 @@
   <span class="md-ellipsis">
     
   
-    Support calculate CRC
+    Support calculating CRC
   
 
     
@@ -469,7 +471,7 @@
   <a href="#project-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project Structure
+        Project structure
       
     </span>
   </a>
@@ -477,30 +479,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#installation-ubuntu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Installation (Ubuntu)
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ubuntu" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ubuntu
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -517,10 +502,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-to-run" class="md-nav__link">
+  <a href="#exclude-folders" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How To Run
+        Exclude folders
       
     </span>
   </a>
@@ -528,10 +513,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#exclude-folder" class="md-nav__link">
+  <a href="#codespell-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Exclude Folder
+        Codespell options
       
     </span>
   </a>
@@ -605,6 +590,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -646,7 +658,7 @@
   <a href="#project-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project Structure
+        Project structure
       
     </span>
   </a>
@@ -654,30 +666,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#installation-ubuntu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Installation (Ubuntu)
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ubuntu" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ubuntu
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -694,10 +689,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-to-run" class="md-nav__link">
+  <a href="#exclude-folders" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How To Run
+        Exclude folders
       
     </span>
   </a>
@@ -705,10 +700,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#exclude-folder" class="md-nav__link">
+  <a href="#codespell-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Exclude Folder
+        Codespell options
       
     </span>
   </a>
@@ -737,75 +732,84 @@
 
 
 
-<h1 id="guideline-for-running-check-coding-convention">Guideline for running check coding convention<a class="headerlink" href="#guideline-for-running-check-coding-convention" title="Permanent link">&para;</a></h1>
+<h1 id="guideline-for-running-coding-convention-checks">Guideline for Running Coding Convention Checks<a class="headerlink" href="#guideline-for-running-coding-convention-checks" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>[!NOTE]
-This is a code formatter tool that helps ensure consistent coding style and detects common issues in source code files.
-It integrates with pre-commit, allowing you to automate code formatting and checks as part of your development workflow.</p>
+This project uses pre-commit hooks to keep formatting consistent and to catch common issues in source files. CI also runs the Silicon Labs coding-convention workflow.</p>
 </blockquote>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Automatically fixes end-of-file issues.</li>
-<li>Removes trailing whitespace from lines.</li>
-<li>Identifies and suggests fixes for common spelling errors using codespell.</li>
-<li>Checks code for potential errors and style issues using cppcheck.</li>
+<li>Fixes missing final newlines (end-of-file)</li>
+<li>Removes trailing whitespace</li>
+<li>Detects common spelling mistakes with codespell</li>
+<li>Runs static analysis with cppcheck</li>
 </ul>
-<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
-<p>the following outlines the structure of the code formatter project, detailing the purpose of each file and directory.</p>
-<div class="highlight"><pre><span></span><code>├──<span class="w"> </span>.pre-commit-config.yaml:<span class="w"> </span>Local<span class="w"> </span>pre-commit<span class="w"> </span>hooks<span class="w"> </span><span class="o">(</span>EOF,<span class="w"> </span>trailing
-<span class="p">|</span><span class="w">                            </span>whitespace,<span class="w"> </span>codespell,<span class="w"> </span>cppcheck<span class="o">)</span>.
-└──<span class="w"> </span>.github/workflows/00-Check-Code-Convention.yml:
-<span class="w">    </span>CI<span class="w"> </span>job<span class="w"> </span>that<span class="w"> </span>runs<span class="w"> </span>SiliconLabsSoftware/devs-coding-convention-tool.
+<h2 id="project-structure">Project structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>├── .pre-commit-config.yaml
+│     Local pre-commit hooks (EOF, trailing whitespace, codespell, cppcheck)
+└── .github/workflows/00-Check-Code-Convention.yml
+      CI job that runs SiliconLabsSoftware/devs-coding-convention-tool
 </code></pre></div>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<h3 id="ubuntu">Ubuntu<a class="headerlink" href="#ubuntu" title="Permanent link">&para;</a></h3>
-<p>Recommended operating system: WSL, Ubuntu 20.04.</p>
-<p>Ensure Python is installed on your system. Then install pre-commit and cppcheck by running:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
-$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>cppcheck
+<h2 id="installation-ubuntu">Installation (Ubuntu)<a class="headerlink" href="#installation-ubuntu" title="Permanent link">&para;</a></h2>
+<p>Recommended environment: WSL or Ubuntu 20.04+.</p>
+<p>Install Python, then install pre-commit and cppcheck:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>cppcheck
 </code></pre></div>
-<p>Recommended version:</p>
+<p>Recommended versions:</p>
 <ul>
 <li>Codespell 2.2.4</li>
-<li>Cppcheck 1.9</li>
+<li>Cppcheck 1.9 (or newer from your distribution)</li>
 </ul>
 <h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<h3 id="how-to-run">How To Run<a class="headerlink" href="#how-to-run" title="Permanent link">&para;</a></h3>
-<p>Run pre-commit install to install pre-commit into your git hooks. pre-commit will now run on every commit:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>pre-commit<span class="w"> </span>install
+<p>Install the Git hooks once:</p>
+<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install
 </code></pre></div>
-<p>Staging files need formatting. For example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>data_format_sample.c
+<p>Stage files, then run checks:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>&lt;your_files&gt;
+pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </code></pre></div>
-<p>Run pre-commit hooks on a repository to check coding convention.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+<p>Hooks also run automatically on each <code>git commit</code> after <code>pre-commit install</code>.</p>
+<h3 id="exclude-folders">Exclude folders<a class="headerlink" href="#exclude-folders" title="Permanent link">&para;</a></h3>
+<p>To skip directories or files, update the <code>exclude</code> regex in <code>.pre-commit-config.yaml</code>. Example pattern used by this repository:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">exclude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^(docs|site|assets|pictures|simplicity_sdk|test/test_script|log|sample|cmake|components|lib/inc/coding_standard.h|lib/inc/silabs_license_agreement.h|lib/inc/sl_iec60730_library_documentation.h|README.md|.github)</span>
 </code></pre></div>
-<h3 id="exclude-folder">Exclude Folder<a class="headerlink" href="#exclude-folder" title="Permanent link">&para;</a></h3>
-<p>When using this tool, you may want to skip some folders.</p>
-<p>You can specify folders to exclude from formatting and checks by replacing the exclude regex pattern with the folders you want to skip.</p>
-<p>Here's an example of the exclude regex pattern in <code>.pre-commit-config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code>exclude:<span class="w"> </span>^<span class="o">(</span>docs<span class="p">|</span>site<span class="p">|</span>assets<span class="p">|</span>pictures<span class="p">|</span>simplicity_sdk<span class="p">|</span>test/test_script<span class="p">|</span>log<span class="p">|</span>sample<span class="p">|</span>cmake<span class="p">|</span>components<span class="p">|</span>lib/inc/coding_standard.h<span class="p">|</span>lib/inc/silabs_license_agreement.h<span class="p">|</span>lib/inc/sl_iec60730_library_documentation.h<span class="p">|</span>README.md<span class="p">|</span>.github<span class="o">)</span>
+<h3 id="codespell-options">Codespell options<a class="headerlink" href="#codespell-options" title="Permanent link">&para;</a></h3>
+<p>Example hook configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codespell</span>
+<span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-w</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">--ignore-words-list=teh</span><span class="p p-Indicator">,</span><span class="nv">foobar</span><span class="p p-Indicator">]</span>
 </code></pre></div>
-<p>Exclude File, Ignore Words for Codespell
-When using Codespell, you may encounter false positives or want to exclude specific files or directories from being checked.</p>
-<p>Codespell provides configuration options to handle these scenarios.
-<div class="highlight"><pre><span></span><code>-<span class="w">   </span>id:<span class="w"> </span>codespell
-<span class="w">    </span>args:<span class="w"> </span><span class="o">[</span>-w,<span class="w"> </span>--ignore-words-list<span class="o">=</span>teh,foobar<span class="o">]</span>
-</code></pre></div></p>
-<p>Explanation of Configuration Options</p>
-<ul>
-<li>ignore-words-list: This option defines comma-separated words that Codespell should ignore.
-If you encounter a false positive, add the word to <code>--ignore-words-list</code>.</li>
-<li>check-filenames: Set this option to true if you want Codespell to check filenames for spelling errors.
-By default, this is empty (disabled).</li>
-<li>check-hidden: Set this option to true if you want Codespell to check hidden files for spelling errors.
-By default, this is empty (disabled).</li>
-<li>count: Set this option to true if you want Codespell to display the number of occurrences of each misspelled word.
-By default, this is empty (disabled).</li>
-<li>skip: This option allows you to specify files or directories that Codespell should skip.
-You can list multiple entries separated by commas.
-For example, .git,*.a, will skip the .git directory and all files with the .a extension.</li>
-</ul>
+<p>Useful options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--ignore-words-list</code></td>
+<td>Comma-separated words Codespell should ignore</td>
+</tr>
+<tr>
+<td><code>check-filenames</code></td>
+<td>Also check file names for spelling errors</td>
+</tr>
+<tr>
+<td><code>check-hidden</code></td>
+<td>Also check hidden files</td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td>Show occurrence counts for each misspelling</td>
+</tr>
+<tr>
+<td><code>skip</code></td>
+<td>Comma-separated files/directories to skip (for example <code>.git,*.a</code>)</td>
+</tr>
+</tbody>
+</table>
 
 
 

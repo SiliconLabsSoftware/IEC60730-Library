@@ -16,7 +16,6 @@ set(LIBRARY_NAME iec60730)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 set(LIB_IEC60730_MAP "lib_iec60730.map")
 set(SDK_CMAKE_RELATIVE_DIR "simplicity_sdk")
-set(SDK_LIB_CMAKE_RELATIVE_DIR  "${SDK_CMAKE_RELATIVE_DIR}/src/lib_iec60730_cmake")
 
 # choose toolchain
 if(DEFINED ENV{TOOL_CHAINS})
@@ -25,6 +24,13 @@ else()
 set(TOOL_CHAINS "GCC")
 endif()
 message("-- [I] Toolchains build: ${TOOL_CHAINS}")
+
+# SLC CLI 6.x generates cmake_gcc/ / cmake_iar/ instead of lib_iec60730_cmake/
+if(${TOOL_CHAINS} STREQUAL "IAR")
+  set(SDK_LIB_CMAKE_RELATIVE_DIR "${SDK_CMAKE_RELATIVE_DIR}/src/cmake_iar")
+else()
+  set(SDK_LIB_CMAKE_RELATIVE_DIR "${SDK_CMAKE_RELATIVE_DIR}/src/cmake_gcc")
+endif()
 
 # enable unit test
 option(ENABLE_UNIT_TESTING "Enable a Unit Testing Build" OFF)

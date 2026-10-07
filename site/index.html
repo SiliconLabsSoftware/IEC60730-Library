@@ -8,6 +8,8 @@
       
       
       
+        <link rel="canonical" href="https://siliconlabssoftware.github.io/IEC60730-Library/index.html">
+      
       
       
         <link rel="next" href="iec60730_safety_library_integration_to_sdk.html">
@@ -16,7 +18,7 @@
         
       
       
-      <link rel="icon" href="images/silabs-soc.png">
+      <link rel="icon" href="images/redesign_logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
@@ -285,7 +287,18 @@
   <a href="#release-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Release Notes
+        Release notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning
       
     </span>
   </a>
@@ -296,7 +309,7 @@
   <a href="#iec60730-certificate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        IEC60730 Certificate
+        IEC60730 certificate
       
     </span>
   </a>
@@ -307,7 +320,7 @@
   <a href="#oem-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OEM Testing
+        OEM testing
       
     </span>
   </a>
@@ -315,43 +328,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-families" class="md-nav__link">
+  <a href="#supported-families-and-software-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Families
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#software-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Software Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#building-the-iec60730-demo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building the IEC60730 Demo
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generate-document-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generate document API
+        Supported families and software requirements
       
     </span>
   </a>
@@ -370,10 +350,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#compiler-specifications" class="md-nav__link">
+  <a href="#dual-sdk-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Compiler specifications
+        Dual SDK support
       
     </span>
   </a>
@@ -381,26 +361,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#system-architecture" class="md-nav__link">
+  <a href="#cmake-and-slc-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        System Architecture
+        CMake and SLC setup
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cmake" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CMake
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CMake">
+    <nav class="md-nav" aria-label="CMake and SLC setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -418,31 +387,19 @@
   <a href="#install-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install Dependencies
+        Install dependencies
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Install Dependencies">
+    <nav class="md-nav" aria-label="Install dependencies">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#install-slc-cli" class="md-nav__link">
+  <a href="#install-simplicity-cli-slc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install slc-cli
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Install slc-cli">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-to-use-slc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to use slc
+        Install Simplicity CLI (slc)
       
     </span>
   </a>
@@ -450,10 +407,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#for-example" class="md-nav__link">
+  <a href="#configure-slc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For example
+        Configure slc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
       
     </span>
   </a>
@@ -465,27 +433,11 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-        
           <li class="md-nav__item">
-  <a href="#run-unit-test" class="md-nav__link">
+  <a href="#run-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run unit test
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-integration-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run integration test
+        Run tests
       
     </span>
   </a>
@@ -596,7 +548,7 @@
   <span class="md-ellipsis">
     
   
-    Support calculate CRC
+    Support calculating CRC
   
 
     
@@ -752,6 +704,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -804,7 +783,18 @@
   <a href="#release-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Release Notes
+        Release notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning
       
     </span>
   </a>
@@ -815,7 +805,7 @@
   <a href="#iec60730-certificate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        IEC60730 Certificate
+        IEC60730 certificate
       
     </span>
   </a>
@@ -826,7 +816,7 @@
   <a href="#oem-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OEM Testing
+        OEM testing
       
     </span>
   </a>
@@ -834,43 +824,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-families" class="md-nav__link">
+  <a href="#supported-families-and-software-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Families
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#software-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Software Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#building-the-iec60730-demo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building the IEC60730 Demo
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generate-document-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generate document API
+        Supported families and software requirements
       
     </span>
   </a>
@@ -889,10 +846,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#compiler-specifications" class="md-nav__link">
+  <a href="#dual-sdk-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Compiler specifications
+        Dual SDK support
       
     </span>
   </a>
@@ -900,26 +857,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#system-architecture" class="md-nav__link">
+  <a href="#cmake-and-slc-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        System Architecture
+        CMake and SLC setup
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cmake" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CMake
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CMake">
+    <nav class="md-nav" aria-label="CMake and SLC setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -937,31 +883,19 @@
   <a href="#install-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install Dependencies
+        Install dependencies
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Install Dependencies">
+    <nav class="md-nav" aria-label="Install dependencies">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#install-slc-cli" class="md-nav__link">
+  <a href="#install-simplicity-cli-slc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install slc-cli
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Install slc-cli">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-to-use-slc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to use slc
+        Install Simplicity CLI (slc)
       
     </span>
   </a>
@@ -969,10 +903,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#for-example" class="md-nav__link">
+  <a href="#configure-slc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For example
+        Configure slc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
       
     </span>
   </a>
@@ -984,27 +929,11 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-        
           <li class="md-nav__item">
-  <a href="#run-unit-test" class="md-nav__link">
+  <a href="#run-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run unit test
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-integration-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run integration test
+        Run tests
       
     </span>
   </a>
@@ -1034,114 +963,177 @@
 
 
 <h1 id="guideline-using-iec60730-safety-library">Guideline using IEC60730 Safety Library<a class="headerlink" href="#guideline-using-iec60730-safety-library" title="Permanent link">&para;</a></h1>
-<p>Platform codes for EFR32 series chips which complies to IEC60730 safety standard</p>
+<p>Platform code for EFR32 series devices that implements IEC 60730 Class B safety requirements.</p>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
-<p>The IEC60730 library for EFR32 provides a basic implementation required to support the necessary requirements found in Table H.1 in the IEC60730 specification. It includes all the Power On Self Test (POST) functions executed when a device is first powered on, as well as Built In Self Test (BIST) functions that are called periodically to ensure correct operation. Certain portions of the requirements require a detailed understanding of the system under development. Callback functions must be completed by the developer to guarantee meeting the full specification. These include a Safe State function used when validation detects an anomaly, properly implemented communications channels (redundancy, error detection, periodic communications), and Plausibility functions to validate system state (internal variables and inputs/outputs).</p>
+<p>The IEC60730 library for EFR32 provides a baseline implementation of the diagnostic requirements in Table H.1 of the IEC 60730 specification. It includes:</p>
+<ul>
+<li><strong>POST (Power-On Self-Test)</strong> — runs when the device powers on</li>
+<li><strong>BIST (Built-In Self-Test)</strong> — runs periodically during normal operation</li>
+</ul>
+<p>Some requirements depend on the end-product design. You must implement the related callback functions to meet the full specification, including:</p>
+<ul>
+<li>Safe-state handling when a fault is detected</li>
+<li>Communications channels (redundancy, error detection, periodic traffic)</li>
+<li>Plausibility checks for system state (internal variables and I/O)</li>
+</ul>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
-<p>Please refer <a href="license.html">License</a></p>
-<h2 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h2>
-<p>Please refer document in <a href="release_note.html">release_note.md</a></p>
-<h2 id="iec60730-certificate">IEC60730 Certificate<a class="headerlink" href="#iec60730-certificate" title="Permanent link">&para;</a></h2>
-<p>The Silicon Labs Appliances homepage will contain the final certificate and detailed report when it is completed.</p>
-<h2 id="oem-testing">OEM Testing<a class="headerlink" href="#oem-testing" title="Permanent link">&para;</a></h2>
-<p>Once OEMs have completed integrating their system with the IEC60730 Library, they will need to certify their device with a qualified certification house.</p>
-<h2 id="supported-families">Supported Families<a class="headerlink" href="#supported-families" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Supported Families</a></li>
-</ul>
-<h2 id="software-requirements">Software Requirements<a class="headerlink" href="#software-requirements" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Software Requirements</a></li>
-</ul>
-<h2 id="building-the-iec60730-demo">Building the IEC60730 Demo<a class="headerlink" href="#building-the-iec60730-demo" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Building the IEC60730 Demo</a></li>
-</ul>
-<h2 id="generate-document-api">Generate document API<a class="headerlink" href="#generate-document-api" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Generate document API</a></li>
-</ul>
-<h2 id="coding-convention-tool">Coding convention tool<a class="headerlink" href="#coding-convention-tool" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer file: <a href="coding_convention_tool.html">coding_convention_tool.md</a>.</li>
-</ul>
-<h2 id="compiler-specifications">Compiler specifications<a class="headerlink" href="#compiler-specifications" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">Compiler specifications</a></li>
-</ul>
-<h2 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer section <a href="document_api_iec60730_library/group__efr32__iec60730.html">System Architecture</a></li>
-</ul>
-<h2 id="cmake">CMake<a class="headerlink" href="#cmake" title="Permanent link">&para;</a></h2>
-<p>The project has a CMake template that supports running tests. Follow the steps below one by one to build and run tests.</p>
-<h3 id="add-the-iec60730-library-extension-to-the-sdk">Add the IEC60730 Library extension to the SDK<a class="headerlink" href="#add-the-iec60730-library-extension-to-the-sdk" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Refer to the <a href="iec60730_safety_library_integration_to_sdk.html">IEC60730 safety library integration to SDK</a> in the <a href="">docs</a> folder for more details.</li>
-</ul>
-<h3 id="install-dependencies">Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permanent link">&para;</a></h3>
-<h4 id="install-slc-cli">Install slc-cli<a class="headerlink" href="#install-slc-cli" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Follow the Simplicity Studio 6 User Guide to install Simplicity Studio and the Simplicity CLI (slc): <a href="https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio">Install Simplicity Studio</a>.</li>
-<li>Follow this guide to install Amazon Corretto 17 on Linux: <a href="https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html">Install Amazon Corretto 17</a>.</li>
-</ul>
-<h5 id="how-to-use-slc">How to use slc<a class="headerlink" href="#how-to-use-slc" title="Permanent link">&para;</a></h5>
-<p>Add the path to the expanded slc-cli to your PATH sh export PATH=$PATH:~/SimplicityStudio/slc_cli_linux/slc_cli/</p>
-<p>Configure SDK. For example sh slc configuration --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p</p>
-<p>Run slc signature trust --sdk <path_to_the_simplicity_sdk> if you have not yet trusted your SDK.</p>
-<p>For example your SDK locate at /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p. Run <code>slc signature trust --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p</code></p>
-<p>Set toolchain For example sh slc configuration --gcc-toolchain=~/SimplicityStudio/developer/toolchains/gnu_arm/12.2.rel1_2023.7</p>
-<p>Generate the project sh slc generate \path\to\example.slcp -np -d <project_destination> -name=<new_name> --with <board_or_device_that_supports_project></p>
-<p>Choose one of the options below to generate the project</p>
+<p>See <a href="https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/main/LICENSE.md">LICENSE.md</a>.</p>
+<h2 id="release-notes">Release notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h2>
+<p>See <a href="release_note.html">release_note.md</a>.</p>
+<h2 id="versioning">Versioning<a class="headerlink" href="#versioning" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Operation</th>
-<th>Arguments</th>
+<th>Artifact</th>
+<th>Version</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDK Extension (package)</td>
+<td><strong>2.2.0</strong></td>
+<td><code>iec60730.slce</code></td>
+</tr>
+<tr>
+<td>Runtime library</td>
+<td><strong>2.0.0</strong></td>
+<td><code>IE60730_LIBRARY_VERSION</code> / <code>SL_IEC60730_LIBRARY_VERSION</code> in <code>lib/inc/sl_iec60730.h</code></td>
+</tr>
+</tbody>
+</table>
+<p>This release updates the <strong>SDK Extension</strong> to 2.2.0 (BG21/BG24, dual-SDK profiles, tests). The library API/runtime version stays at <strong>2.0.0</strong>.</p>
+<h2 id="iec60730-certificate">IEC60730 certificate<a class="headerlink" href="#iec60730-certificate" title="Permanent link">&para;</a></h2>
+<p>The Silicon Labs Appliances homepage will host the final certificate and detailed report when they are available.</p>
+<h2 id="oem-testing">OEM testing<a class="headerlink" href="#oem-testing" title="Permanent link">&para;</a></h2>
+<p>After integrating the IEC60730 library into a product, OEMs must certify the complete device with a qualified certification body.</p>
+<h2 id="supported-families-and-software-requirements">Supported families and software requirements<a class="headerlink" href="#supported-families-and-software-requirements" title="Permanent link">&para;</a></h2>
+<p>API documentation (supported families, software requirements, demo build steps, compiler notes, and system architecture) is published with the generated Doxygen site on GitHub Pages:</p>
+<ul>
+<li><a href="https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html">Supported Families</a></li>
+<li><a href="https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html">Software Requirements</a></li>
+<li><a href="https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html">Building the IEC60730 Demo</a></li>
+<li><a href="https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html">Generate document API</a></li>
+<li><a href="https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html">Compiler specifications</a></li>
+<li><a href="https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html">System Architecture</a></li>
+</ul>
+<h2 id="coding-convention-tool">Coding convention tool<a class="headerlink" href="#coding-convention-tool" title="Permanent link">&para;</a></h2>
+<p>See <a href="coding_convention_tool.html">coding_convention_tool.md</a>.</p>
+<h2 id="dual-sdk-support">Dual SDK support<a class="headerlink" href="#dual-sdk-support" title="Permanent link">&para;</a></h2>
+<p>The IEC60730 Library SDK Extension <strong>v2.2.0</strong> supports:</p>
+<table>
+<thead>
+<tr>
+<th>SDK</th>
+<th>Version</th>
+<th>How it is obtained</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simplicity SDK (SSDK / SimSDK)</td>
+<td>2026.6.0</td>
+<td>Clone/setup through <strong>SLT</strong> via <code>recipe.toml</code> / <code>make bootstrap</code></td>
+</tr>
+<tr>
+<td>Gecko SDK (GSDK)</td>
+<td>4.5.0</td>
+<td>Maintained on GitHub — resolve via <code>GSDK_PATH</code>, Docker mount, local cache, or download</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!NOTE]
+<strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.</p>
+<p><strong>Gecko SDK (GSDK) 4.5.0 is maintained on GitHub</strong>, so the <code>gecko_4_5</code> profile obtains it separately through <code>script/set_gsdk.sh</code>.</p>
+</blockquote>
+<p>The repository ships with <strong><code>ssdk_2026_6</code> as the committed default</strong>. Apply a profile before generating or building:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6<span class="w">   </span><span class="c1"># default</span>
+make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
+</code></pre></div>
+<p>Recommended order: <code>apply-sdk-profile</code> → <code>bootstrap</code> / <code>source script/set_env.sh</code> → <code>build-*</code>.</p>
+<blockquote>
+<p>[!IMPORTANT]
+<strong><code>make apply-sdk-profile</code> overwrites tracked project files</strong> from snapshots under <code>sdk_profiles/&lt;profile&gt;/</code> (the <code>*.patch</code> files are full-file snapshots, not git diffs). It also removes <code>build/</code>, <code>autogen/</code>, <code>src/</code>, and <code>*.slconf</code>.</p>
+<ul>
+<li>Expect a dirty <code>git status</code> after switching (especially to <code>gecko_4_5</code>).</li>
+<li><strong>Do not commit</strong> those changes unless you intentionally change the default profile.</li>
+<li>Restore before commit: <code>make apply-sdk-profile PROFILE=ssdk_2026_6</code>.</li>
+</ul>
+<p>Full workflow notes: <a href="index.html#dual-sdk-support">README — Dual SDK support</a>.</p>
+</blockquote>
+<h2 id="cmake-and-slc-setup">CMake and SLC setup<a class="headerlink" href="#cmake-and-slc-setup" title="Permanent link">&para;</a></h2>
+<p>The project includes a CMake template for building and running tests.</p>
+<h3 id="add-the-iec60730-library-extension-to-the-sdk">Add the IEC60730 Library extension to the SDK<a class="headerlink" href="#add-the-iec60730-library-extension-to-the-sdk" title="Permanent link">&para;</a></h3>
+<p>See <a href="iec60730_safety_library_integration_to_sdk.html">IEC60730 safety library integration to SDK</a>.</p>
+<h3 id="install-dependencies">Install dependencies<a class="headerlink" href="#install-dependencies" title="Permanent link">&para;</a></h3>
+<h4 id="install-simplicity-cli-slc">Install Simplicity CLI (<code>slc</code>)<a class="headerlink" href="#install-simplicity-cli-slc" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Follow the Simplicity Studio 6 User Guide: <a href="https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio">Install Simplicity Studio</a>.</li>
+<li><strong>Java:</strong> Docker / SLT bootstrap uses <strong>Java 21</strong>. For Simplicity Studio–only workflows, install the JDK your Studio/<code>slc</code> package requires (often Amazon Corretto 17 on Linux): <a href="https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html">Amazon Corretto 17 downloads</a>.</li>
+</ul>
+<h4 id="configure-slc">Configure <code>slc</code><a class="headerlink" href="#configure-slc" title="Permanent link">&para;</a></h4>
+<p>Add <code>slc</code> to your <code>PATH</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:&lt;path_to_slc&gt;
+</code></pre></div>
+<p>Configure and trust the SDK:</p>
+<div class="highlight"><pre><span></span><code>slc<span class="w"> </span>configuration<span class="w"> </span>--sdk<span class="w"> </span>&lt;path_to_sdk&gt;
+slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>--sdk<span class="w"> </span>&lt;path_to_sdk&gt;
+</code></pre></div>
+<p>Configure the GCC toolchain:</p>
+<div class="highlight"><pre><span></span><code>slc<span class="w"> </span>configuration<span class="w"> </span>--gcc-toolchain<span class="o">=</span>&lt;path_to_gcc_toolchain&gt;
+</code></pre></div>
+<p>Generate a project:</p>
+<div class="highlight"><pre><span></span><code>slc<span class="w"> </span>generate<span class="w"> </span>&lt;path_to_example.slcp&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-np<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span>&lt;project_destination&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-name<span class="o">=</span>&lt;project_name&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--with<span class="w"> </span>&lt;supported_board_or_device&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>generate</td>
-<td>-cp, --copy-sources</td>
-<td>Copies all files referenced by this project, selected components, and any other running tools (Pin Tool, etc.). By default, no files are copied.</td>
+<td><code>-cp</code>, <code>--copy-sources</code></td>
+<td>Copy all files referenced by the project, selected components, and related tools. By default, no files are copied.</td>
 </tr>
 <tr>
-<td>^</td>
-<td>-cpproj, --copy-proj-sources</td>
-<td>Copies all files referenced by the project and links any SDK sources. This can be combined with -cpsdk.</td>
+<td><code>-cpproj</code>, <code>--copy-proj-sources</code></td>
+<td>Copy project files and link SDK sources. Can be combined with <code>-cpsdk</code>.</td>
 </tr>
 <tr>
-<td>^</td>
-<td>-cpsdk, --copy-sdk-sources</td>
-<td>Copies all files referenced by the selected components and links any project sources. This can be combined with -cpproj.</td>
+<td><code>-cpsdk</code>, <code>--copy-sdk-sources</code></td>
+<td>Copy SDK component sources and link project sources. Can be combined with <code>-cpproj</code>.</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>[!NOTE]: To be able to use the extension LibIEC60730. You need to add the LibIEC60730
-extension to your SDK in the extension folder and run the command: <code>slc signature trust -extpath &lt;path_to_your_extension_sdk&gt;</code></p>
-</blockquote>
-<h5 id="for-example">For example<a class="headerlink" href="#for-example" title="Permanent link">&para;</a></h5>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">SDK</span><span class="o">=</span>/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$<span class="w"> </span>slc<span class="w"> </span>configuration<span class="w"> </span>--sdk<span class="o">=</span><span class="nv">$SDK</span>
-$<span class="w"> </span>slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>--sdk<span class="w"> </span><span class="nv">$SDK</span>
-$<span class="w"> </span>slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>-extpath<span class="w"> </span><span class="nv">$SDK</span>/extension/IEC60730_Libs
-$<span class="w"> </span>slc<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span><span class="nv">$SDK</span>/app/common/example/blink_baremetal<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-np<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-d<span class="w"> </span>blinky<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-name<span class="o">=</span>blinky<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--with<span class="w"> </span>brd4264c
+<p>Copy the LibIEC60730 extension into the SDK <code>extension</code> directory, then trust it:</p>
+<div class="highlight"><pre><span></span><code>slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>-extpath<span class="w"> </span>&lt;path_to_extension&gt;
 </code></pre></div>
-<h3 id="run-unit-test">Run unit test<a class="headerlink" href="#run-unit-test" title="Permanent link">&para;</a></h3>
+<h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Prefer resolving the SLT-managed Simplicity SDK dynamically</span>
+<span class="nv">SDK</span><span class="o">=</span><span class="k">$(</span>slt<span class="w"> </span>where<span class="w"> </span>simplicity-sdk<span class="k">)</span>
+
+slc<span class="w"> </span>configuration<span class="w"> </span>--sdk<span class="w"> </span><span class="s2">"</span><span class="nv">$SDK</span><span class="s2">"</span>
+slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>--sdk<span class="w"> </span><span class="s2">"</span><span class="nv">$SDK</span><span class="s2">"</span>
+slc<span class="w"> </span>signature<span class="w"> </span>trust<span class="w"> </span>-extpath<span class="w"> </span><span class="s2">"</span><span class="nv">$SDK</span><span class="s2">/extension/IEC60730_Libs"</span>
+
+slc<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>&lt;path_to_project&gt;.slcp<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-np<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span>iec60730_demo<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-name<span class="o">=</span>iec60730_demo<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--with<span class="w"> </span>EFR32BG21A010F1024IM32
+</code></pre></div>
+<h3 id="run-tests">Run tests<a class="headerlink" href="#run-tests" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Refer to the guideline link: <a href="guideline_for_running_unit_test.html">guideline_for_running_unit_test.md</a></li>
-</ul>
-<h3 id="run-integration-test">Run integration test<a class="headerlink" href="#run-integration-test" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Refer to the guideline link: <a href="guideline_for_running_integration_test.html">guideline_for_running_integration_test.md</a></li>
+<li><a href="guideline_for_running_unit_test.html">Guideline for running unit tests</a></li>
+<li><a href="guideline_for_running_integration_test.html">Guideline for running integration tests</a></li>
 </ul>
 
 
