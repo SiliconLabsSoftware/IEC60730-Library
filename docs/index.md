@@ -1,119 +1,147 @@
 # Guideline using IEC60730 Safety Library
 
-Platform codes for EFR32 series chips which complies to IEC60730 safety standard
+Platform code for EFR32 series devices that implements IEC 60730 Class B safety requirements.
 
 ## Introduction
-The IEC60730 library for EFR32 provides a basic implementation required to support the necessary requirements found in Table H.1 in the IEC60730 specification. It includes all the Power On Self Test (POST) functions executed when a device is first powered on, as well as Built In Self Test (BIST) functions that are called periodically to ensure correct operation. Certain portions of the requirements require a detailed understanding of the system under development. Callback functions must be completed by the developer to guarantee meeting the full specification. These include a Safe State function used when validation detects an anomaly, properly implemented communications channels (redundancy, error detection, periodic communications), and Plausibility functions to validate system state (internal variables and inputs/outputs).
+
+The IEC60730 library for EFR32 provides a baseline implementation of the diagnostic requirements in Table H.1 of the IEC 60730 specification. It includes:
+
+- **POST (Power-On Self-Test)** — runs when the device powers on
+- **BIST (Built-In Self-Test)** — runs periodically during normal operation
+
+Some requirements depend on the end-product design. You must implement the related callback functions to meet the full specification, including:
+
+- Safe-state handling when a fault is detected
+- Communications channels (redundancy, error detection, periodic traffic)
+- Plausibility checks for system state (internal variables and I/O)
 
 ## License
 
-Please refer [License](./license.md)
+See [License](./license.md).
 
-## Release Notes
+## Release notes
 
-Please refer document in [release_note.md](./release_note.md)
+See [release_note.md](./release_note.md).
 
-## IEC60730 Certificate
+## IEC60730 certificate
 
-The Silicon Labs Appliances homepage will contain the final certificate and detailed report when it is completed.
+The Silicon Labs Appliances homepage will host the final certificate and detailed report when they are available.
 
-## OEM Testing
+## OEM testing
 
-Once OEMs have completed integrating their system with the IEC60730 Library, they will need to certify their device with a qualified certification house.
+After integrating the IEC60730 library into a product, OEMs must certify the complete device with a qualified certification body.
 
-## Supported Families
+## Supported families and software requirements
 
-- Refer section [Supported Families](./document_api_iec60730_library/group__efr32__iec60730.html)
+API documentation (supported families, software requirements, demo build steps, compiler notes, and system architecture) is published with the generated Doxygen site on GitHub Pages:
 
-## Software Requirements
-
-- Refer section [Software Requirements](./document_api_iec60730_library/group__efr32__iec60730.html)
-
-## Building the IEC60730 Demo
-
-- Refer section [Building the IEC60730 Demo](./document_api_iec60730_library/group__efr32__iec60730.html)
-
-## Generate document API
-
-- Refer section [Generate document API](./document_api_iec60730_library/group__efr32__iec60730.html)
+- [Supported Families](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Software Requirements](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Building the IEC60730 Demo](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Generate document API](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Compiler specifications](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [System Architecture](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## Coding convention tool
 
-- Refer file: [coding_convention_tool.md](./coding_convention_tool.md).
+See [coding_convention_tool.md](./coding_convention_tool.md).
 
-## Compiler specifications
+## Dual SDK support
 
-- Refer section [Compiler specifications](./document_api_iec60730_library/group__efr32__iec60730.html)
+The IEC60730 Library SDK Extension **v2.2.0** supports:
 
-## System Architecture
+| SDK | Version | How it is obtained |
+| --- | --- | --- |
+| Simplicity SDK (SSDK / SimSDK) | 2026.6.0 | Clone/setup through **SLT** via `recipe.toml` / `make bootstrap` |
+| Gecko SDK (GSDK) | 4.5.0 | Maintained on GitHub — resolve via `GSDK_PATH`, Docker mount, local cache, or download |
 
-- Refer section [System Architecture](./document_api_iec60730_library/group__efr32__iec60730.html)
+> [!NOTE]
+> **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup.
+>
+> **Gecko SDK (GSDK) 4.5.0 is maintained on GitHub**, so the `gecko_4_5` profile obtains it separately through `script/set_gsdk.sh`.
 
-## CMake
+```sh
+make apply-sdk-profile PROFILE=ssdk_2026_6
+make apply-sdk-profile PROFILE=gecko_4_5
+```
 
-The project has a CMake template that supports running tests. Follow the steps below one by one to build and run tests.
+## CMake and SLC setup
+
+The project includes a CMake template for building and running tests.
 
 ### Add the IEC60730 Library extension to the SDK
 
-- Refer to the [IEC60730 safety library integration to SDK](./iec60730_safety_library_integration_to_sdk.md) in the [docs]() folder for more details.
+See [IEC60730 safety library integration to SDK](./iec60730_safety_library_integration_to_sdk.md).
 
-### Install Dependencies
+### Install dependencies
 
-#### Install slc-cli
+#### Install Simplicity CLI (`slc`)
 
-- Follow the Simplicity Studio 6 User Guide to install Simplicity Studio and the Simplicity CLI (slc): [Install Simplicity Studio](https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio).
-- Follow this guide to install Amazon Corretto 17 on Linux: [Install Amazon Corretto 17](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
+- Follow the Simplicity Studio 6 User Guide: [Install Simplicity Studio](https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio).
+- On Linux, install Amazon Corretto 17 if required: [Amazon Corretto 17 downloads](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
 
-##### How to use slc
+#### Configure `slc`
 
-Add the path to the expanded slc-cli to your PATH sh export PATH=$PATH:~/SimplicityStudio/slc_cli_linux/slc_cli/
-
-Configure SDK. For example sh slc configuration --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-
-Run slc signature trust --sdk <path_to_the_simplicity_sdk> if you have not yet trusted your SDK.
-
-For example your SDK locate at /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p. Run `slc signature trust --sdk /home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p`
-
-Set toolchain For example sh slc configuration --gcc-toolchain=~/SimplicityStudio/developer/toolchains/gnu_arm/12.2.rel1_2023.7
-
-Generate the project sh slc generate \path\to\example.slcp -np -d <project_destination> -name=<new_name> --with <board_or_device_that_supports_project>
-
-Choose one of the options below to generate the project
-
-| Operation | Arguments | Description |
-|---|---|---|
-|generate | -cp, --copy-sources | Copies all files referenced by this project, selected components, and any other running tools (Pin Tool, etc.). By default, no files are copied. |
-|^ | -cpproj, --copy-proj-sources | Copies all files referenced by the project and links any SDK sources. This can be combined with -cpsdk. |
-|^ | -cpsdk, --copy-sdk-sources | Copies all files referenced by the selected components and links any project sources. This can be combined with -cpproj. |
-
-> [!NOTE]
-> The LibIEC60730 extension supports EFR32BG21 and EFR32BG24 devices on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
->
-> Before generating a project, copy the LibIEC60730 extension into the SDK's `extension` directory and trust both the SDK and the extension using the `slc` commands below.
->
-> If your workspace supports dual SDK switching, select the desired SDK profile before generating the project:
->
-> ```sh
-> make apply-sdk-profile PROFILE=gecko_4_5
-> make apply-sdk-profile PROFILE=ssdk_2026_6
-> ```
-
-##### Example
+Add `slc` to your `PATH`:
 
 ```sh
-# Configure SDK
-$ SDK=/home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
+export PATH=$PATH:<path_to_slc>
+```
 
-# Trust the SDK and the IEC60730 extension
-$ slc configuration --sdk $SDK
-$ slc signature trust --sdk $SDK
-$ slc signature trust -extpath $SDK/extension/IEC60730_Libs
+Configure and trust the SDK:
 
-# Generate an IEC60730 project
-$ slc generate \
+```sh
+slc configuration --sdk <path_to_sdk>
+slc signature trust --sdk <path_to_sdk>
+```
+
+Configure the GCC toolchain:
+
+```sh
+slc configuration --gcc-toolchain=<path_to_gcc_toolchain>
+```
+
+Generate a project:
+
+```sh
+slc generate <path_to_example.slcp> \
+    -np \
+    -d <project_destination> \
+    -name=<project_name> \
+    --with <supported_board_or_device>
+```
+
+| Argument | Description |
+| --- | --- |
+| `-cp`, `--copy-sources` | Copy all files referenced by the project, selected components, and related tools. By default, no files are copied. |
+| `-cpproj`, `--copy-proj-sources` | Copy project files and link SDK sources. Can be combined with `-cpsdk`. |
+| `-cpsdk`, `--copy-sdk-sources` | Copy SDK component sources and link project sources. Can be combined with `-cpproj`. |
+
+Copy the LibIEC60730 extension into the SDK `extension` directory, then trust it:
+
+```sh
+slc signature trust -extpath <path_to_extension>
+```
+
+#### Example
+
+```sh
+# Prefer resolving the SLT-managed Simplicity SDK dynamically
+SDK=$(slt where simplicity-sdk)
+
+slc configuration --sdk "$SDK"
+slc signature trust --sdk "$SDK"
+slc signature trust -extpath "$SDK/extension/IEC60730_Libs"
+
+slc generate \
     <path_to_project>.slcp \
     -np \
     -d iec60730_demo \
     -name=iec60730_demo \
     --with EFR32BG21A010F1024IM32
 ```
+
+### Run tests
+
+- [Guideline for running unit tests](./guideline_for_running_unit_test.md)
+- [Guideline for running integration tests](./guideline_for_running_integration_test.md)

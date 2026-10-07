@@ -1,95 +1,80 @@
-# Guideline for running check coding convention
+# Guideline for Running Coding Convention Checks
 
 > [!NOTE]
-> This is a code formatter tool that helps ensure consistent coding style and detects common issues in source code files.
-It integrates with pre-commit, allowing you to automate code formatting and checks as part of your development workflow.
+> This project uses pre-commit hooks to keep formatting consistent and to catch common issues in source files. CI also runs the Silicon Labs coding-convention workflow.
 
 ## Features
 
-- Automatically fixes end-of-file issues.
-- Removes trailing whitespace from lines.
-- Identifies and suggests fixes for common spelling errors using codespell.
-- Checks code for potential errors and style issues using cppcheck.
+- Fixes missing final newlines (end-of-file)
+- Removes trailing whitespace
+- Detects common spelling mistakes with codespell
+- Runs static analysis with cppcheck
 
-## Project Structure
-the following outlines the structure of the code formatter project, detailing the purpose of each file and directory.
+## Project structure
 
-```sh
-├── .pre-commit-config.yaml: Local pre-commit hooks (EOF, trailing
-|                            whitespace, codespell, cppcheck).
-└── .github/workflows/00-Check-Code-Convention.yml:
-    CI job that runs SiliconLabsSoftware/devs-coding-convention-tool.
+```text
+├── .pre-commit-config.yaml
+│     Local pre-commit hooks (EOF, trailing whitespace, codespell, cppcheck)
+└── .github/workflows/00-Check-Code-Convention.yml
+      CI job that runs SiliconLabsSoftware/devs-coding-convention-tool
 ```
 
-## Installation
-###  Ubuntu
-Recommended operating system: WSL, Ubuntu 20.04.
+## Installation (Ubuntu)
 
-Ensure Python is installed on your system. Then install pre-commit and cppcheck by running:
+Recommended environment: WSL or Ubuntu 20.04+.
+
+Install Python, then install pre-commit and cppcheck:
 
 ```sh
-$ pip install pre-commit
-$ sudo apt install cppcheck
+pip install pre-commit
+sudo apt install cppcheck
 ```
 
-Recommended version:
+Recommended versions:
 
 - Codespell 2.2.4
-- Cppcheck 1.9
+- Cppcheck 1.9 (or newer from your distribution)
 
 ## Quick start
-### How To Run
 
-Run pre-commit install to install pre-commit into your git hooks. pre-commit will now run on every commit:
+Install the Git hooks once:
 
 ```sh
-$ pre-commit install
+pre-commit install
 ```
 
-Staging files need formatting. For example:
+Stage files, then run checks:
 
 ```sh
-$ git add data_format_sample.c
+git add <your_files>
+pre-commit run --all-files
 ```
 
-Run pre-commit hooks on a repository to check coding convention.
+Hooks also run automatically on each `git commit` after `pre-commit install`.
 
-```sh
-$ pre-commit run --all-files
-```
+### Exclude folders
 
-### Exclude Folder
-When using this tool, you may want to skip some folders.
+To skip directories or files, update the `exclude` regex in `.pre-commit-config.yaml`. Example pattern used by this repository:
 
-You can specify folders to exclude from formatting and checks by replacing the exclude regex pattern with the folders you want to skip.
-
-Here's an example of the exclude regex pattern in `.pre-commit-config.yaml`:
-
-```sh
+```yaml
 exclude: ^(docs|site|assets|pictures|simplicity_sdk|test/test_script|log|sample|cmake|components|lib/inc/coding_standard.h|lib/inc/silabs_license_agreement.h|lib/inc/sl_iec60730_library_documentation.h|README.md|.github)
 ```
 
-Exclude File, Ignore Words for Codespell
-When using Codespell, you may encounter false positives or want to exclude specific files or directories from being checked.
+### Codespell options
 
-Codespell provides configuration options to handle these scenarios.
-```sh
--   id: codespell
-    args: [-w, --ignore-words-list=teh,foobar]
+Example hook configuration:
+
+```yaml
+- id: codespell
+  args: [-w, --ignore-words-list=teh,foobar]
 ```
 
-Explanation of Configuration Options
+Useful options:
 
-- ignore-words-list: This option defines comma-separated words that Codespell should ignore.
-If you encounter a false positive, add the word to `--ignore-words-list`.
-- check-filenames: Set this option to true if you want Codespell to check filenames for spelling errors.
-By default, this is empty (disabled).
-- check-hidden: Set this option to true if you want Codespell to check hidden files for spelling errors.
-By default, this is empty (disabled).
-- count: Set this option to true if you want Codespell to display the number of occurrences of each misspelled word.
-By default, this is empty (disabled).
-- skip: This option allows you to specify files or directories that Codespell should skip.
-You can list multiple entries separated by commas.
-For example, .git,*.a, will skip the .git directory and all files with the .a extension.
-
-
+| Option | Purpose |
+| --- | --- |
+| `--ignore-words-list` | Comma-separated words Codespell should ignore |
+| `check-filenames` | Also check file names for spelling errors |
+| `check-hidden` | Also check hidden files |
+| `count` | Show occurrence counts for each misspelling |
+| `skip` | Comma-separated files/directories to skip (for example `.git,*.a`) |

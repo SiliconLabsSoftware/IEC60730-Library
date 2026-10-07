@@ -1,490 +1,253 @@
 # Guideline for Running Integration Tests
 
-This document describes how to build and run IEC60730 integration tests using `IEC60730 Library SDK Extension v2.2.0`. The test framework supports both:
+This document describes how to build and run IEC60730 integration tests with **IEC60730 Library SDK Extension v2.2.0**.
 
-- Gecko SDK (GSDK) 4.5.0
-- Simplicity SDK (SSDK) 2026.6.0
+Supported SDKs:
 
-The same build and execution flow can be used for both SDKs after selecting the appropriate SDK environment.
+| SDK | Version | Notes |
+| --- | --- | --- |
+| Simplicity SDK (SSDK / SimSDK) | 2026.6.0 | Clone/setup through SLT (`make bootstrap` / `recipe.toml`) |
+| Gecko SDK (GSDK) | 4.5.0 | Maintained on GitHub — set `GSDK_PATH` or allow cache/download |
 
-## Select SDK Version
+> [!NOTE]
+> **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup.
+> **GSDK 4.5.0 is maintained on GitHub**, so resolve it with `GSDK_PATH`, a Docker mount, or `script/set_gsdk.sh` (see the repository [README](../README.md)).
 
-### GSDK 4.5.0
+The build and execution flow is the same for both SDKs after you select the matching profile and environment.
 
-```sh
-$ export SDK_PATH=<path_to_gsdk_4.5.0>
-```
+## Prerequisites
 
-### SSDK 2026.6.0
+- GCC Arm Embedded Toolchain (`arm-none-eabi-gcc`)
+- SEGGER J-Link software
+- SRecord (`srecord`)
+- Simplicity CLI (`slc`) on `PATH`
+- Ethernet connectivity to the target for watchdog integration tests (`HOST_IP`)
 
-```sh
-$ export SDK_PATH=<path_to_ssdk_2026.6.0>
-```
-
-If dual SDK switching is supported in your workspace:
+## Select SDK version
 
 ```sh
 make apply-sdk-profile PROFILE=gecko_4_5
+# or
 make apply-sdk-profile PROFILE=ssdk_2026_6
-```
 
-## Export Variables
-
-> [!NOTE]
-> The environment variable examples above are provided for reference only.
->
-> Native builds should normally use:
->
-> ```bash
-> source script/set_env.sh
-> ```
->
-> This script automatically configures SDK, toolchain, and build-tool
-> locations for the active SDK profile.
->
-> Alternatively, when configuring CMake manually, ensure the required
-> environment variables are exported before running CMake. Recent updates to
-> `cmake/toolchain.cmake` also allow `arm-none-eabi-gcc` to be discovered
-> from `PATH`, reducing dependence on fixed toolchain paths and SLT package
-> installation hashes.
-
-Export SDK_PATH=<path_to_sdk>, TOOL_DIRS=<path_to_toolchain>, TOOL_CHAINS, FLASH_REGIONS_TEST (flash start address used to calculate CRC for the Invariable Memory module), JLINK_PATH, and add the slc-cli path to PATH before running CMake configuration.
-
-If you want to calculate the CRC from the flash start address to the end of flash, configure the required environment variables as follows.
-
-### GSDK 4.5.0
-
-```sh
-$ export SDK_PATH=/home/Desktop/gecko-sdk
-$ export TOOL_DIRS=/home/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$ export TOOL_CHAINS=GCC
-$ export JLINK_PATH=/opt/SEGGER/JLink_V968a/libjlinkarm.so
-$ export PATH=$HOME/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli:$PATH
-```
-
-### Simplicity SDK 2026.6.0
-
-```sh
-$ export SDK_PATH=/home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ export TOOL_DIRS=/home/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$ export TOOL_CHAINS=GCC
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export PATH=$PATH:/home/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
-```
-
-For `EFR32BG24A010F1024IM40`, the flash start address is `0x8000000`, so set:
-
-```sh
-$ export FLASH_REGIONS_TEST=0x8000000
-```
-
-Or, if you want to calculate CRC for multiple flash regions on `EFR32BG24A010F1024IM40`:
-
-```sh
-$ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
-```
-
-For `EFR32BG21A010F1024IM32`, the flash start address is `0x0000000`, so set:
-
-```sh
-$ export FLASH_REGIONS_TEST=0x0000000
-```
-
-Or, if you want to calculate CRC for multiple flash regions on `EFR32BG21A010F1024IM32`:
-
-```sh
-$ export FLASH_REGIONS_TEST="0x00000000 0x0000050 0x00000A0 0x00000F0 0x00000140 0x00000190"
-```
-
-To run integration tests manually, for the watchdog module, you need to connect the device to ethernet. Export CHIP, ADAPTER_SN, LST_PATH, JLINK_PATH, and the device's IP address and run the test script, for example:
-
-```sh
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export HOST_IP=192.168.1.69
-$ export ADAPTER_SN=440319421
-
-# EFR32BG21A010F1024IM32
-$ export CHIP=EFR32BG21A010F1024IM32
-
-# EFR32BG24A010F1024IM40
-$ export CHIP=EFR32BG24A010F1024IM40
-```
-
-If test secure peripherals or non-secure peripherals:
-
-```sh
-# EFR32BG21A010F1024IM32
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/NS
-
-# EFR32BG24A010F1024IM40
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG24A010F1024IM40/GCC/integration_test_iec60730_watchdog/NS
-```
-```sh
-# EFR32BG21A010F1024IM32
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/S
-
-# EFR32BG24A010F1024IM40
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG24A010F1024IM40/GCC/integration_test_iec60730_watchdog/S
+source script/set_env.sh
 ```
 
 > [!NOTE]
-> Environment variables need to be exported during test execution:
->> export TOOL_CHAINS= GCC
->>
->> export TOOL_DIRS= <path_to_tool_chains>
->>
->> export FLASH_REGIONS_TEST= <start_address_flash_board>
->>
->> export HOST_IP= <ip_board>
->>
->> export JLINK_PATH= <path_to_jlink>
+> Prefer `source script/set_env.sh` over hard-coded machine paths.
+> When configuring CMake manually, export the required variables before running CMake.
+> `cmake/toolchain.cmake` can also discover `arm-none-eabi-gcc` from `PATH`.
+
+### Manual environment variables (reference only)
+
+| Variable | Purpose |
+| --- | --- |
+| `SDK_PATH` | Root of GSDK 4.5.0 or Simplicity SDK 2026.6.0 |
+| `TOOL_DIRS` | Directory containing `arm-none-eabi-gcc` |
+| `TOOL_CHAINS` | `GCC` |
+| `JLINK_PATH` | Path to `libjlinkarm.so` |
+| `FLASH_REGIONS_TEST` | Flash start address used for IMC CRC calculation |
+| `HOST_IP` | Target board IP address (watchdog tests) |
+| `ADAPTER_SN` | J-Link / adapter serial number |
+| `CHIP` | Board/device part number used by test scripts |
+| `LST_PATH` | Path to the built watchdog test listing directory (`S` or `NS`) |
+| `PATH` | Must include `slc` |
+
+Example shapes (replace paths with your local installs):
+
+```sh
+# GSDK 4.5.0
+export SDK_PATH=/path/to/gecko-sdk
+export TOOL_DIRS=/path/to/arm-gnu-toolchain/bin
+export TOOL_CHAINS=GCC
+export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+export PATH=/path/to/slc_cli:$PATH
+
+# Simplicity SDK 2026.6.0 (typically from SLT)
+export SDK_PATH=$(slt where simplicity-sdk)
+export TOOL_DIRS=/path/to/arm-gnu-toolchain/bin
+export TOOL_CHAINS=GCC
+export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
+export PATH=/path/to/slc_cli:$PATH
+```
+
+### Flash regions and board identity
+
+| Device | Flash start | Example CHIP |
+| --- | --- | --- |
+| `EFR32BG24A010F1024IM40` | `0x8000000` | `EFR32BG24A010F1024IM40` |
+| `EFR32BG21A010F1024IM32` | `0x0000000` | `EFR32BG21A010F1024IM32` |
+
+```sh
+export FLASH_REGIONS_TEST=0x8000000   # BG24
+# or
+export FLASH_REGIONS_TEST=0x0000000   # BG21
+
+export CHIP=EFR32BG24A010F1024IM40
+export HOST_IP=<board_ip>
+export ADAPTER_SN=<adapter_serial>
+```
+
+> [!NOTE]
+> The current integration test implementation supports CRC calculation for a **single** continuous flash region. Set `FLASH_REGIONS_TEST` to the device flash start address only.
+
+### Watchdog test environment
+
+Watchdog integration tests require Ethernet access to the device. Export `CHIP`, `ADAPTER_SN`, `JLINK_PATH`, `HOST_IP`, and `LST_PATH` before running the Python test script.
+
+`LST_PATH` points at the built watchdog output directory under `build/`, for example:
+
+```sh
+# Non-secure peripherals (default)
+export LST_PATH=$PWD/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/NS
+
+# Secure peripherals
+export LST_PATH=$PWD/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/S
+```
+
+Adjust the board name and `S`/`NS` suffix to match your build.
 
 ## Manually run integration tests
 
-CMake config
+From the repository root:
 
 ```sh
-$ make prepare
-$ cd build
+make prepare
+cd build
 
-# EFR32BG21A010F1024IM32
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON \
-  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON \
+  -DBOARD_NAME=EFR32BG21A010F1024IM32
 
-# EFR32BG24A010F1024IM40
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON \
-  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40
+# or BG24
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON \
+  -DBOARD_NAME=EFR32BG24A010F1024IM40
 ```
 
-CMake Build
+Build targets:
 
 ```sh
-$ cmake --build . --target integration_test_iec60730_program_counter -j4
-$ cmake --build . --target integration_test_iec60730_irq -j4
-$ cmake --build . --target integration_test_iec60730_system_clock -j4
-$ cmake --build . --target integration_test_iec60730_watchdog -j4
-$ cmake --build . --target integration_test_iec60730_cpu_registers -j4
-$ cmake --build . --target integration_test_iec60730_variable_memory -j4
-$ cmake --build . --target integration_test_iec60730_invariable_memory -j4
+cmake --build . --target integration_test_iec60730_program_counter -j4
+cmake --build . --target integration_test_iec60730_irq -j4
+cmake --build . --target integration_test_iec60730_system_clock -j4
+cmake --build . --target integration_test_iec60730_watchdog -j4
+cmake --build . --target integration_test_iec60730_cpu_registers -j4
+cmake --build . --target integration_test_iec60730_variable_memory -j4
+cmake --build . --target integration_test_iec60730_invariable_memory -j4
 ```
 
-To support running integration tests for the watchdog module, there are 2 options when running the CMake config:
+### Optional CMake flags
 
-- TEST_SECURE_PERIPHERALS_ENABLE: enable test secure peripherals
+| Option | Purpose |
+| --- | --- |
+| `TEST_SECURE_PERIPHERALS_ENABLE` | Test secure peripherals (TrustZone). Default is non-secure. |
+| `INTEGRATION_TEST_WDOG1_ENABLE` | Enable Watchdog 1 testing when the device supports it |
+| `INTEGRATION_TEST_USE_MARCHX_DISABLE` | Disable the MarchX algorithm for variable memory tests |
 
-- INTEGRATION_TEST_WDOG1_ENABLE: enable Watchdog 1 testing on device if the device supports
-
-To support running integration tests for the variable memory module, there is 1 option when running CMake config:
-
-- INTEGRATION_TEST_USE_MARCHX_DISABLE: disable using MarchX algorithm
-
-By default, the Variable Memory Check module uses the MarchX algorithm.
-To disable MarchX, enable the following Cmake option. For example:
+Examples:
 
 ```sh
-# EFR32BG21A010F1024IM32
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON \
-  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
+  -DBOARD_NAME=EFR32BG21A010F1024IM32
 
-# EFR32BG24A010F1024IM40
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON \
-  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DINTEGRATION_TEST_WDOG1_ENABLE=ON \
+  -DBOARD_NAME=EFR32BG24A010F1024IM40
 ```
 
-For devices that have a Trust zone implemented, secure and non-secure peripherals need to be tested.
-Default enable checks non-secure peripherals. To check secure peripherals enable this option when running 
-CMake config: TEST_SECURE_PERIPHERALS_ENABLE. For example:
+### Manual Python test helpers
+
+From `test/test_script/` (after building images and exporting env vars):
 
 ```sh
-# EFR32BG21A010F1024IM32
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON \
-  -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32
-
-# EFR32BG24A010F1024IM40
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON \
-  -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40
-```
-
-For devices that support 2 watchdogs, if you want to test both watchdogs, enable option INTEGRATION_TEST_WDOG1_ENABLE to ON when running Cmake config:
-
-```sh
-# EFR32BG21A010F1024IM32
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32
-
-# EFR32BG24A010F1024IM40
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40
-```
-
-To run Watchdog integration tests manually, connect the target device to an Ethernet network. Export `CHIP`, `ADAPTER_SN`, `JLINK_PATH`, and `HOST_IP` before running the test script.
-
-```sh
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export HOST_IP=192.168.1.69
-$ export ADAPTER_SN=440319421
-
-# EFR32BG21A010F1024IM32
-$ export CHIP=EFR32BG21A010F1024IM32
-
-# EFR32BG24A010F1024IM40
-$ export CHIP=EFR32BG24A010F1024IM40
-```
-
-If running Watchdog integration tests, export `LST_PATH` according to the target build configuration.
-
-For secure peripherals:
-
-```sh
-# EFR32BG21A010F1024IM32
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/S
-
-# EFR32BG24A010F1024IM40
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG24A010F1024IM40/GCC/integration_test_iec60730_watchdog/S
-```
-
-For non-secure peripherals:
-
-```sh
-# EFR32BG21A010F1024IM32
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/NS
-
-# EFR32BG24A010F1024IM40
-$ export LST_PATH=/home/Desktop/IEC60730-Library/build/test/integration_test/build/EFR32BG24A010F1024IM40/GCC/integration_test_iec60730_watchdog/NS
-```
-
-
-By default, the device enables watchdog 0 and test watchdog 0. If you want to test Watchdog 1 use this command:
-
-```sh
-$ INTEGRATION_TEST_WDOG1_ENABLE=enable python3 integration_test_iec60730_watchdog.py GCC
-```
-
-If you want to test the variable memory module with disable using the MarchX algorithm:
-
-```sh
-$ INTEGRATION_TEST_USE_MARCHX_DISABLE=disable python3 integration_test_iec60730_variable_memory.py GCC
-```
-
-If you want to test the invariable memory module with calculate crc32:
-
-```sh
-$ INTEGRATION_TEST_ENABLE_CAL_CRC_32=enable python3 integration_test_iec60730_variable_memory.py GCC
+INTEGRATION_TEST_WDOG1_ENABLE=enable python3 integration_test_iec60730_watchdog.py GCC
+INTEGRATION_TEST_USE_MARCHX_DISABLE=disable python3 integration_test_iec60730_variable_memory.py GCC
+INTEGRATION_TEST_ENABLE_CAL_CRC_32=enable python3 integration_test_iec60730_invariable_memory.py GCC
 ```
 
 ## Automatically run integration tests
 
-Command run
+Run the helper script **from the `test/` directory**:
 
 ```sh
-$ bash execute_integration_test.sh $1 $2 $3 $4 $5 $6
+cd test
+bash execute_integration_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
 ```
 
-With the input arguments, there is the following information.
+| Argument | Values |
+| --- | --- |
+| `$1` BOARD_NAME | `EFR32BG21A010F1024IM32` or `EFR32BG24A010F1024IM40` |
+| `$2` TASK | `all`, `gen-only`, `run-only` |
+| `$3` COMPONENTS | `all`, or a single integration target |
+| `$4` ADAPTER_SN | Adapter serial number |
+| `$5` COMPILER | `GCC` |
+| `$6` OPTIONS | Optional CMake flags (quoted) |
 
-- `$1`: BOARD_NAME (`EFR32BG21A010F1024IM32` or `EFR32BG24A010F1024IM40`)
-- `$2`: Task (`all`, `gen-only`, `run-only`)
-- `$3`: Components (`all`, `integration_test_iec60730_program_counter`, `integration_test_iec60730_irq`, `integration_test_iec60730_system_clock`, `integration_test_iec60730_watchdog`, `integration_test_iec60730_cpu_registers`, `integration_test_iec60730_variable_memory`, `integration_test_iec60730_invariable_memory`)
-- `$4`: ADAPTER_SN
-- `$5`: Compiler (`GCC`)
-- `$6`: OPTION_SUPPORT_INTEGRATION_TEST:
-  - `-DENABLE_CAL_CRC_32=ON`
-  - `-DENABLE_CRC_USE_SW=ON`
-  - `-DTEST_SECURE_PERIPHERALS_ENABLE=ON`
-  - `-DINTEGRATION_TEST_WDOG1_ENABLE=ON`
-  - `-DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON`
+Supported component targets:
 
-Which, components list that support testing includes:
+- `integration_test_iec60730_program_counter`
+- `integration_test_iec60730_irq`
+- `integration_test_iec60730_system_clock`
+- `integration_test_iec60730_watchdog`
+- `integration_test_iec60730_cpu_registers`
+- `integration_test_iec60730_variable_memory`
+- `integration_test_iec60730_invariable_memory`
 
-- integration_test_iec60730_program_counter
+Optional CMake flags for `$6`:
 
-- integration_test_iec60730_irq
+- `-DENABLE_CAL_CRC_32=ON`
+- `-DENABLE_CRC_USE_SW=ON`
+- `-DTEST_SECURE_PERIPHERALS_ENABLE=ON`
+- `-DINTEGRATION_TEST_WDOG1_ENABLE=ON`
+- `-DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON`
 
-- integration_test_iec60730_system_clock
-
-- integration_test_iec60730_watchdog
-
-- integration_test_iec60730_cpu_registers
-
-- integration_test_iec60730_variable_memory
-
-- integration_test_iec60730_invariable_memory
-
-Before running the bash file, you need to install Jlink, Srecord, and slc tool, refer [Overview](./index.md) to set up some environment variables as follows:
-- If the compiler is GCC
-
-If you want to calculate the CRC from the flash start address to the end of flash when using either GSDK 4.5.0 or Simplicity SDK 2026.6.0, configure the required environment variables as follows.
-
-### GSDK 4.5.0
+### Examples
 
 ```sh
-$ export SDK_PATH=/home/Desktop/gecko-sdk
-$ export TOOL_DIRS=/home/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$ export TOOL_CHAINS=GCC
-$ export JLINK_PATH=/opt/SEGGER/JLink_V968a/libjlinkarm.so
-$ export PATH=$HOME/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli:$PATH
-$ export HOST_IP=192.168.1.69
-$ export ADAPTER_SN=440319421
-```
+cd test
 
-### Simplicity SDK 2026.6.0
+bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all <ADAPTER_SN> GCC
 
-```sh
-$ export SDK_PATH=/home/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ export TOOL_DIRS=/home/.local/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi/bin
-$ export TOOL_CHAINS=GCC
-$ export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-$ export PATH=$PATH:/home/.silabs/slt/installs/archive/slc-cli-v6.0.23/slc_cli
-$ export HOST_IP=192.168.1.69
-$ export ADAPTER_SN=440319421
-```
+bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CAL_CRC_32=ON"
 
-For `EFR32BG24A010F1024IM40`:
-
-```sh
-$ export CHIP=EFR32BG24A010F1024IM40
-$ export FLASH_REGIONS_TEST=0x8000000
-```
-
-Or, if you want to calculate CRC for multiple flash regions on `EFR32BG24A010F1024IM40`:
-
-```sh
-$ export FLASH_REGIONS_TEST="0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
-```
-
-For `EFR32BG21A010F1024IM32`:
-
-```sh
-$ export CHIP=EFR32BG21A010F1024IM32
-$ export FLASH_REGIONS_TEST=0x0000000
-```
-
-Or, if you want to calculate CRC for multiple flash regions on `EFR32BG21A010F1024IM32`:
-
-```sh
-$ export FLASH_REGIONS_TEST="0x0000000 0x0000050 0x00000A0 0x00000F0 0x00000140 0x00000190"
-```
-
-> [!NOTE]
-> The current integration test implementation only supports CRC calculation for a single flash region, from the flash start address to the end of flash. Therefore, set `FLASH_REGIONS_TEST` to the flash start address of the target device.
->
-> Examples:
->
-> - EFR32BG24A010F1024IM40: `export FLASH_REGIONS_TEST=0x8000000`
-> - EFR32BG21A010F1024IM32: `export FLASH_REGIONS_TEST=0x0000000`
-
-### Example
-
-With the GCC toolchain:
-
-```sh
-# EFR32BG21A010F1024IM32
-$ bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440319421 GCC
-
-# EFR32BG24A010F1024IM40
-$ bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all 440319421 GCC
-```
-
-To enable CRC-32 calculation:
-
-```sh
-# EFR32BG21A010F1024IM32
-$ bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440319421 GCC "-DENABLE_CAL_CRC_32=ON"
-
-# EFR32BG24A010F1024IM40
-$ bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all 440319421 GCC "-DENABLE_CAL_CRC_32=ON"
-```
-
-To enable additional integration test options:
-
-```sh
-# EFR32BG21A010F1024IM32
-$ bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440319421 GCC \
-  "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"
-
-# EFR32BG24A010F1024IM40
-$ bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all 440319421 GCC \
+bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all <ADAPTER_SN> GCC \
   "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"
 ```
+
+For environment setup details, see also [Overview](./index.md).
 
 ## CRC calculation options
 
-When running build CMake to run unit tests and integration tests for invariable memory modules, the CRC calculation image file will have the suffix _crc16 or _crc32, you must flash the image file with this suffix.
+When building invariable-memory integration tests, CRC post-processing produces images with a `_crc16` or `_crc32` suffix. Flash the image that includes the CRC suffix.
 
-With the commands above, the default value supports the calculation CRC-16. If you want to change to calculate for CRC-32 bits, use the CMake config command below:
+Default CRC mode is CRC-16. Enable CRC-32 or software CRC with:
 
-- With integration test:
+| Option | Description |
+| --- | --- |
+| `ENABLE_CAL_CRC_32` | Use CRC-32 instead of CRC-16 |
+| `ENABLE_CRC_USE_SW` | Use software CRC instead of GPCRC hardware |
+| `ENABLE_SW_CRC_TABLE` | Use a precomputed software CRC table (**requires** `ENABLE_CRC_USE_SW=ON`) |
 
-by manually
-
-For integration tests, the following CMake options can be used to configure CRC calculation.
-
-```sh
-# EFR32BG21A010F1024IM32
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32 -DENABLE_CAL_CRC_32=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32 -DENABLE_CRC_USE_SW=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32 -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG21A010F1024IM32 -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON
-
-# EFR32BG24A010F1024IM40
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40 -DENABLE_CAL_CRC_32=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40 -DENABLE_CRC_USE_SW=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40 -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON
-
-$ cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_INTEGRATION_TESTING=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
-  -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DBOARD_NAME=EFR32BG24A010F1024IM40 -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON
-```
-
-or by automatically
-
-### Example
-
-With the GCC toolchain:
+Manual CMake example:
 
 ```sh
-# EFR32BG21A010F1024IM32
-$ bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440319421 GCC \
-  "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"
+cd build
 
-$ bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440319421 GCC \
-  "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON"
-
-$ bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440319421 GCC \
-  "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
-
-$ bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440319421 GCC \
-  "-DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
-
-# EFR32BG24A010F1024IM40
-$ bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all 440319421 GCC \
-  "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"
-
-$ bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all 440319421 GCC \
-  "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON"
-
-$ bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all 440319421 GCC \
-  "-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
-
-$ bash execute_integration_test.sh EFR32BG24A010F1024IM40 all all 440319421 GCC \
-  "-DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
+cmake --toolchain ../cmake/toolchain.cmake .. \
+  -DENABLE_INTEGRATION_TESTING=ON \
+  -DTEST_SECURE_PERIPHERALS_ENABLE=ON \
+  -DINTEGRATION_TEST_WDOG1_ENABLE=ON \
+  -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON \
+  -DBOARD_NAME=EFR32BG21A010F1024IM32 \
+  -DENABLE_CAL_CRC_32=ON
 ```
-
-
-Here are some options to support running tests of invariable memory modules:
-
-- ENABLE_CAL_CRC_32
-
-- ENABLE_CRC_USE_SW (if this option is ON, you can enable option: ENABLE_SW_CRC_TABLE for using the pre-defined table for calculating or not)
 
 > [!NOTE]
-> Only use the ENABLE_SW_CRC_TABLE option when the ENABLE_CRC_USE_SW option is ON, otherwise, an error will be reported during the build process.
+> Enable `ENABLE_SW_CRC_TABLE` only when `ENABLE_CRC_USE_SW` is `ON`. Otherwise the build fails.

@@ -1,12 +1,16 @@
 #  Exports:
 #    - SLT_INSTALL_DIR : directory that contains the `slt` binary
 #    - JAVA_HOME       : SLT's Java 21 root (`$(slt where java21)/jre`)
-#    - SDK_PATH        : Simplicity SDK root from SLT
+#    - SDK_PATH        : active SDK root (SSDK from SLT, or GSDK via set_gsdk.sh)
 #    - TOOL_DIRS       : arm-none-eabi gcc bin directory
 #    - TOOL_CHAINS     : GCC
 #    - FLASH_REGIONS_TEST : flash start for CRC tests (BG21/BG24)
 #    - POST_BUILD_EXE  : Simplicity Commander binary (if installed)
 #    - PATH            : prepended with SLT-managed tools
+#
+#  SDK profiles:
+#    - ssdk_2026_6 : Simplicity SDK (SimSDK) 2026.6.0 from SLT (`slt where simplicity-sdk`)
+#    - gecko_4_5   : Gecko SDK 4.5.0 maintained on GitHub; resolved via script/set_gsdk.sh
 #
 #  Required: slc-cli, java21, gcc-arm-none-eabi, commander, ninja, cmake
 #  Also verifies: srecord (apt / host package)

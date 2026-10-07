@@ -1,19 +1,18 @@
 #!/bin/bash
 
-#./execute_test.sh $1 $2 $3 $4 $5
-# $1: BOARD_NAME: EFR32BG21A010F1024IM32 or EFR32BG24A010F1024IM40
-# $2: task: all, gen-only, run-only
-# $3: components: all, integration_test_iec60730_*, ...
-# $4: ADAPTER_SN
-# $5: compiler: GCC (IAR is not supported)
-# $6: some option as "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW=ON -DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON"
-
-# Example
-#  bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
-
-# Note:
-# In case you want to build CRC32 run this command. For example
-#  bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+# Usage (run from the test/ directory):
+#   bash execute_integration_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
+#
+#   BOARD_NAME  : EFR32BG21A010F1024IM32 or EFR32BG24A010F1024IM40
+#   TASK        : all, gen-only, run-only
+#   COMPONENTS  : all, or a single integration_test_iec60730_* target
+#   ADAPTER_SN  : J-Link / adapter serial number
+#   COMPILER    : GCC (IAR is not supported)
+#   OPTIONS     : optional CMake flags, e.g. "-DENABLE_CAL_CRC_32=ON"
+#
+# Examples:
+#   bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
+#   bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
 
 BASH_DIRECTION=$(pwd)
 BOARD_NAME=$1
