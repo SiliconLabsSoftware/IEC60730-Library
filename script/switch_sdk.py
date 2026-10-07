@@ -43,10 +43,6 @@ TARGETS = {
     "ut_main.c.patch":
         ROOT / "test/unit_test/src/main.c",
 
-    # SDK-specific application entry point
-    "sdk_main.c.patch":
-        ROOT / "simplicity_sdk/main.c",
-
     # Build environment configuration
     "sdk.env.patch":
         ROOT / "sdk.env",

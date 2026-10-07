@@ -93,10 +93,6 @@ sl_iec60730_test_result_t sl_iec60730_vmc_post(void)
 
     LABEL_DEF(IEC60730_VMC_POST_START_BKPT);
 
-    if (iec60730_rt_check > iec60730_vmc_test_config.region[current_test_region].end) {
-      goto VMC_POST_DONE;
-    }
-
     // Check RAM region from begin to end
     while (iec60730_rt_check < iec60730_vmc_test_config.region[current_test_region].end) {
       if (!CHECK_INTEGRITY(uint32_t, iec60730_rt_check)) {

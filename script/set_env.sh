@@ -4,7 +4,7 @@
 #    - SDK_PATH        : Simplicity SDK root from SLT
 #    - TOOL_DIRS       : arm-none-eabi gcc bin directory
 #    - TOOL_CHAINS     : GCC
-#    - FLASH_REGIONS_TEST : flash start for brd4264c CRC tests
+#    - FLASH_REGIONS_TEST : flash start for CRC tests (BG21/BG24)
 #    - POST_BUILD_EXE  : Simplicity Commander binary (if installed)
 #    - PATH            : prepended with SLT-managed tools
 #
@@ -35,8 +35,23 @@ source "${_set_env_repo_root}/sdk.env"
 
 _set_env_resolve_slt_dir()
 {
+    local search_root="${1:-${HOME}/.silabs}"
+
     #
-    # New Simplicity Installer layout
+    # Prefer an explicit install root (e.g. Compose SLT_INSTALL_DIR=/opt/silabs)
+    #
+    if [ -x "${search_root}/bin/slt" ]; then
+        echo "${search_root}/bin"
+        return 0
+    fi
+
+    if [ -x "${search_root}/slt" ]; then
+        echo "${search_root}"
+        return 0
+    fi
+
+    #
+    # New Simplicity Installer layout under HOME
     #
     if [ -x "${HOME}/.silabs/bin/slt" ]; then
         echo "${HOME}/.silabs/bin"
@@ -61,7 +76,18 @@ _set_env_resolve_slt_dir()
     return 1
 }
 
-if ! SLT_INSTALL_DIR="$(_set_env_resolve_slt_dir)"; then
+# Honor a pre-set SLT_INSTALL_DIR (Compose/CI), otherwise discover under HOME.
+if [ -n "${SLT_INSTALL_DIR:-}" ]; then
+    _set_env_slt_hint="${SLT_INSTALL_DIR}"
+    if ! SLT_INSTALL_DIR="$(_set_env_resolve_slt_dir "${_set_env_slt_hint}")"; then
+        echo "Error: SLT_INSTALL_DIR is set but no slt binary was found under it."
+        echo "  SLT_INSTALL_DIR was: ${_set_env_slt_hint}"
+        unset _set_env_repo_root _set_env_slt_hint
+        unset -f _set_env_resolve_slt_dir
+        return 1
+    fi
+    unset _set_env_slt_hint
+elif ! SLT_INSTALL_DIR="$(_set_env_resolve_slt_dir)"; then
     echo "Error: SLT is not installed."
     echo "Run:   ./script/bootstrap silabs"
     unset _set_env_repo_root

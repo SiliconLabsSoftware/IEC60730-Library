@@ -9,7 +9,7 @@ GSDK_URL="https://github.com/SiliconLabs/gecko_sdk/releases/download/v4.5.0/geck
 
 # sha256 of gecko-sdk.zip. Empty = not verified. set_gsdk.sh prints the hash
 # after the first download so it can be pinned here.
-GSDK_SHA256=""
+GSDK_SHA256="b5b2b2410eac0c9e2a72320f46605ecac0d376910cafded5daca9c1f78e966c8"
 
 GSDK_CACHE_SUBDIR="gecko-sdk"
 

@@ -173,8 +173,9 @@ docker compose build
 # Layer B — install / refresh Silicon Labs tooling and SDKs
 make bootstrap
 
-# Layer C — compile for brd4264c
-make build-unit          # unit test targets
+# Layer C — compile for BG21 (default) or BG24
+make build-unit          # unit test targets (BOARD_NAME=EFR32BG21A010F1024IM32)
+make BOARD_NAME=EFR32BG24A010F1024IM40 build-unit
 make build-integration   # integration test targets
 make build               # unit + integration
 # or: make all           # bootstrap + build

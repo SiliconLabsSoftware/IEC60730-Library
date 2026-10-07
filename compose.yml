@@ -10,17 +10,19 @@ services:
 
     volumes:
       - .:/workspace
-      - ${HOME}/.silabs:/home/ubuntu/.silabs
+      - ${HOME}/.silabs:/opt/silabs
 
       # Gecko SDK cache (gecko_4_5 profile): downloaded once by bootstrap,
       # shared between host and container.
-      - ${HOME}/.cache/iec60730:/home/ubuntu/.cache/iec60730
+      - ${HOME}/.cache/iec60730:/opt/iec60730-cache
 
       # Optional: expose a host Gecko SDK (GSDK_PATH) instead of the cache.
       - ${GSDK_PATH:-/tmp}:/opt/gecko_sdk:ro
 
     environment:
-      SLT_INSTALL_DIR: /home/ubuntu/.silabs
+      HOME: /workspace
+      SLT_INSTALL_DIR: /opt/silabs
+      IEC60730_CACHE_DIR: /opt/iec60730-cache
       FLASH_REGIONS_TEST: ${FLASH_REGIONS_TEST}
       SDK_PATH: ${SDK_PATH:-}
 

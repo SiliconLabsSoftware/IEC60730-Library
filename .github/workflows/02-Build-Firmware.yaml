@@ -15,7 +15,7 @@ on:
 
 jobs:
   FW_build:
-    name: FW_build (${{ matrix.profile }})
+    name: FW_build (${{ matrix.profile }} / ${{ matrix.board }})
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -23,6 +23,9 @@ jobs:
         profile:
           - ssdk_2026_6
           - gecko_4_5
+        board:
+          - EFR32BG21A010F1024IM32
+          - EFR32BG24A010F1024IM40
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -54,7 +57,7 @@ jobs:
             -e IEC60730_CACHE_DIR=/root/.cache/iec60730 \
             -w /workspace \
             "$IMAGE" /bin/bash -c \
-            "make apply-sdk-profile PROFILE=${{ matrix.profile }} && make RUNNER=native bootstrap && make RUNNER=native build-unit && make RUNNER=native build-integration"
+            "make apply-sdk-profile PROFILE=${{ matrix.profile }} && make RUNNER=native bootstrap && make RUNNER=native BOARD_NAME=${{ matrix.board }} build-unit && make RUNNER=native BOARD_NAME=${{ matrix.board }} build-integration"
 
       - name: Clean up workspace
         if: always()

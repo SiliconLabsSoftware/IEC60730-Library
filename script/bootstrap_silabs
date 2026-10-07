@@ -49,8 +49,25 @@ install_slt()
 
 check_slt_installation()
 {
+    local search_root="${SLT_INSTALL_DIR:-${HOME}/.silabs}"
+
     #
-    # New layout
+    # Explicit / Compose install root (bin/slt or slt in root)
+    #
+    if [ -x "${search_root}/bin/slt" ]; then
+        SLT_INSTALL_DIR="${search_root}/bin"
+        export SLT_INSTALL_DIR
+        return 0
+    fi
+
+    if [ -x "${search_root}/slt" ]; then
+        SLT_INSTALL_DIR="${search_root}"
+        export SLT_INSTALL_DIR
+        return 0
+    fi
+
+    #
+    # New layout under HOME
     #
     if [ -x "${HOME}/.silabs/bin/slt" ]; then
         SLT_INSTALL_DIR="${HOME}/.silabs/bin"
