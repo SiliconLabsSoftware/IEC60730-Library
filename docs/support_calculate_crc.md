@@ -1,38 +1,44 @@
-# Support calculate CRC by Srecord
+# Support Calculating CRC with SRecord
 
 ## Install
 
-On Linux
+**Linux:**
 
 ```sh
 sudo apt install srecord
 ```
 
-On Window: Download Srecord to install
+**Windows:** download and install SRecord from [https://srecord.sourceforge.net/](https://srecord.sourceforge.net/).
 
-## Arguments to bash script
+## Script arguments
+
+CRC helper scripts (`sl_iec60730_cal_crc16.sh` / `sl_iec60730_cal_crc32.sh`) expect:
+
+| Position | Argument | Description |
+| --- | --- | --- |
+| `$1` | `PROJ_NAME` | Project / artifact base name |
+| `$2` | `BUILD_DIR` | Directory containing `*.bin`, `*.hex`, `*.s37`, and `*.map` |
+| `$3` | `SREC_PATH` | Path to the SRecord `bin` directory (use `""` on Linux if already on `PATH`) |
+| `$4` | `TOOL_CHAINS` | Toolchain identifier (`GCC`) |
+| `$5` | address list | Flash start address, or start/end pairs for multiple regions |
+
+### Examples
+
+Single continuous region:
 
 ```sh
-PROJ_NAME=$1
-BUILD_DIR=$2
-SREC_PATH=$3
-TOOL_CHAINS=$4
-START_ADDR=$6
+bash sl_iec60730_cal_crc16.sh "${PROJ_NAME}" "${BUILD_DIR}" "C:\srecord\bin" GCC "0x8000000"
 ```
 
-For example:
+Multiple regions (start/end pairs):
 
 ```sh
-$ bash sl_iec60730_cal_crc16.sh "${PROJ_NAME}" "${BUILD_DIR}" "C:\srecord\bin" GCC "0x8000000"
-```
-
- Or if you want to calculate multiple regions:
-
-```sh
-$ bash sl_iec60730_cal_crc16.sh "${PROJ_NAME}" "${BUILD_DIR}" "C:\srecord\bin" GCC "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
+bash sl_iec60730_cal_crc16.sh "${PROJ_NAME}" "${BUILD_DIR}" "C:\srecord\bin" GCC "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
 ```
 
 > [!NOTE]
-> If you calculate multiple regions CRC, you need to enter the start and end addresses of each zone. For example, in the above command, srec will calculate a three-range CRC: 0x8000000 - 0x8000050; 0x80000a0 - 0x80000f0; 0x8000140 - 0x8000190.
+> For multiple regions, provide start and end addresses for each zone. The example above covers three ranges: `0x8000000–0x8000050`, `0x80000a0–0x80000f0`, and `0x8000140–0x8000190`.
 >
-> Path `${BUILD_DIR}` have the files `*.bin`, `*.hex`, and `*.s37`. A `*.map` file is also needed in this directory, so that bash can check to find the address of the `check_sum` variable to store the calculated CRC value.
+> `${BUILD_DIR}` must contain `*.bin`, `*.hex`, and `*.s37`, plus a `*.map` file so the script can locate the `check_sum` symbol used to store the reference CRC.
+>
+> Keep the address list identical to the Flash IMC regions configured in OEM code. See [IEC60730 safety library integration to SDK](./iec60730_safety_library_integration_to_sdk.md).

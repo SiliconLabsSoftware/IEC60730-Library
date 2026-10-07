@@ -2,14 +2,13 @@
 
 ![Image](images/redesign_logo.png)
 
-Our web site: [www.silabs.com](https://www.silabs.com/)
+Website: [www.silabs.com](https://www.silabs.com/)
 
 ## Contact us
 
-- Our community: [Community Silabs](https://community.silabs.com/s/)
+- Community: [Silicon Labs Community](https://community.silabs.com/s/)
+- Support: [Silicon Labs support](https://www.silabs.com/support)
 
-- Our support page: [Silicon Labs support page](https://www.silabs.com/support)
+## Special thanks
 
-## Special Thanks
-
-The documentations in this site are created by [MkDocs](https://www.mkdocs.org).
+Documentation on this site is built with [MkDocs](https://www.mkdocs.org/).

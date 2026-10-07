@@ -1,34 +1,38 @@
 #!/bin/bash
 
-#./execute_test.sh $1 $2 $3 $4 $5
-# $1: BOARD_NAME: brd4187c
-# $2: task: all, gen-only, run-only
-# $3: components: all, unit_test_iec60730_bist, unit_test_iec60730_post, ...
-# $4: ADAPTER_SN
-# $5: compiler: GCC, IAR
-# $6: "-DENABLE_CAL_CRC_32=ON -DENABLE_CRC_USE_SW=ON"
+# Usage (recommended from test/; also safe from repo root):
+#   bash execute_unit_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
+#
+#   BOARD_NAME  : EFR32BG21A010F1024IM32 or EFR32BG24A010F1024IM40
+#   TASK        : all, gen-only, run-only
+#   COMPONENTS  : all, or a single unit_test_iec60730_* target
+#   ADAPTER_SN  : J-Link / adapter serial number
+#   COMPILER    : GCC (IAR is not supported)
+#   OPTIONS     : optional CMake flags, e.g. "-DENABLE_CAL_CRC_32=ON"
+#
+# Examples:
+#   cd test && bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
+#   bash test/execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
 
-# Example
-#  bash execute_unit_test.sh brd4187c all all 440111030 GCC
-
-# Note:
-# In case you want to build CRC32 run this command. For example
-#  bash execute_unit_test.sh brd4187c all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
-
-BASH_DIRECTION=$(pwd)
-BASH_PRE_IAR_BUILD=$(pwd)/../simplicity_sdk
+# Paths are anchored to this script's directory so cwd may be test/ or repo root.
+BASH_DIRECTION="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BOARD_NAME=$1
 TASK=$2
 COMPONENT=$3
 ADAPTER_SN=$4
 COMPILER=$5
 OPTION_UNIT_TEST=${6//"%20"/" "}
+
+if [[ "$COMPILER" == "IAR" ]]; then
+    echo "Error: IAR is not supported. Use COMPILER=GCC."
+    exit 1
+fi
 JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-TEST_PATH=$(pwd)/test_script
+TEST_PATH=$BASH_DIRECTION/test_script
 TEST_SCRIPT=$TEST_PATH/unit_test_iec60730_get_report.py
-LOG_PATH=$(pwd)/../log
+LOG_PATH=$BASH_DIRECTION/../log
 LOG_FILE=$LOG_PATH/build_unit_test_components.log
-IMAGE_PATH=$(pwd)/../build/test/unit_test/build/$BOARD_NAME/$COMPILER
+IMAGE_PATH=$BASH_DIRECTION/../build/test/unit_test/build/$BOARD_NAME/$COMPILER
 DEVICE_NAME=
 
 function get_device_name
@@ -56,12 +60,6 @@ fi
 
 function gen_image
 {
-    if [[ "$COMPILER" == "IAR" ]] ;then
-        echo "-- [I] Start run pre_build_iar!"
-        cd $BASH_PRE_IAR_BUILD
-        bash pre_build_iar.sh $BOARD_NAME "-DENABLE_UNIT_TESTING=ON $OPTION_UNIT_TEST" &> /dev/null
-        echo "-- [I] Run pre_build_iar done!"
-    fi
     cd $BASH_DIRECTION/..
     make prepare &> /dev/null
     cd $BASH_DIRECTION/../build

@@ -113,8 +113,8 @@ function(generate_integration_test relative_dir target_name)
     set(DEFINE_IAR_TESTING "IAR_TESTING")
   endif()
 
-  # Set address start calculate crc
-  if(DEFINED ENV{FLASH_REGIONS_TEST})
+  # Set address start calculate crc (ignore empty env; fall back to default)
+  if(DEFINED ENV{FLASH_REGIONS_TEST} AND NOT "$ENV{FLASH_REGIONS_TEST}" STREQUAL "")
     set(FLASH_REGIONS_TEST "$ENV{FLASH_REGIONS_TEST}")
   else()
     set(FLASH_REGIONS_TEST "0x00000000")

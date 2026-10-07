@@ -1,10 +1,13 @@
 site_name: IEC60730 Safety Library
+site_url: https://siliconlabssoftware.github.io/IEC60730-Library/
+exclude_docs: |
+  main_page_doxygen.md
 nav:
   - Overview: index.md
 
   - IEC60730 safety library integration to SDK:
     - "Integration to SDK": iec60730_safety_library_integration_to_sdk.md
-    - "Support calculate CRC": support_calculate_crc.md
+    - "Support calculating CRC": support_calculate_crc.md
 
 
   - Guideline for running unit test: guideline_for_running_unit_test.md
@@ -16,6 +19,7 @@ nav:
   - About: about.md
 
   - Release Notes: release_note.md
+  - Changelog: changelog.md
 
 ## DO NOT CHANGE BELOW THIS LINE
 
@@ -38,7 +42,7 @@ theme:
     scheme: default
     primary: red
     accent: red
-  favicon: images/silabs-soc.png
+  favicon: images/redesign_logo.png
   logo: images/silabs_banner.png
 # Plugins
 plugins:

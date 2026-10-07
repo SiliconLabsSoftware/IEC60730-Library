@@ -1,13 +1,8 @@
-### Thin build-environment image for IEC60730-Library
-### Firmware toolchains and Simplicity SDK are installed later by SLT (make bootstrap).
-
 FROM ubuntu:24.04
 
 ENV TZ=Europe/Budapest
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install only the OS-level prerequisites needed to bootstrap SLT and run the
-# project scripts. Firmware toolchains and SDKs are installed by SLT.
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
     build-essential \

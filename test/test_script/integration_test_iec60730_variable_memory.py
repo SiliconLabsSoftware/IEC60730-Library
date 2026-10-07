@@ -273,7 +273,7 @@ class iec60730_vmc(unittest.TestCase, iec60730TestBase):
     self.adapter.clear_all_breakpoints()
     self.adapter.reset()
 
-    # TODO: Check test case again
+    # TODO: Re-validate this test case against the current variable-memory specification.
     self.reach_to_breakpoint('IEC60730_VMC_POST_CHECK_BKBUF_BKPT', True, 1)
     self.adapter.clear_all_breakpoints()
 
