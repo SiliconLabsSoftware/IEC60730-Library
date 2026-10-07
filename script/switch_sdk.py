@@ -74,6 +74,12 @@ def main():
         print(f"[UPDATED] {dst.relative_to(ROOT)}")
 
     print(f"\nApplied SDK profile: {args.profile}")
+    print(
+        "Note: tracked files were overwritten from profile snapshots "
+        "(*.patch are full-file copies, not git diffs). "
+        "Restore with: make apply-sdk-profile PROFILE=ssdk_2026_6 "
+        "before commit unless changing the default."
+    )
 
 
 if __name__ == "__main__":

@@ -121,6 +121,9 @@ endef
 
 # make apply-sdk-profile PROFILE=gecko_4_5
 # make apply-sdk-profile PROFILE=ssdk_2026_6
+# Overwrites tracked sources from sdk_profiles/<PROFILE>/*.patch snapshots
+# (not git diffs). Default committed profile is ssdk_2026_6 — restore that
+# before commit. See README "Dual SDK support".
 apply-sdk-profile:
 	@python3 "$(CURDIR)/script/switch_sdk.py" "$(PROFILE)"
 	@echo "Cleaning generated SDK..."
@@ -129,6 +132,7 @@ apply-sdk-profile:
 	@rm -rf src
 	@rm -f recipe.slconf
 	@rm -f user.slconf
+	@echo "Note: tracked files were updated for PROFILE=$(PROFILE). Restore with PROFILE=ssdk_2026_6 before commit unless changing the default."
 
 # Run the default bootstrap and build workflow.
 all: bootstrap build

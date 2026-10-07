@@ -25,22 +25,27 @@ The build and execution flow is the same for both SDKs after you select the matc
 
 ## Select SDK version
 
-Apply the SDK profile that matches your target SDK, then load the environment:
+Apply the SDK profile that matches your target SDK, then load the environment.
+The committed default is **`ssdk_2026_6`**.
 
 ```sh
-make apply-sdk-profile PROFILE=gecko_4_5
-# or
 make apply-sdk-profile PROFILE=ssdk_2026_6
+# or
+make apply-sdk-profile PROFILE=gecko_4_5
 
 source script/set_env.sh
 ```
 
 `script/set_env.sh` configures `SDK_PATH`, toolchain paths, and related variables for the active profile.
 
+> [!IMPORTANT]
+> `make apply-sdk-profile` **overwrites tracked files** (SLCPs, demos, `sdk.env`, etc.) from `sdk_profiles/<profile>/` snapshots and cleans `build/` / `autogen/` / `src/`. Do **not** commit those changes unless you mean to change the default profile. Restore with `make apply-sdk-profile PROFILE=ssdk_2026_6` before committing other work. Details: [README — Dual SDK support](../README.md#dual-sdk-support).
+
 > [!NOTE]
 > Prefer `source script/set_env.sh` over hard-coded machine paths.
 > When configuring CMake manually, export the required variables before running CMake.
 > `cmake/toolchain.cmake` can also discover `arm-none-eabi-gcc` from `PATH`.
+> Prefer `make BOARD_NAME=... build-unit` so `FLASH_REGIONS_TEST` is set for BG21/BG24; if you invoke CMake directly, export `FLASH_REGIONS_TEST` yourself (see table below).
 
 ### Manual environment variables (reference only)
 

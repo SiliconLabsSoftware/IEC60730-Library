@@ -69,10 +69,23 @@ The IEC60730 Library SDK Extension **v2.2.0** supports:
 >
 > **Gecko SDK (GSDK) 4.5.0 is maintained on GitHub**, so the `gecko_4_5` profile obtains it separately through `script/set_gsdk.sh`.
 
+The repository ships with **`ssdk_2026_6` as the committed default**. Apply a profile before generating or building:
+
 ```sh
-make apply-sdk-profile PROFILE=ssdk_2026_6
+make apply-sdk-profile PROFILE=ssdk_2026_6   # default
 make apply-sdk-profile PROFILE=gecko_4_5
 ```
+
+Recommended order: `apply-sdk-profile` → `bootstrap` / `source script/set_env.sh` → `build-*`.
+
+> [!IMPORTANT]
+> **`make apply-sdk-profile` overwrites tracked project files** from snapshots under `sdk_profiles/<profile>/` (the `*.patch` files are full-file snapshots, not git diffs). It also removes `build/`, `autogen/`, `src/`, and `*.slconf`.
+>
+> - Expect a dirty `git status` after switching (especially to `gecko_4_5`).
+> - **Do not commit** those changes unless you intentionally change the default profile.
+> - Restore before commit: `make apply-sdk-profile PROFILE=ssdk_2026_6`.
+>
+> Full workflow notes: [README — Dual SDK support](../README.md#dual-sdk-support).
 
 ## CMake and SLC setup
 

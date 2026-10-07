@@ -80,12 +80,34 @@ The IEC60730 Library SDK Extension **v2.2.0** supports:
 >
 > **Gecko SDK (GSDK) 4.5.0 is maintained on GitHub**, so the `gecko_4_5` profile obtains it separately through `script/set_gsdk.sh` (explicit `GSDK_PATH`, `/opt/gecko_sdk` mount, `~/.cache/iec60730/gecko-sdk/4.5.0`, or download from the GitHub release).
 
-Select the active SDK profile before generating or building projects:
+### Select an SDK profile
+
+The repository ships with **`ssdk_2026_6` as the committed default**. Apply a profile before generating or building:
 
 ```sh
-make apply-sdk-profile PROFILE=ssdk_2026_6   # Simplicity SDK 2026.6.0 (SLT)
+make apply-sdk-profile PROFILE=ssdk_2026_6   # Simplicity SDK 2026.6.0 (SLT) — default
 make apply-sdk-profile PROFILE=gecko_4_5     # Gecko SDK 4.5.0 (GitHub / local path)
 ```
+
+Recommended order:
+
+```sh
+make apply-sdk-profile PROFILE=<ssdk_2026_6|gecko_4_5>
+make bootstrap          # or: source script/set_env.sh after a prior bootstrap
+make build-unit         # or build-integration / build
+```
+
+> [!IMPORTANT]
+> **`make apply-sdk-profile` overwrites tracked project files** (extension metadata, SLCPs, demo/`main` sources, `sdk.env`) from snapshots under `sdk_profiles/<profile>/`. Those `*.patch` files are **full-file snapshots**, not git diffs.
+>
+> - Expect `git status` to show modified files after switching (especially to `gecko_4_5`).
+> - The target also removes generated dirs: `build/`, `autogen/`, `src/`, and `*.slconf`.
+> - **Do not commit** those modifications unless you intentionally change the default profile.
+> - Before committing other work, restore the default:
+>   ```sh
+>   make apply-sdk-profile PROFILE=ssdk_2026_6
+>   ```
+> - CI applies the profile in a clean job checkout; local clones should treat profile switches as a temporary workspace state.
 
 ## Building with CMake and SLC
 
@@ -203,10 +225,14 @@ CI reference: [`.github/workflows/02-Build-Firmware.yaml`](./.github/workflows/0
 # Layer A — build the image (once, or after Dockerfile changes)
 docker compose build
 
-# Layer B — install / refresh Silicon Labs tooling and Simplicity SDK
+# Layer B — select SDK profile (optional; clone default is ssdk_2026_6)
+# make apply-sdk-profile PROFILE=ssdk_2026_6
+# make apply-sdk-profile PROFILE=gecko_4_5
+
+# Layer C — install / refresh Silicon Labs tooling and the selected SDK
 make bootstrap
 
-# Layer C — compile for BG21 (default) or BG24
+# Layer D — compile for BG21 (default) or BG24
 make build-unit          # unit test targets (BOARD_NAME=EFR32BG21A010F1024IM32)
 make BOARD_NAME=EFR32BG24A010F1024IM40 build-unit
 make build-integration   # integration test targets
@@ -228,6 +254,8 @@ make build-unit BUILD_ARGS="-DENABLE_CAL_CRC_32=ON"
 | --- | --- | --- |
 | `ssdk_2026_6` (default) | Simplicity SDK 2026.6.0 | SLT installs and locates the SDK |
 | `gecko_4_5` | Gecko SDK 4.5.0 | Maintained on GitHub; `script/set_gsdk.sh` resolves it |
+
+After `make apply-sdk-profile`, `sdk.env` records `SDK_PROFILE=...`. Bootstrap / `script/set_env.sh` uses that to resolve `SDK_PATH` for the active profile. See [Select an SDK profile](#select-an-sdk-profile) for the overwrite / restore rules.
 
 For Simplicity SDK, an explicit host install can be passed through Compose as `SDK_PATH` (preserved by `script/set_env.sh`). For Gecko SDK, either set a local install:
 
@@ -286,7 +314,11 @@ Scripts resolve paths from their own location, so `bash test/execute_unit_test.s
 | --- | --- |
 | Missing `slc` / SLT packages | Run `make bootstrap` before `make build-*`. |
 | `slc generate` fails with a mysterious path error | Prefer SLT’s `slc-cli`, not Heimdal’s `/usr/bin/slc`. `source script/set_env.sh` after bootstrap. |
+| Unexpected `git status` changes after profile switch | Expected: `apply-sdk-profile` overwrites tracked files. Restore with `make apply-sdk-profile PROFILE=ssdk_2026_6` before commit. |
+| Build fails after switching SDK | Re-run `make bootstrap` (or `source script/set_env.sh`) for the new profile, then rebuild. |
+| Wrong SDK / `SDK_PATH` | Check `sdk.env` (`SDK_PROFILE`), then `source script/set_env.sh`. For GSDK set `GSDK_PATH` or allow cache/download. |
 | `RUNNER=compose` inside a container | Use `make RUNNER=native …` when already inside the image or CI. |
 | Flash fails / no device | Ensure `commander` is on `PATH`, J-Link is installed, and `ADAPTER_SN` is correct. |
 | Permission errors under `~/.silabs` | Pre-create as your user, or `sudo chown -R "$USER" ~/.silabs` after a root-owned bind mount. |
 | Wrong `.s37` / missing CRC image | Use the artifact paths above; for invariable memory flash `*_crc16.s37` or `*_crc32.s37`. |
+| BG24 CRC / flash address wrong | Prefer `make BOARD_NAME=EFR32BG24A010F1024IM40 …` (sets `FLASH_REGIONS_TEST`). If invoking CMake directly, export `FLASH_REGIONS_TEST=0x08000000` for BG24. |
