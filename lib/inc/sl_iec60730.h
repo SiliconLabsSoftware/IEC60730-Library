@@ -31,6 +31,7 @@ extern "C" {
 #include "em_gpcrc.h"
 #include SL_IEC60730_BOARD_HEADER
 
+/* Runtime library version (API). SDK Extension package version is separate (iec60730.slce). */
 #define IE60730_LIBRARY_VERSION { 2, 0, 0 }
 
 #ifdef DOXYGEN

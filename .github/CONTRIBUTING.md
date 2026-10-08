@@ -100,7 +100,7 @@ Example branch name:
 ```
 99-bootloader-implementation
 ```
-Issue number is necessary to maintain tracebility.
+Issue number is necessary to maintain traceability.
 Now you have a branch. You can start committing your code onto it.
 
 ## Commit Messages
@@ -128,8 +128,8 @@ What to consider when raising a Pull Request:
 4. **Evaluate the Action Workflow Results**  
    The following workflows are included in every repository:
    - **[Coding Convention Check](workflows/00-Check-Code-Convention.yml)**: Analyzes the code formatting and fails if any rules are broken.
-   - **[Firmware Build](workflows/02-Build-Firmware.yml)**: Builds the firmware inside the [Dockerfile](../Dockerfile).  
-   - **[Secret Scanner](workflows/04-TruffleHog-Security-Scan.yml)**: Runs the TruffleHog security scanner to look for API keys and committed secrets.
+   - **[Firmware Build](workflows/02-Build-Firmware.yaml)**: Builds the firmware inside the [Dockerfile](../Dockerfile).
+   - **[Secret Scanner](workflows/04-Run-TroffleHog.yaml)**: Runs the TruffleHog security scanner to look for API keys and committed secrets.
 
 ### As a Reviewer
 
@@ -138,4 +138,4 @@ What to consider when reviewing a Pull Request:
 - All builds must pass successfully.
 - The code must follow the Silicon Labs [coding guidelines](https://github.com/SiliconLabsSoftware/agreements-and-guidelines/blob/main/coding_standard.md).
 - Write clear comments. Describe the issue and explain why you disagree (e.g., mistakes, errors, violations of conventions, performance risks, security issues, etc.).
-- If any comments must be addressed mandatorily, mark the pull request as �Draft.�
+- If any comments must be addressed mandatorily, mark the pull request as Draft.

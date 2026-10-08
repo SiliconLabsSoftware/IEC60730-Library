@@ -1,12 +1,16 @@
 #  Exports:
 #    - SLT_INSTALL_DIR : directory that contains the `slt` binary
 #    - JAVA_HOME       : SLT's Java 21 root (`$(slt where java21)/jre`)
-#    - SDK_PATH        : Simplicity SDK root from SLT
+#    - SDK_PATH        : active SDK root (SSDK from SLT, or GSDK via set_gsdk.sh)
 #    - TOOL_DIRS       : arm-none-eabi gcc bin directory
 #    - TOOL_CHAINS     : GCC
-#    - FLASH_REGIONS_TEST : flash start for brd4264c CRC tests
+#    - FLASH_REGIONS_TEST : flash start for CRC tests (BG21/BG24)
 #    - POST_BUILD_EXE  : Simplicity Commander binary (if installed)
 #    - PATH            : prepended with SLT-managed tools
+#
+#  SDK profiles:
+#    - ssdk_2026_6 : Simplicity SDK (SimSDK) 2026.6.0 from SLT (`slt where simplicity-sdk`)
+#    - gecko_4_5   : Gecko SDK 4.5.0 maintained on GitHub; resolved via script/set_gsdk.sh
 #
 #  Required: slc-cli, java21, gcc-arm-none-eabi, commander, ninja, cmake
 #  Also verifies: srecord (apt / host package)
@@ -20,29 +24,87 @@
 
 _set_env_repo_root="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
 
-_set_env_resolve_slt_dir() {
-    local slt_location="${HOME}/.silabs/slt/slt.location"
-    local candidate=""
-    if [ -f "${slt_location}" ]; then
-        candidate="$(dirname "$(cat "${slt_location}")")"
-    fi
-    if [ -n "${candidate}" ] && "${candidate}/slt" --version >/dev/null 2>&1; then
-        echo "${candidate}"
+# Note: Load SDK settings for the selected profile. When sdk.env is missing
+# (clean checkout), only create the default marker — do not run switch_sdk.py,
+# which overwrites tracked project/source files from profile snapshots.
+# Explicit profile switches stay behind: make apply-sdk-profile PROFILE=...
+if [ ! -f "${_set_env_repo_root}/sdk.env" ]; then
+    echo "sdk.env not found; using default profile ssdk_2026_6."
+    echo "Tracked sources are left unchanged. To switch SDK profiles, run:"
+    echo "  make apply-sdk-profile PROFILE=<ssdk_2026_6|gecko_4_5>"
+
+    cp \
+        "${_set_env_repo_root}/sdk_profiles/ssdk_2026_6/sdk.env.patch" \
+        "${_set_env_repo_root}/sdk.env" || return 1
+fi
+
+# Profiles often set SDK_PATH= (empty) meaning "resolve later". Preserve a
+# non-empty caller/Compose override across sourcing sdk.env.
+_set_env_sdk_path_preset="${SDK_PATH-}"
+source "${_set_env_repo_root}/sdk.env"
+if [ -n "${_set_env_sdk_path_preset}" ]; then
+    SDK_PATH="${_set_env_sdk_path_preset}"
+fi
+unset _set_env_sdk_path_preset
+
+
+_set_env_resolve_slt_dir()
+{
+    local search_root="${1:-${HOME}/.silabs}"
+
+    #
+    # Prefer an explicit install root (e.g. Compose SLT_INSTALL_DIR=/opt/silabs).
+    # Require a regular file: ~/.silabs/slt is often an SLT data directory
+    # (installs/engines), and -x alone is true for directories.
+    #
+    if [ -f "${search_root}/bin/slt" ] && [ -x "${search_root}/bin/slt" ]; then
+        echo "${search_root}/bin"
         return 0
     fi
-    if [ -n "${SLT_INSTALL_DIR:-}" ] && "${SLT_INSTALL_DIR}/slt" --version >/dev/null 2>&1; then
-        echo "${SLT_INSTALL_DIR}"
+
+    if [ -f "${search_root}/slt" ] && [ -x "${search_root}/slt" ]; then
+        echo "${search_root}"
         return 0
     fi
-    # Common layout after install_slt: ${SLT_INSTALL_DIR}/bin/slt
-    if [ -n "${SLT_INSTALL_DIR:-}" ] && "${SLT_INSTALL_DIR}/bin/slt" --version >/dev/null 2>&1; then
-        echo "${SLT_INSTALL_DIR}/bin"
+
+    #
+    # New Simplicity Installer layout under HOME
+    #
+    if [ -f "${HOME}/.silabs/bin/slt" ] && [ -x "${HOME}/.silabs/bin/slt" ]; then
+        echo "${HOME}/.silabs/bin"
         return 0
     fi
+
+    #
+    # Legacy layout
+    #
+    local slt_bin
+
+    slt_bin="$(find "${HOME}/.silabs" \
+        -type f \
+        -path "*/slt-cli-*/slt" \
+        2>/dev/null | head -n 1)"
+
+    if [ -n "${slt_bin}" ]; then
+        dirname "${slt_bin}"
+        return 0
+    fi
+
     return 1
 }
 
-if ! SLT_INSTALL_DIR="$(_set_env_resolve_slt_dir)"; then
+# Honor a pre-set SLT_INSTALL_DIR (Compose/CI), otherwise discover under HOME.
+if [ -n "${SLT_INSTALL_DIR:-}" ]; then
+    _set_env_slt_hint="${SLT_INSTALL_DIR}"
+    if ! SLT_INSTALL_DIR="$(_set_env_resolve_slt_dir "${_set_env_slt_hint}")"; then
+        echo "Error: SLT_INSTALL_DIR is set but no slt binary was found under it."
+        echo "  SLT_INSTALL_DIR was: ${_set_env_slt_hint}"
+        unset _set_env_repo_root _set_env_slt_hint
+        unset -f _set_env_resolve_slt_dir
+        return 1
+    fi
+    unset _set_env_slt_hint
+elif ! SLT_INSTALL_DIR="$(_set_env_resolve_slt_dir)"; then
     echo "Error: SLT is not installed."
     echo "Run:   ./script/bootstrap silabs"
     unset _set_env_repo_root
@@ -159,10 +221,40 @@ if [ "${_set_env_failed}" -ne 0 ]; then
     return 1
 fi
 
-export SDK_PATH="$(_set_env_slt_where simplicity-sdk)"
+# SDK root. sdk.env (written by `make apply-sdk-profile`) selects the profile:
+#   gecko_4_5   -> script/set_gsdk.sh (GSDK_PATH / mount / cache / download)
+#   otherwise   -> explicit SDK_PATH, else SLT-managed simplicity-sdk
+if [ "${SDK_PROFILE:-}" = "gecko_4_5" ]; then
+    # shellcheck source=set_gsdk.sh
+    if ! source "${_set_env_repo_root}/script/set_gsdk.sh"; then
+        echo "Error: could not resolve Gecko SDK for profile gecko_4_5."
+        echo "Set GSDK_PATH to an existing Gecko SDK 4.5.0 root, or allow the download into \${XDG_CACHE_HOME:-~/.cache}/iec60730."
+        unset _set_env_repo_root _set_env_failed _set_env_slconf
+        unset _set_env_dir_slc_cli _set_env_dir_java21 _set_env_dir_gcc_arm_none_eabi
+        unset _set_env_dir_commander _set_env_dir_ninja _set_env_dir_cmake
+        unset -f _set_env_resolve_slt_dir _set_env_slt_where _set_env_path_prepend _set_env
+        unset -f _set_env_slconf_usable
+        return 1
+    fi
+elif [ -z "${SDK_PATH:-}" ]; then
+    SDK_PATH="$(_set_env_slt_where simplicity-sdk)"
+fi
+export SDK_PATH
+
+# Note: Toolchain paths used by CMake and build scripts.
 export TOOL_DIRS="${_set_env_dir_gcc_arm_none_eabi}/bin"
 export TOOL_CHAINS="${TOOL_CHAINS:-GCC}"
-export FLASH_REGIONS_TEST="${FLASH_REGIONS_TEST:-0x8000000}"
+
+
+# Preserve FLASH_REGIONS_TEST from the build environment. Keep it defined
+# (possibly empty) so nounset-safe callers do not abort; CMake treats empty
+# as "use board/default fallback".
+export FLASH_REGIONS_TEST="${FLASH_REGIONS_TEST:-}"
+
+# Note: Ensure Docker containers run with the same IDs
+export DOCKER_UID=$(id -u)
+export DOCKER_GID=$(id -g)
+
 if [ -n "${_set_env_slconf}" ]; then
     export SLC_SLCONF="${_set_env_slconf}"
 else

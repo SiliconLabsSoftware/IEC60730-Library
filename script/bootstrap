@@ -7,6 +7,10 @@
 #   ./script/bootstrap packages  # OS packages only
 #   ./script/bootstrap silabs    # SLT + recipe.toml packages only
 #
+# SLT / recipe.toml provides Simplicity SDK (SimSDK) 2026.6.0 clone/setup and
+# related tools. Gecko SDK 4.5.0 is maintained on GitHub; use GSDK_PATH or
+# script/set_gsdk.sh when SDK_PROFILE=gecko_4_5.
+#
 
 set -euxo pipefail
 

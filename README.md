@@ -1,163 +1,245 @@
 ![Static Badge](https://img.shields.io/badge/Security_Support-Supported-green)
-![Static Badge](https://img.shields.io/badge/SDK-Simplicity_SDK_v2026.6.0-green?style=flat-square)
+![Static Badge](https://img.shields.io/badge/Supported-Simplicity_SDK_v2026.6.0-green?style=flat-square)
+[![Static Badge](https://img.shields.io/badge/Supported-GeckoSDK_v4.5.0-green)](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0)
 
-# IEC60730_Libs
-Platform codes for EFR32 series chips which complies to IEC60730 safety standard
+# IEC60730 Library
+
+Platform code for EFR32 series devices that implements IEC 60730 Class B safety requirements.
 
 ## Introduction
-The IEC60730 library for EFR32 provides a basic implementation required to support the necessary requirements found in Table H.1 in the IEC60730 specification. It includes all the Power On Self Test (POST) functions executed when a device is first powered on, as well as Built In Self Test (BIST) functions that are called periodically to ensure correct operation. Certain portions of the requirements require a detailed understanding of the system under development. Callback functions must be completed by the developer to guarantee meeting the full specification. These include a Safe State function used when validation detects an anomaly, properly implemented communications channels (redundancy, error detection, periodic communications), and Plausibility functions to validate system state (internal variables and inputs/outputs).
+
+The IEC60730 library for EFR32 provides a baseline implementation of the diagnostic requirements in Table H.1 of the IEC 60730 specification. It includes:
+
+- **POST (Power-On Self-Test)** — runs when the device powers on
+- **BIST (Built-In Self-Test)** — runs periodically during normal operation
+
+Some requirements depend on the end-product design. You must implement the related callback functions to meet the full specification, including:
+
+- Safe-state handling when a fault is detected
+- Communications channels (redundancy, error detection, periodic traffic)
+- Plausibility checks for system state (internal variables and I/O)
 
 ## License
 
-Please refer [License](LICENSE.md)
+See [LICENSE.md](LICENSE.md).
 
-## Release Notes
+## Release notes
 
-Please refer document in [release_note.md](./docs/release_note.md)
+See [docs/release_note.md](./docs/release_note.md).
 
-## IEC60730 Certificate
+## Versioning
 
-The Silicon Labs Appliances homepage will contain the final certificate and detailed report when it is completed.
+| Artifact | Version | Where |
+| --- | --- | --- |
+| SDK Extension (package) | **2.2.0** | `iec60730.slce` |
+| Runtime library | **2.0.0** | `IE60730_LIBRARY_VERSION` / `SL_IEC60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h` |
 
-## OEM Testing
+This release updates the **SDK Extension** to 2.2.0 (BG21/BG24, dual-SDK profiles, tests). The library API/runtime version stays at **2.0.0**.
 
-Once OEMs have completed integrating their system with the IEC60730 Library, they will need to certify their device with a qualified certification house.
+## IEC60730 certificate
 
-## Supported Families
+The Silicon Labs Appliances homepage will host the final certificate and detailed report when they are available.
 
-- Refer section [Supported Families](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+## OEM testing
 
-## Software Requirements
+After integrating the IEC60730 library into a product, OEMs must certify the complete device with a qualified certification body.
 
-- Refer section [Software Requirements](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+## Supported families and software requirements
 
-## Building the IEC60730 Demo
+Default Docker / CI / Makefile board names:
 
-- Refer section [Building the IEC60730 Demo](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+| Device ID | Role |
+| --- | --- |
+| `EFR32BG21A010F1024IM32` | Default (`BOARD_NAME`) |
+| `EFR32BG24A010F1024IM40` | Alternate CI matrix board |
 
-## Generate document API
+SDK pins: Simplicity SDK **2026.6.0** (`recipe.toml`) and Gecko SDK **4.5.0**. Full family / API docs:
 
-- Refer section [Generate document API](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Supported Families](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Software Requirements](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Building the IEC60730 Demo](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Generate document API](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [Compiler specifications](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+- [System Architecture](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
 
 ## Coding convention tool
 
-- Refer file: [coding_convention_tool.md](./docs/coding_convention_tool.md).
+See [docs/coding_convention_tool.md](./docs/coding_convention_tool.md).
 
-## Compiler specifications
+## Dual SDK support
 
-- Refer section [Compiler specifications](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+The IEC60730 Library SDK Extension **v2.2.0** supports:
 
-## System Architecture
+| SDK | Version | How it is obtained |
+| --- | --- | --- |
+| Simplicity SDK (SSDK / SimSDK) | 2026.6.0 | Clone/setup through **SLT** via `recipe.toml` / `make bootstrap` |
+| Gecko SDK (GSDK) | 4.5.0 | Maintained on GitHub — resolve via `GSDK_PATH`, Docker mount, local cache, or download from the [Gecko SDK v4.5.0 release](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0) |
 
-- Refer section [System Architecture](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
+> [!NOTE]
+> **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup (`simplicity-sdk` in `recipe.toml`).
+>
+> **Gecko SDK (GSDK) 4.5.0 is maintained on GitHub**, so the `gecko_4_5` profile obtains it separately through `script/set_gsdk.sh` (explicit `GSDK_PATH`, `/opt/gecko_sdk` mount, `~/.cache/iec60730/gecko-sdk/4.5.0`, or download from the GitHub release).
 
-## CMake
+### Select an SDK profile
 
-The project has a CMake template that supports running tests. Follow the steps below one by one to build and run tests.
-
-### Add the IEC60730 Library extension to the SDK
-
-Refer to the IEC60730 Safety Library Integration Guide in the `docs` folder for more details.
-
-### Install Dependencies
-
-#### Install Simplicity CLI (slc)
-
-- Follow the Simplicity Studio 6 User Guide to install Simplicity Studio and the Simplicity CLI (slc): [Install Simplicity Studio](https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio).
-- Follow this guide to install Amazon Corretto 17 on Linux: [Install Amazon Corretto 17](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
-
-##### How to use slc
-
-Add the path to the expanded slc executable to your PATH.
+The repository ships with **`ssdk_2026_6` as the committed default**. Apply a profile before generating or building:
 
 ```sh
-$ export PATH=$PATH:<path_to_slc>
+make apply-sdk-profile PROFILE=ssdk_2026_6   # Simplicity SDK 2026.6.0 (SLT) — default
+make apply-sdk-profile PROFILE=gecko_4_5     # Gecko SDK 4.5.0 (GitHub / local path)
 ```
 
-Configure the SDK. For example:
+Recommended order:
 
 ```sh
-$ slc configuration --sdk <path_to_sdk>
+make apply-sdk-profile PROFILE=<ssdk_2026_6|gecko_4_5>
+make bootstrap          # or: source script/set_env.sh after a prior bootstrap
+make build-unit         # or build-integration / build
 ```
 
-Run the following command if you have not yet trusted your SDK:
+> [!IMPORTANT]
+> **`make apply-sdk-profile` overwrites tracked project files** (extension metadata, SLCPs, demo/`main` sources, `sdk.env`) from snapshots under `sdk_profiles/<profile>/`. Those `*.patch` files are **full-file snapshots**, not git diffs.
+>
+> - Expect `git status` to show modified files after switching (especially to `gecko_4_5`).
+> - The target also removes generated dirs: `build/`, `autogen/`, `src/`, and `*.slconf`.
+> - **Do not commit** those modifications unless you intentionally change the default profile.
+> - Before committing other work, restore the default:
+>   ```sh
+>   make apply-sdk-profile PROFILE=ssdk_2026_6
+>   ```
+> - CI applies the profile in a clean job checkout; local clones should treat profile switches as a temporary workspace state.
+
+## Building with CMake and SLC
+
+The repository includes a CMake template for building tests. Follow the steps below in order.
+
+### 1. Add the IEC60730 extension to the SDK
+
+See [docs/iec60730_safety_library_integration_to_sdk.md](./docs/iec60730_safety_library_integration_to_sdk.md).
+
+### 2. Install Simplicity CLI (`slc`)
+
+- Install Simplicity Studio and the Simplicity CLI: [Install Simplicity Studio](https://docs.silabs.com/ssv6ug/latest/install-ssv6/install-simplicity-studio).
+- **Java:** Docker / SLT bootstrap provides **Java 21** (`java21` via SLT; image also installs `openjdk-21-jre-headless`). For Simplicity Studio–only workflows, install the JDK your Studio/`slc` package requires (often Amazon Corretto 17 on Linux): [Amazon Corretto 17 downloads](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html).
+
+#### Configure `slc`
+
+Add the `slc` executable directory to `PATH`:
 
 ```sh
-$ slc signature trust --sdk <path_to_sdk>
+export PATH=$PATH:<path_to_slc>
 ```
 
-For example:
+Point `slc` at your SDK and trust it if needed:
 
 ```sh
-$ slc signature trust --sdk $SDK
+slc configuration --sdk <path_to_sdk>
+slc signature trust --sdk <path_to_sdk>
 ```
 
-Configure the GCC toolchain. For example:
+Configure the GCC toolchain:
 
 ```sh
-$ slc configuration --gcc-toolchain=<path_to_gcc_toolchain>
+slc configuration --gcc-toolchain=<path_to_gcc_toolchain>
 ```
-Generate the project:
+
+Generate a project:
 
 ```sh
-$ slc generate <path_to_example.slcp> \
+slc generate <path_to_example.slcp> \
     -np \
     -d <project_destination> \
     -name=<project_name> \
     --with <supported_board_or_device>
 ```
 
-Choose one of the options below to generate the project
+| Argument | Description |
+| --- | --- |
+| `-cp`, `--copy-sources` | Copy all files referenced by the project, selected components, and related tools. By default, no files are copied. |
+| `-cpproj`, `--copy-proj-sources` | Copy project files and link SDK sources. Can be combined with `-cpsdk`. |
+| `-cpsdk`, `--copy-sdk-sources` | Copy SDK component sources and link project sources. Can be combined with `-cpproj`. |
 
-| Operation | Arguments | Description |
-|---|---|---|
-|generate | -cp, --copy-sources | Copies all files referenced by this project, selected components, and any other running tools (Pin Tool, etc.). By default, no files are copied. |
-|^ | -cpproj, --copy-proj-sources | Copies all files referenced by the project and links any SDK sources. This can be combined with -cpsdk. |
-|^ | -cpsdk, --copy-sdk-sources | Copies all files referenced by the selected components and links any project sources. This can be combined with -cpproj. |
-
-> [!NOTE]: To be able to use the extension LibIEC60730. You need to add the LibIEC60730
-> extension to your SDK in the extension folder and run the command: `slc signature trust -extpath <path_to_your_extension_sdk>`
-
-##### For example
+After copying the LibIEC60730 extension into the SDK `extension` directory, trust it:
 
 ```sh
-$ SDK=/home/svc_sqa_automation/.silabs/slt/installs/conan/p/simpl508ee6c1a6569/p
-$ slc configuration --sdk=$SDK
-$ slc signature trust --sdk $SDK
-$ slc signature trust -extpath $SDK/extension/IEC60730_Libs
-$ slc generate \
-    $SDK/app/common/example/blink_baremetal \
+slc signature trust -extpath <path_to_extension>
+```
+
+#### Example (Simplicity SDK via SLT install path)
+
+```sh
+# Replace with your local Simplicity SDK root (from `slt where simplicity-sdk`)
+SDK=$(slt where simplicity-sdk)
+
+slc configuration --sdk "$SDK"
+slc signature trust --sdk "$SDK"
+slc signature trust -extpath "$SDK/extension/IEC60730_Libs"
+
+slc generate \
+    "$SDK/app/common/example/blink_baremetal" \
     -np \
     -d blinky \
     -name=blinky \
-    --with brd4264c
+    --with EFR32BG21A010F1024IM32
 ```
 
-### Run unit test
-  - Refer to the guideline link: [guideline_for_running_unit_test.md](./docs/guideline_for_running_unit_test.md)
-### Run integration test
-  - Refer to the guideline link: [guideline_for_running_integration_test.md](./docs/guideline_for_running_integration_test.md)
+### 3. Run tests
 
-## Docker build (Simplicity SDK via SLT)
+- Unit tests: [docs/guideline_for_running_unit_test.md](./docs/guideline_for_running_unit_test.md)
+- Integration tests: [docs/guideline_for_running_integration_test.md](./docs/guideline_for_running_integration_test.md)
 
-Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs SDKs and toolchains are **not** baked into the image; they are installed by `make bootstrap` into `/root/.silabs` (Compose volume `silabs-root`). Package pins live in `recipe.toml`; SLT/SLC paths live in root `recipe.slconf` (refreshed by bootstrap).
+## Docker / Makefile bootstrap build
 
-**Prerequisites:** Docker Engine 24+, Docker Compose v2, network access to Silabs package servers.
+Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs tooling (`slc-cli`, `java21`, `gcc-arm-none-eabi`, `commander`, `cmake`, and `ninja`) is installed and managed by **SLT** during `make bootstrap`. Package pins live in `recipe.toml`. After bootstrap, SLT/SLC search paths are written to gitignored `recipe.slconf` at the repo root (not present in a clean clone).
+
+**Supported host OS:** Documented Docker builds are validated on **Linux** (Ubuntu 24.04 recommended; used by CI). Windows and macOS can use Docker Desktop with the same Compose flow. Native host flash/run scripts are validated on Linux.
+
+**Prerequisites:**
+
+- Docker Engine 24+
+- **Docker Compose v2** (the `docker compose` CLI plugin — required by the root `Makefile`; Docker Engine alone is not enough)
+- Network access to Silicon Labs package servers (and GitHub, if GSDK must be downloaded)
+
+`make bootstrap` / `make build` pre-create writable host dirs `~/.silabs` and `~/.cache/iec60730` (avoid a root-owned bind mount). If a previous failed run left `~/.silabs` owned by root, fix once with `sudo chown -R "$USER" ~/.silabs`.
+
+Verify Compose v2 before the first bootstrap:
+
+```sh
+docker compose version
+```
+
+If that fails (for example `compose is not a docker command`, or `unknown shorthand flag: 'f' in -f` when running `make bootstrap` / `docker compose -f ...`), install the plugin, then re-check:
+
+```sh
+# Ubuntu / Debian (package name may vary by distro)
+sudo apt-get update
+sudo apt-get install docker-compose-v2
+# or, from Docker's apt repository: docker-compose-plugin
+
+docker compose version
+```
+
+CI reference: [`.github/workflows/02-Build-Firmware.yaml`](./.github/workflows/02-Build-Firmware.yaml).
 
 ```sh
 # Layer A — build the image (once, or after Dockerfile changes)
 docker compose build
 
-# Layer B — install SLT + simplicity-sdk 2026.6.0 from recipe.toml (once)
+# Layer B — select SDK profile (optional; clone default is ssdk_2026_6)
+# make apply-sdk-profile PROFILE=ssdk_2026_6
+# make apply-sdk-profile PROFILE=gecko_4_5
+
+# Layer C — install / refresh Silicon Labs tooling and the selected SDK
 make bootstrap
 
-# Layer C — compile for brd4264c
-make build-unit          # unit test targets
+# Layer D — compile for BG21 (default) or BG24
+make build-unit          # unit test targets (BOARD_NAME=EFR32BG21A010F1024IM32)
+make BOARD_NAME=EFR32BG24A010F1024IM40 build-unit
 make build-integration   # integration test targets
 make build               # unit + integration
 # or: make all           # bootstrap + build
 
-make clean               # removes build/ output; keeps the silabs-root volume
+make clean               # removes build/ output; preserves SDK caches
 ```
 
 Optional CMake flags:
@@ -166,10 +248,77 @@ Optional CMake flags:
 make build-unit BUILD_ARGS="-DENABLE_CAL_CRC_32=ON"
 ```
 
-Inside an already-running container or CI (`docker run -v "$PWD":/workspace ...`):
+### SDK profile resolution
+
+| Profile | SDK | How it is resolved |
+| --- | --- | --- |
+| `ssdk_2026_6` (default) | Simplicity SDK 2026.6.0 | SLT installs and locates the SDK |
+| `gecko_4_5` | Gecko SDK 4.5.0 | Maintained on GitHub; `script/set_gsdk.sh` resolves it |
+
+After `make apply-sdk-profile`, `sdk.env` records `SDK_PROFILE=...`. Bootstrap / `script/set_env.sh` uses that to resolve `SDK_PATH` for the active profile. See [Select an SDK profile](#select-an-sdk-profile) for the overwrite / restore rules.
+
+For Simplicity SDK, an explicit host install can be passed through Compose as `SDK_PATH` (preserved by `script/set_env.sh`). For Gecko SDK, either set a local install:
+
+```sh
+export GSDK_PATH=/path/to/gecko-sdk
+```
+
+or allow bootstrap/`set_env.sh` to download and cache it under:
+
+```text
+~/.cache/iec60730
+```
+
+Inside an already-running container or CI environment:
 
 ```sh
 make RUNNER=native bootstrap build
 ```
 
-Artifacts appear on the host under `build/` (bind-mounted workspace). Hardware flash and on-device test execution stay on the host via `test/execute_unit_test.sh` / `test/execute_integration_test.sh`.
+### Build artifacts
+
+After `make build-unit` / `make build-integration`, firmware images land under the bind-mounted `build/` tree. Example (BG21, GCC):
+
+```text
+build/test/unit_test/build/EFR32BG21A010F1024IM32/GCC/unit_test_iec60730_post/unit_test_iec60730_post.s37
+build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_irq/NS/integration_test_iec60730_irq.s37
+```
+
+Invariable-memory images may end with `_crc16.s37` or `_crc32.s37` — flash the CRC-suffixed file when those options are enabled. See the unit/integration guidelines for details.
+
+### On-device test prerequisites (host)
+
+Compile can stay in Docker; flash and on-device execution run on the **host**:
+
+- Supported kit / device: `EFR32BG21A010F1024IM32` (default) or `EFR32BG24A010F1024IM40`
+- SEGGER J-Link (library path used by scripts: `/opt/SEGGER/JLink/libjlinkarm.so`)
+- Simplicity Commander (`commander`) on `PATH`
+- Adapter serial number (`ADAPTER_SN`) from the debugger
+
+### Flash and run on-device tests
+
+```sh
+cd test
+bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+# or
+bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+```
+
+Scripts resolve paths from their own location, so `bash test/execute_unit_test.sh ...` from the repo root also works. Prefer `cd test` to match the guidelines.
+
+**Success:** script exits `0` and writes reports under `log/` (for example `log/unit_test_iec60730_post.log`). Full options and CRC flags: [unit test guideline](./docs/guideline_for_running_unit_test.md), [integration test guideline](./docs/guideline_for_running_integration_test.md).
+
+## Troubleshooting
+
+| Symptom | What to try |
+| --- | --- |
+| Missing `slc` / SLT packages | Run `make bootstrap` before `make build-*`. |
+| `slc generate` fails with a mysterious path error | Prefer SLT’s `slc-cli`, not Heimdal’s `/usr/bin/slc`. `source script/set_env.sh` after bootstrap. |
+| Unexpected `git status` changes after profile switch | Expected: `apply-sdk-profile` overwrites tracked files. Restore with `make apply-sdk-profile PROFILE=ssdk_2026_6` before commit. |
+| Build fails after switching SDK | Re-run `make bootstrap` (or `source script/set_env.sh`) for the new profile, then rebuild. |
+| Wrong SDK / `SDK_PATH` | Check `sdk.env` (`SDK_PROFILE`), then `source script/set_env.sh`. For GSDK set `GSDK_PATH` or allow cache/download. |
+| `RUNNER=compose` inside a container | Use `make RUNNER=native …` when already inside the image or CI. |
+| Flash fails / no device | Ensure `commander` is on `PATH`, J-Link is installed, and `ADAPTER_SN` is correct. |
+| Permission errors under `~/.silabs` | Pre-create as your user, or `sudo chown -R "$USER" ~/.silabs` after a root-owned bind mount. |
+| Wrong `.s37` / missing CRC image | Use the artifact paths above; for invariable memory flash `*_crc16.s37` or `*_crc32.s37`. |
+| BG24 CRC / flash address wrong | Prefer `make BOARD_NAME=EFR32BG24A010F1024IM40 …` (sets `FLASH_REGIONS_TEST`). If invoking CMake directly, export `FLASH_REGIONS_TEST=0x08000000` for BG24. |
