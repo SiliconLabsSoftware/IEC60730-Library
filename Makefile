@@ -12,7 +12,7 @@ DOCKER_COMPOSE ?= DOCKER_UID=$(shell id -u) \
 DEV_CONTAINER ?= iec60730-library
 
 # Default target board.
-BOARD_NAME ?= EFR32BG21A010F1024IM32
+BOARD_NAME ?= brd4121a
 
 # Additional build arguments passed to the build command.
 BUILD_ARGS ?=
