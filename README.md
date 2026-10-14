@@ -1,6 +1,5 @@
 ![Static Badge](https://img.shields.io/badge/Security_Support-Supported-green)
 ![Static Badge](https://img.shields.io/badge/Supported-Simplicity_SDK_v2026.6.0-green?style=flat-square)
-[![Static Badge](https://img.shields.io/badge/Supported-GeckoSDK_v4.5.0-green)](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0)
 
 # IEC60730 Library
 
@@ -31,10 +30,10 @@ See [docs/release_note.md](./docs/release_note.md).
 
 | Artifact | Version | Where |
 | --- | --- | --- |
-| SDK Extension (package) | **2.2.0** | `iec60730.slce` |
+| SDK Extension (package) | **2.3.0** | `iec60730.slce` |
 | Runtime library | **2.0.0** | `IE60730_LIBRARY_VERSION` / `SL_IEC60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h` |
 
-This release updates the **SDK Extension** to 2.2.0 (BG21/BG24, dual-SDK profiles, tests). The library API/runtime version stays at **2.0.0**.
+This release updates the **SDK Extension** to 2.3.0 (MG26, SimSDK2026.6.0, tests). The library API/runtime version stays at **2.0.0**.
 
 ## IEC60730 certificate
 
@@ -50,10 +49,9 @@ Default Docker / CI / Makefile board names:
 
 | Device ID | Role |
 | --- | --- |
-| `EFR32BG21A010F1024IM32` | Default (`BOARD_NAME`) |
-| `EFR32BG24A010F1024IM40` | Alternate CI matrix board |
+| `brd4121a` | Default (`BOARD_NAME`) |
 
-SDK pins: Simplicity SDK **2026.6.0** (`recipe.toml`) and Gecko SDK **4.5.0**. Full family / API docs:
+SDK pins: Simplicity SDK **2026.6.0** (`recipe.toml`). Full family / API docs:
 
 - [Supported Families](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
 - [Software Requirements](https://github.com/SiliconLabsSoftware/IEC60730-Library/blob/gh-pages/docs/document_api_iec60730_library/group__efr32__iec60730.html)
@@ -66,19 +64,16 @@ SDK pins: Simplicity SDK **2026.6.0** (`recipe.toml`) and Gecko SDK **4.5.0**. F
 
 See [docs/coding_convention_tool.md](./docs/coding_convention_tool.md).
 
-## Dual SDK support
+## SDK support
 
-The IEC60730 Library SDK Extension **v2.2.0** supports:
+The IEC60730 Library SDK Extension **v2.3.0** supports:
 
 | SDK | Version | How it is obtained |
 | --- | --- | --- |
 | Simplicity SDK (SSDK / SimSDK) | 2026.6.0 | Clone/setup through **SLT** via `recipe.toml` / `make bootstrap` |
-| Gecko SDK (GSDK) | 4.5.0 | Maintained on GitHub — resolve via `GSDK_PATH`, Docker mount, local cache, or download from the [Gecko SDK v4.5.0 release](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0) |
 
 > [!NOTE]
 > **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup (`simplicity-sdk` in `recipe.toml`).
->
-> **Gecko SDK (GSDK) 4.5.0 is maintained on GitHub**, so the `gecko_4_5` profile obtains it separately through `script/set_gsdk.sh` (explicit `GSDK_PATH`, `/opt/gecko_sdk` mount, `~/.cache/iec60730/gecko-sdk/4.5.0`, or download from the GitHub release).
 
 ### Select an SDK profile
 
