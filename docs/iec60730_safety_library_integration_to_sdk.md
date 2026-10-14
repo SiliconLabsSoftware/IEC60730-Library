@@ -119,23 +119,11 @@ Press `Browse` to find the directory of this extension. Then choose the folder t
 
 ## 4. Generate an example project
 
-Before generating a project in Simplicity Studio, confirm that the IEC60730 extension has been added to the selected SDK.
+Before using Simplicity Studio to generate the project, you need to add the IEC60730 extension. Please remember the following text:
 
-> This extension provides demo projects for EFR32BG21 and EFR32BG24 on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
+> "This extension supports a demo example for EFR32MG26"
 
-If you are working from this repository, apply the matching SDK profile before generating the project.
-The committed default is **`ssdk_2026_6`**.
-
-```bash
-make apply-sdk-profile PROFILE=ssdk_2026_6
-# or
-make apply-sdk-profile PROFILE=gecko_4_5
-```
-
-> [!IMPORTANT]
-> Profile apply **overwrites tracked repository files** from `sdk_profiles/<profile>/` snapshots (not git diffs) and clears generated build dirs. Use it for local build/Studio prep; restore `PROFILE=ssdk_2026_6` before committing unless you intentionally change the default. See the repository [README — Dual SDK support](../README.md#dual-sdk-support).
-
-The project-generation workflow is the same for both devices and both supported SDKs:
+The project-generation workflow for EFR32MG26 devices is shown below:
 
 ![Figure 3 Create new project](./images/figure_3_create_new_project.png)
 ######  Figure 3 Create new project
@@ -155,7 +143,7 @@ In `Example Project Selection`, use the checkboxes or keywords to find the examp
 ![Figure 4 Example Project Selection](./images/figure_4_example_project_selection.png)
 ###### Figure 4 Example Project Selection
 
-In Target Device, select the target device for the project. For this example, choose `EFR32BG24A010F1024IM40`, then click `Next`. The same steps apply to `BRD4264C` or `EFR32BG21A010F1024IM32`.
+In Target Device, select the target device for the project. For this example, choose `brd4121a`, then click `Next`.
 <br>
 
 ![Figure 5 Target Device Selection](./images/figure_5_target_device_selection.png)

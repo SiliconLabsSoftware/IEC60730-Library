@@ -1,19 +1,17 @@
 # Guideline for Running Unit Tests
 
-This document describes how to build and run IEC60730 unit tests with **IEC60730 Library SDK Extension v2.2.0**.
+This document describes how to build and run IEC60730 unit tests with **IEC60730 Library SDK Extension v2.3.0**.
 
 Supported SDKs:
 
 | SDK | Version | Notes |
 | --- | --- | --- |
 | Simplicity SDK (SSDK / SimSDK) | 2026.6.0 | Clone/setup through SLT (`make bootstrap` / `recipe.toml`) |
-| Gecko SDK (GSDK) | 4.5.0 | Maintained on GitHub — set `GSDK_PATH` or allow cache/download |
 
 > [!NOTE]
 > **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup.
-> **GSDK 4.5.0 is maintained on GitHub**, so resolve it with `GSDK_PATH`, a Docker mount, or `script/set_gsdk.sh` (see the repository [README](../README.md)).
 
-The build and execution flow is the same for both SDKs after you select the matching profile and environment.
+The build and execution flow described in this document applies to Simplicity SDK (SimSDK) 2026.6.0.
 
 ## Prerequisites
 
@@ -23,37 +21,13 @@ The build and execution flow is the same for both SDKs after you select the matc
 - Simplicity CLI (`slc`) on `PATH`
 - Simplicity Commander (`commander`) on `PATH` when the script queries device info
 
-## Select SDK version
-
-Apply the SDK profile that matches your target SDK, then load the environment.
-The committed default is **`ssdk_2026_6`**.
-
-```sh
-make apply-sdk-profile PROFILE=ssdk_2026_6
-# or
-make apply-sdk-profile PROFILE=gecko_4_5
-
-source script/set_env.sh
-```
-
-`script/set_env.sh` configures `SDK_PATH`, toolchain paths, and related variables for the active profile.
-
-> [!IMPORTANT]
-> `make apply-sdk-profile` **overwrites tracked files** (SLCPs, demos, `sdk.env`, etc.) from `sdk_profiles/<profile>/` snapshots and cleans `build/` / `autogen/` / `src/`. Do **not** commit those changes unless you mean to change the default profile. Restore with `make apply-sdk-profile PROFILE=ssdk_2026_6` before committing other work. Details: [README — Dual SDK support](../README.md#dual-sdk-support).
-
-> [!NOTE]
-> Prefer `source script/set_env.sh` over hard-coded machine paths.
-> When configuring CMake manually, export the required variables before running CMake.
-> `cmake/toolchain.cmake` can also discover `arm-none-eabi-gcc` from `PATH`.
-> Prefer `make BOARD_NAME=... build-unit` so `FLASH_REGIONS_TEST` is set for BG21/BG24; if you invoke CMake directly, export `FLASH_REGIONS_TEST` yourself (see table below).
-
 ### Manual environment variables (reference only)
 
 If you configure the environment manually:
 
 | Variable | Purpose |
 | --- | --- |
-| `SDK_PATH` | Root of GSDK 4.5.0 or Simplicity SDK 2026.6.0 |
+| `SDK_PATH` | Root of Simplicity SDK 2026.6.0 |
 | `TOOL_DIRS` | Directory containing `arm-none-eabi-gcc` |
 | `TOOL_CHAINS` | `GCC` |
 | `JLINK_PATH` | Path to `libjlinkarm.so` |
@@ -63,14 +37,6 @@ If you configure the environment manually:
 Example shapes (replace paths with your local installs):
 
 ```sh
-# GSDK 4.5.0
-export SDK_PATH=/path/to/gecko-sdk
-export TOOL_DIRS=/path/to/arm-gnu-toolchain/bin
-export TOOL_CHAINS=GCC
-export JLINK_PATH=/opt/SEGGER/JLink/libjlinkarm.so
-export PATH=/path/to/slc_cli:$PATH
-
-# Simplicity SDK 2026.6.0 (typically from SLT)
 export SDK_PATH=$(slt where simplicity-sdk)
 export TOOL_DIRS=/path/to/arm-gnu-toolchain/bin
 export TOOL_CHAINS=GCC
@@ -82,15 +48,11 @@ export PATH=/path/to/slc_cli:$PATH
 
 | Device | Flash start |
 | --- | --- |
-| `EFR32BG24A010F1024IM40` | `0x8000000` |
-| `EFR32BG21A010F1024IM32` | `0x0000000` |
+| `brd4121a` | `0x8000000` |
 
 ```sh
-# BG24
+# brd4121a
 export FLASH_REGIONS_TEST=0x8000000
-
-# BG21
-export FLASH_REGIONS_TEST=0x0000000
 ```
 
 > [!NOTE]
@@ -104,15 +66,8 @@ From the repository root:
 make prepare
 cd build
 
-# BG21
-cmake --toolchain ../cmake/toolchain.cmake .. \
-  -DENABLE_UNIT_TESTING=ON \
-  -DBOARD_NAME=EFR32BG21A010F1024IM32
-
-# BG24
-cmake --toolchain ../cmake/toolchain.cmake .. \
-  -DENABLE_UNIT_TESTING=ON \
-  -DBOARD_NAME=EFR32BG24A010F1024IM40
+# brd4121a
+cmake --toolchain ../cmake/toolchain.cmake .. -DENABLE_UNIT_TESTING=ON -DBOARD_NAME=brd4121a
 ```
 
 Build individual components:
@@ -141,7 +96,7 @@ bash execute_unit_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILE
 
 | Argument | Values |
 | --- | --- |
-| `$1` BOARD_NAME | `EFR32BG21A010F1024IM32` or `EFR32BG24A010F1024IM40` |
+| `$1` BOARD_NAME | `brd4121a` |
 | `$2` TASK | `all`, `gen-only`, `run-only` |
 | `$3` COMPONENTS | `all`, or a single target such as `unit_test_iec60730_bist` |
 | `$4` ADAPTER_SN | J-Link / adapter serial number |
@@ -167,14 +122,13 @@ Supported component targets:
 cd test
 
 # Build and run all unit tests
-bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
-bash execute_unit_test.sh EFR32BG24A010F1024IM40 all all <ADAPTER_SN> GCC
+bash execute_unit_test.sh brd4121a all all <ADAPTER_SN> GCC
 
 # CRC / software CRC options
-bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CAL_CRC_32=ON"
-bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON"
-bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
-bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
+bash execute_unit_test.sh brd4121a all all <ADAPTER_SN> GCC "-DENABLE_CAL_CRC_32=ON"
+bash execute_unit_test.sh brd4121a all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON"
+bash execute_unit_test.sh brd4121a all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"
+bash execute_unit_test.sh brd4121a all all <ADAPTER_SN> GCC "-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"
 ```
 
 For environment setup details, see also [Overview](./index.md).
@@ -198,12 +152,12 @@ cd build
 
 cmake --toolchain ../cmake/toolchain.cmake .. \
   -DENABLE_UNIT_TESTING=ON \
-  -DBOARD_NAME=EFR32BG21A010F1024IM32 \
+  -DBOARD_NAME=brd4121a \
   -DENABLE_CAL_CRC_32=ON
 
 cmake --toolchain ../cmake/toolchain.cmake .. \
   -DENABLE_UNIT_TESTING=ON \
-  -DBOARD_NAME=EFR32BG21A010F1024IM32 \
+  -DBOARD_NAME=brd4121a \
   -DENABLE_CRC_USE_SW=ON \
   -DENABLE_SW_CRC_TABLE=ON
 ```

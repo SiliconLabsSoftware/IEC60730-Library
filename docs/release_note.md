@@ -56,6 +56,13 @@ Coding convention
 ## Revision History
 
 ----------------
+2.3.0 Release
+
+- Add support for the EFR32MG26 family.
+- Supported compiler: GCC.
+- Support unit testing and integration testing for EFR32MG26.
+
+----------------
 2.2.0 Release (SDK Extension)
 
 - Package / SDK Extension version: **2.2.0** (`iec60730.slce`). Runtime library version remains **2.0.0** (`IE60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h`).
