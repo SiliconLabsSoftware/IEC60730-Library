@@ -53,7 +53,7 @@ DEVICE_NAME=$(get_device_name $ADAPTER_SN)
 #    DEVICE_NAME=EFR32MG24BXXXF1536
 #fi
 #printf "===== $DEVICE_NAME\n"
-# hieu
+# Note
 if [[ "$DEVICE_NAME" == *"EFR32MG26B"* ]]; then
     DEVICE_NAME=EFR32MG26BxxxF3200
 fi
