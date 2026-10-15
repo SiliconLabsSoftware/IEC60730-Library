@@ -27,10 +27,10 @@ See [release_note.md](./release_note.md).
 
 | Artifact | Version | Where |
 | --- | --- | --- |
-| SDK Extension (package) | **2.2.0** | `iec60730.slce` |
+| SDK Extension (package) | **2.3.0** | `iec60730.slce` |
 | Runtime library | **2.0.0** | `IE60730_LIBRARY_VERSION` / `SL_IEC60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h` |
 
-This release updates the **SDK Extension** to 2.2.0 (BG21/BG24, dual-SDK profiles, tests). The library API/runtime version stays at **2.0.0**.
+This release updates the **SDK Extension** to 2.3.0 (MG26, SimSDK2026.6.0, tests). The library API/runtime version stays at **2.0.0**.
 
 ## IEC60730 certificate
 
@@ -55,37 +55,18 @@ API documentation (supported families, software requirements, demo build steps, 
 
 See [coding_convention_tool.md](./coding_convention_tool.md).
 
-## Dual SDK support
+## SDK support
 
-The IEC60730 Library SDK Extension **v2.2.0** supports:
+The IEC60730 Library SDK Extension **v2.3.0** supports:
 
 | SDK | Version | How it is obtained |
 | --- | --- | --- |
 | Simplicity SDK (SSDK / SimSDK) | 2026.6.0 | Clone/setup through **SLT** via `recipe.toml` / `make bootstrap` |
-| Gecko SDK (GSDK) | 4.5.0 | Maintained on GitHub — resolve via `GSDK_PATH`, Docker mount, local cache, or download |
 
 > [!NOTE]
 > **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup.
->
-> **Gecko SDK (GSDK) 4.5.0 is maintained on GitHub**, so the `gecko_4_5` profile obtains it separately through `script/set_gsdk.sh`.
 
-The repository ships with **`ssdk_2026_6` as the committed default**. Apply a profile before generating or building:
-
-```sh
-make apply-sdk-profile PROFILE=ssdk_2026_6   # default
-make apply-sdk-profile PROFILE=gecko_4_5
-```
-
-Recommended order: `apply-sdk-profile` → `bootstrap` / `source script/set_env.sh` → `build-*`.
-
-> [!IMPORTANT]
-> **`make apply-sdk-profile` overwrites tracked project files** from snapshots under `sdk_profiles/<profile>/` (the `*.patch` files are full-file snapshots, not git diffs). It also removes `build/`, `autogen/`, `src/`, and `*.slconf`.
->
-> - Expect a dirty `git status` after switching (especially to `gecko_4_5`).
-> - **Do not commit** those changes unless you intentionally change the default profile.
-> - Restore before commit: `make apply-sdk-profile PROFILE=ssdk_2026_6`.
->
-> Full workflow notes: [README — Dual SDK support](index.md#dual-sdk-support).
+Recommended order: `bootstrap` / `source script/set_env.sh` → `build-*`.
 
 ## CMake and SLC setup
 
@@ -160,7 +141,7 @@ slc generate \
     -np \
     -d iec60730_demo \
     -name=iec60730_demo \
-    --with EFR32BG21A010F1024IM32
+    --with brd4121a
 ```
 
 ### Run tests

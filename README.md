@@ -75,35 +75,6 @@ The IEC60730 Library SDK Extension **v2.3.0** supports:
 > [!NOTE]
 > **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup (`simplicity-sdk` in `recipe.toml`).
 
-### Select an SDK profile
-
-The repository ships with **`ssdk_2026_6` as the committed default**. Apply a profile before generating or building:
-
-```sh
-make apply-sdk-profile PROFILE=ssdk_2026_6   # Simplicity SDK 2026.6.0 (SLT) — default
-make apply-sdk-profile PROFILE=gecko_4_5     # Gecko SDK 4.5.0 (GitHub / local path)
-```
-
-Recommended order:
-
-```sh
-make apply-sdk-profile PROFILE=<ssdk_2026_6|gecko_4_5>
-make bootstrap          # or: source script/set_env.sh after a prior bootstrap
-make build-unit         # or build-integration / build
-```
-
-> [!IMPORTANT]
-> **`make apply-sdk-profile` overwrites tracked project files** (extension metadata, SLCPs, demo/`main` sources, `sdk.env`) from snapshots under `sdk_profiles/<profile>/`. Those `*.patch` files are **full-file snapshots**, not git diffs.
->
-> - Expect `git status` to show modified files after switching (especially to `gecko_4_5`).
-> - The target also removes generated dirs: `build/`, `autogen/`, `src/`, and `*.slconf`.
-> - **Do not commit** those modifications unless you intentionally change the default profile.
-> - Before committing other work, restore the default:
->   ```sh
->   make apply-sdk-profile PROFILE=ssdk_2026_6
->   ```
-> - CI applies the profile in a clean job checkout; local clones should treat profile switches as a temporary workspace state.
-
 ## Building with CMake and SLC
 
 The repository includes a CMake template for building tests. Follow the steps below in order.
@@ -175,7 +146,7 @@ slc generate \
     -np \
     -d blinky \
     -name=blinky \
-    --with EFR32BG21A010F1024IM32
+    --with brd4121a
 ```
 
 ### 3. Run tests
@@ -193,7 +164,7 @@ Reproducible compile-only builds use a thin Ubuntu image. Silicon Labs tooling (
 
 - Docker Engine 24+
 - **Docker Compose v2** (the `docker compose` CLI plugin — required by the root `Makefile`; Docker Engine alone is not enough)
-- Network access to Silicon Labs package servers (and GitHub, if GSDK must be downloaded)
+- Network access to Silicon Labs package servers.
 
 `make bootstrap` / `make build` pre-create writable host dirs `~/.silabs` and `~/.cache/iec60730` (avoid a root-owned bind mount). If a previous failed run left `~/.silabs` owned by root, fix once with `sudo chown -R "$USER" ~/.silabs`.
 
@@ -220,16 +191,12 @@ CI reference: [`.github/workflows/02-Build-Firmware.yaml`](./.github/workflows/0
 # Layer A — build the image (once, or after Dockerfile changes)
 docker compose build
 
-# Layer B — select SDK profile (optional; clone default is ssdk_2026_6)
-# make apply-sdk-profile PROFILE=ssdk_2026_6
-# make apply-sdk-profile PROFILE=gecko_4_5
-
-# Layer C — install / refresh Silicon Labs tooling and the selected SDK
+# Layer B — install / refresh Silicon Labs tooling and SDK
 make bootstrap
 
-# Layer D — compile for BG21 (default) or BG24
-make build-unit          # unit test targets (BOARD_NAME=EFR32BG21A010F1024IM32)
-make BOARD_NAME=EFR32BG24A010F1024IM40 build-unit
+# Layer C — compile for MG26
+make build-unit          # unit test targets (BOARD_NAME=brd4121a)
+make BOARD_NAME=brd4121a build-unit
 make build-integration   # integration test targets
 make build               # unit + integration
 # or: make all           # bootstrap + build
@@ -243,40 +210,13 @@ Optional CMake flags:
 make build-unit BUILD_ARGS="-DENABLE_CAL_CRC_32=ON"
 ```
 
-### SDK profile resolution
-
-| Profile | SDK | How it is resolved |
-| --- | --- | --- |
-| `ssdk_2026_6` (default) | Simplicity SDK 2026.6.0 | SLT installs and locates the SDK |
-| `gecko_4_5` | Gecko SDK 4.5.0 | Maintained on GitHub; `script/set_gsdk.sh` resolves it |
-
-After `make apply-sdk-profile`, `sdk.env` records `SDK_PROFILE=...`. Bootstrap / `script/set_env.sh` uses that to resolve `SDK_PATH` for the active profile. See [Select an SDK profile](#select-an-sdk-profile) for the overwrite / restore rules.
-
-For Simplicity SDK, an explicit host install can be passed through Compose as `SDK_PATH` (preserved by `script/set_env.sh`). For Gecko SDK, either set a local install:
-
-```sh
-export GSDK_PATH=/path/to/gecko-sdk
-```
-
-or allow bootstrap/`set_env.sh` to download and cache it under:
-
-```text
-~/.cache/iec60730
-```
-
-Inside an already-running container or CI environment:
-
-```sh
-make RUNNER=native bootstrap build
-```
-
 ### Build artifacts
 
-After `make build-unit` / `make build-integration`, firmware images land under the bind-mounted `build/` tree. Example (BG21, GCC):
+After `make build-unit` / `make build-integration`, firmware images land under the bind-mounted `build/` tree. Example (MG26, GCC):
 
 ```text
-build/test/unit_test/build/EFR32BG21A010F1024IM32/GCC/unit_test_iec60730_post/unit_test_iec60730_post.s37
-build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_irq/NS/integration_test_iec60730_irq.s37
+build/test/unit_test/build/brd4121a/GCC/unit_test_iec60730_post/unit_test_iec60730_post.s37
+build/test/integration_test/build/brd4121a/GCC/integration_test_iec60730_irq/NS/integration_test_iec60730_irq.s37
 ```
 
 Invariable-memory images may end with `_crc16.s37` or `_crc32.s37` — flash the CRC-suffixed file when those options are enabled. See the unit/integration guidelines for details.
@@ -285,7 +225,7 @@ Invariable-memory images may end with `_crc16.s37` or `_crc32.s37` — flash the
 
 Compile can stay in Docker; flash and on-device execution run on the **host**:
 
-- Supported kit / device: `EFR32BG21A010F1024IM32` (default) or `EFR32BG24A010F1024IM40`
+- Supported kit / device: `brd4121a`
 - SEGGER J-Link (library path used by scripts: `/opt/SEGGER/JLink/libjlinkarm.so`)
 - Simplicity Commander (`commander`) on `PATH`
 - Adapter serial number (`ADAPTER_SN`) from the debugger
@@ -294,9 +234,9 @@ Compile can stay in Docker; flash and on-device execution run on the **host**:
 
 ```sh
 cd test
-bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+bash execute_unit_test.sh brd4121a all all <ADAPTER_SN> GCC
 # or
-bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all <ADAPTER_SN> GCC
+bash execute_integration_test.sh brd4121a all all <ADAPTER_SN> GCC
 ```
 
 Scripts resolve paths from their own location, so `bash test/execute_unit_test.sh ...` from the repo root also works. Prefer `cd test` to match the guidelines.
@@ -309,11 +249,8 @@ Scripts resolve paths from their own location, so `bash test/execute_unit_test.s
 | --- | --- |
 | Missing `slc` / SLT packages | Run `make bootstrap` before `make build-*`. |
 | `slc generate` fails with a mysterious path error | Prefer SLT’s `slc-cli`, not Heimdal’s `/usr/bin/slc`. `source script/set_env.sh` after bootstrap. |
-| Unexpected `git status` changes after profile switch | Expected: `apply-sdk-profile` overwrites tracked files. Restore with `make apply-sdk-profile PROFILE=ssdk_2026_6` before commit. |
-| Build fails after switching SDK | Re-run `make bootstrap` (or `source script/set_env.sh`) for the new profile, then rebuild. |
-| Wrong SDK / `SDK_PATH` | Check `sdk.env` (`SDK_PROFILE`), then `source script/set_env.sh`. For GSDK set `GSDK_PATH` or allow cache/download. |
 | `RUNNER=compose` inside a container | Use `make RUNNER=native …` when already inside the image or CI. |
 | Flash fails / no device | Ensure `commander` is on `PATH`, J-Link is installed, and `ADAPTER_SN` is correct. |
 | Permission errors under `~/.silabs` | Pre-create as your user, or `sudo chown -R "$USER" ~/.silabs` after a root-owned bind mount. |
 | Wrong `.s37` / missing CRC image | Use the artifact paths above; for invariable memory flash `*_crc16.s37` or `*_crc32.s37`. |
-| BG24 CRC / flash address wrong | Prefer `make BOARD_NAME=EFR32BG24A010F1024IM40 …` (sets `FLASH_REGIONS_TEST`). If invoking CMake directly, export `FLASH_REGIONS_TEST=0x08000000` for BG24. |
+| MG26 CRC / flash address wrong | Prefer `make BOARD_NAME=EFR32MG26A020F1024IM68 …` (sets `FLASH_REGIONS_TEST`). If invoking CMake directly, export `FLASH_REGIONS_TEST=0x08000000` for MG26. |
