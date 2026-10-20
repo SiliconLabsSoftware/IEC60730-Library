@@ -92,14 +92,9 @@ static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* i
 #ifdef WDOG_HAS_SET_CLEAR
   do {
     iec60730_wachdog->SL_WDOG->EN_CLR = WDOG_EN_EN;
-#if defined(_SILICON_LABS_32B_SERIES_2_CONFIG_1) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_2) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_3) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_4) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_5) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_6) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_7) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_8)
+#if (defined _SILICON_LABS_32B_SERIES_2_CONFIG_3) \
+    || (defined _SILICON_LABS_32B_SERIES_2_CONFIG_4) \
+    || (defined _SILICON_LABS_32B_SERIES_2_CONFIG_6)
     while ((iec60730_wachdog->SL_WDOG->EN & WDOG_EN_DISABLING) != 0U) {
       // wait disabling watchdog
     }
@@ -110,14 +105,9 @@ static void sli_iec60730_set_watchdog_timout_min(const sl_iec60730_watchdog_t* i
 #else
   do {
     iec60730_wachdog->SL_WDOG->EN &= ~_WDOG_EN_MASK;
-#if defined(_SILICON_LABS_32B_SERIES_2_CONFIG_1) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_2) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_3) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_4) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_5) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_6) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_7) || \
-    defined(_SILICON_LABS_32B_SERIES_2_CONFIG_8)
+#if (defined _SILICON_LABS_32B_SERIES_2_CONFIG_3) \
+    || (defined _SILICON_LABS_32B_SERIES_2_CONFIG_4) \
+    || (defined _SILICON_LABS_32B_SERIES_2_CONFIG_6)
     while ((iec60730_wachdog->SL_WDOG->EN & WDOG_EN_DISABLING) != 0U) {
       // wait disabling watchdog
     }
