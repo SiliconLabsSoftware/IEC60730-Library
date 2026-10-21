@@ -458,7 +458,7 @@ Implement `sl_iec60730_safe_state` to handle detected faults. See `oem_iec60730_
 | 2.0.0 | Nov 2024 | Rewrite the documentation by the re-factory code of the library support device EFR32MG families. |
 | 2.1.0 | Aug 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32FG23 device family. |
 | 2.2.0 | Sep 2026 | SDK Extension packaging release (library runtime version remains 2.0.0). Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support. Documented that SLT provides Simplicity SDK 2026.6.0 clone/setup, while GSDK 4.5.0 is maintained on GitHub and resolved separately. |
-| 2.3.0 | Oct 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32FG23 device 
+| 2.3.0 | Oct 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32MG26 device 
 
 
 

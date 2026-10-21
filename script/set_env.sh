@@ -4,7 +4,7 @@
 #    - SDK_PATH        : active SDK root (SSDK from SLT, or GSDK via set_gsdk.sh)
 #    - TOOL_DIRS       : arm-none-eabi gcc bin directory
 #    - TOOL_CHAINS     : GCC
-#    - FLASH_REGIONS_TEST : flash start for CRC tests (BG21/BG24)
+#    - FLASH_REGIONS_TEST : flash start for CRC tests (MG26)
 #    - POST_BUILD_EXE  : Simplicity Commander binary (if installed)
 #    - PATH            : prepended with SLT-managed tools
 #
