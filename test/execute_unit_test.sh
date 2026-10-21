@@ -3,7 +3,7 @@
 # Usage (recommended from test/; also safe from repo root):
 #   bash execute_unit_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
 #
-#   BOARD_NAME  : EFR32BG21A010F1024IM32 or EFR32BG24A010F1024IM40
+#   BOARD_NAME  : brd4121a
 #   TASK        : all, gen-only, run-only
 #   COMPONENTS  : all, or a single unit_test_iec60730_* target
 #   ADAPTER_SN  : J-Link / adapter serial number
@@ -11,8 +11,8 @@
 #   OPTIONS     : optional CMake flags, e.g. "-DENABLE_CAL_CRC_32=ON"
 #
 # Examples:
-#   cd test && bash execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
-#   bash test/execute_unit_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+#   cd test && bash execute_unit_test.sh brd4121a all all 440111030 GCC
+#   bash test/execute_unit_test.sh brd4121a all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
 
 # Paths are anchored to this script's directory so cwd may be test/ or repo root.
 BASH_DIRECTION="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
