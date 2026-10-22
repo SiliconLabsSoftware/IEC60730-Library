@@ -73,7 +73,7 @@ SILICON LABS
 
 IEC 60730 is a safety standard used in household appliances. It defines diagnostic methods that help ensure safe device operation. This library provides tests for CPU registers, variable memory, invariable memory, program counter, clock, and interrupts.
 
-At the time of this writing, the IEC60730 Library SDK Extension **v2.2.0** has been tested on EFR32BG21 and EFR32BG24 devices using GNU Arm Embedded Toolchain v12.2.1 with both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. The runtime library version reported by `SL_IEC60730_LIBRARY_VERSION` remains **2.0.0**; only the SDK Extension package version is **2.2.0**.
+At the time of this writing, the IEC60730 Library SDK Extension **v2.3.0** has been tested on EFR32MG26 devices using GNU Arm Embedded Toolchain v12.2.1 with Simplicity SDK (SSDK) 2026.6.0. The runtime library version reported by `SL_IEC60730_LIBRARY_VERSION` **2.0.1**; only the SDK Extension package version is **2.3.0**.
 
 ## 2. Install the required software
 
@@ -93,18 +93,13 @@ The IEC60730 safety library is delivered as a Simplicity Studio SDK extension. T
 
 - Ubuntu 24.04
 - Simplicity Studio 6
-- Gecko SDK (GSDK) 4.5.0
 - Simplicity SDK (SSDK) 2026.6.0
 - GNU Arm Embedded Toolchain v12.2.1
 
 > [!NOTE]
 > **SLT supports Simplicity SDK (SimSDK) 2026.6.0** clone/setup (`make bootstrap` / `recipe.toml`).
->
-> **Gecko SDK (GSDK) 4.5.0 is maintained on GitHub**, so obtain it from the GitHub release, import it in Simplicity Studio, set `GSDK_PATH`, or use `script/set_gsdk.sh`.
 
 **Install Simplicity SDK 2026.6.0 in Studio:** after installing [Simplicity Studio 6](https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started), use `PACKAGES > PACKAGE MANAGER > Simplicity SDKs > Add New SDK > Simplicity SDK 2026.6.0`.
-
-**Install Gecko SDK 4.5.0 in Studio:** download from the [Gecko SDK v4.5.0 release](https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0), then import it with `SETTINGS > SDKs > Add SDK`.
 
 To add the IEC60730 extension: `SETTINGS > SDKs > <selected SDK> > Add Extension`.
 
@@ -112,30 +107,18 @@ To add the IEC60730 extension: `SETTINGS > SDKs > <selected SDK> > Add Extension
 ###### Figure 1 Adding Extension to SDK
 
 
-Press `Browse` to find the directory of this extension. Then choose the folder that has the file name `iec60730.slce`. Simplicity Studio will detect SDK extensions automatically. Click `OK` then `Apply and Close`
+Press `Browse` to find the directory of this extension. Then choose the folder that has the file name `iec60730.slce`. Simplicity Studio will detect SDK extensions automatically. Click `OK` then `Apply and Close`.
 
 ![ Figure 2 Browse to extension location](./images/figure_2_brows_to_extension_location.png)
 ###### Figure 2 Browse to extension location
 
 ## 4. Generate an example project
 
-Before generating a project in Simplicity Studio, confirm that the IEC60730 extension has been added to the selected SDK.
+Before using Simplicity Studio to generate the project, you need to add the IEC60730 extension. Please remember the following text:
 
-> This extension provides demo projects for EFR32BG21 and EFR32BG24 on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.
+> This extension provides an IEC60730 demo project for EFR32MG26 devices.
 
-If you are working from this repository, apply the matching SDK profile before generating the project.
-The committed default is **`ssdk_2026_6`**.
-
-```bash
-make apply-sdk-profile PROFILE=ssdk_2026_6
-# or
-make apply-sdk-profile PROFILE=gecko_4_5
-```
-
-> [!IMPORTANT]
-> Profile apply **overwrites tracked repository files** from `sdk_profiles/<profile>/` snapshots (not git diffs) and clears generated build dirs. Use it for local build/Studio prep; restore `PROFILE=ssdk_2026_6` before committing unless you intentionally change the default. See the repository [README — Dual SDK support](../README.md#dual-sdk-support).
-
-The project-generation workflow is the same for both devices and both supported SDKs:
+The project-generation workflow for EFR32MG26 devices is shown below:
 
 ![Figure 3 Create new project](./images/figure_3_create_new_project.png)
 ######  Figure 3 Create new project
@@ -155,7 +138,7 @@ In `Example Project Selection`, use the checkboxes or keywords to find the examp
 ![Figure 4 Example Project Selection](./images/figure_4_example_project_selection.png)
 ###### Figure 4 Example Project Selection
 
-In Target Device, select the target device for the project. For this example, choose `EFR32BG24A010F1024IM40`, then click `Next`. The same steps apply to `BRD4264C` or `EFR32BG21A010F1024IM32`.
+In Target Device, select the target device for the project. For this example, choose `brd4121a`, then click `Next`.
 <br>
 
 ![Figure 5 Target Device Selection](./images/figure_5_target_device_selection.png)
@@ -206,13 +189,13 @@ Detailed parameters are described in [Support calculate CRC](./support_calculate
 Single continuous region (start address to `check_sum`):
 
 ```bash
-arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_2.2.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "<path_build_dir>" "<path_srecord_bin>" GCC "0x8000000"
+arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_2.3.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "<path_build_dir>" "<path_srecord_bin>" GCC "0x8000000"
 ```
 
 Multiple regions (must match OEM Flash IMC regions; demo GCC offsets example):
 
 ```bash
-arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_2.2.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "<path_build_dir>" "<path_srecord_bin>" GCC "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
+arm-none-eabi-objdump -t -h -d -S '${BuildArtifactFileBaseName}.axf' >'${BuildArtifactFileBaseName}.lst' && bash ${ProjDirPath}/iec60730_2.3.0/lib/crc/sl_iec60730_cal_crc16.sh ${BuildArtifactFileBaseName} "<path_build_dir>" "<path_srecord_bin>" GCC "0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"
 ```
 
 These six addresses are **three start/end pairs**. They come from the demo OEM table in `oem_iec60730.c` (`OEM_FLASH_OFFSET = 20` words → `0x50` bytes per region, with one-region gaps). See **Section 7.2** for the OEM code to modify and why multiple regions are used.
@@ -234,7 +217,7 @@ add_custom_command(TARGET iec60730_demo
     COMMAND ${CMAKE_OBJCOPY} ${OBJCOPY_BIN_CMD}  "$<TARGET_FILE:iec60730_demo>" "$<TARGET_FILE_DIR:iec60730_demo>/$<TARGET_FILE_BASE_NAME:iec60730_demo>.bin"
     # .lst + CRC-16 (*_crc16.bin/hex/s37). Use bash on Windows (MSYS/MinGW/Cygwin).
     COMMAND ${CMAKE_OBJDUMP} -t -h -d -S "$<TARGET_FILE:iec60730_demo>" > "$<TARGET_FILE_DIR:iec60730_demo>/$<TARGET_FILE_BASE_NAME:iec60730_demo>.lst"
-    COMMAND bash "${CMAKE_CURRENT_LIST_DIR}/../iec60730_2.2.0/lib/crc/sl_iec60730_cal_crc16.sh"
+    COMMAND bash "${CMAKE_CURRENT_LIST_DIR}/../iec60730_2.3.0/lib/crc/sl_iec60730_cal_crc16.sh"
             "$<TARGET_FILE_BASE_NAME:iec60730_demo>"
             "$<TARGET_FILE_DIR:iec60730_demo>"
             "C:/Program Files/srecord/bin"
@@ -475,6 +458,7 @@ Implement `sl_iec60730_safe_state` to handle detected faults. See `oem_iec60730_
 | 2.0.0 | Nov 2024 | Rewrite the documentation by the re-factory code of the library support device EFR32MG families. |
 | 2.1.0 | Aug 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32FG23 device family. |
 | 2.2.0 | Sep 2026 | SDK Extension packaging release (library runtime version remains 2.0.0). Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support. Documented that SLT provides Simplicity SDK 2026.6.0 clone/setup, while GSDK 4.5.0 is maintained on GitHub and resolved separately. |
+| 2.3.0 | Oct 2026 | Update the documentation to reflect the extension configuration changes that add support for the EFR32MG26 device 
 
 
 

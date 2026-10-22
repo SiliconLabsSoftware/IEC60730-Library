@@ -12,7 +12,7 @@ DOCKER_COMPOSE ?= DOCKER_UID=$(shell id -u) \
 DEV_CONTAINER ?= iec60730-library
 
 # Default target board.
-BOARD_NAME ?= EFR32BG21A010F1024IM32
+BOARD_NAME ?= brd4121a
 
 # Additional build arguments passed to the build command.
 BUILD_ARGS ?=
@@ -24,7 +24,7 @@ BUILD_MODE ?= all
 RUNNER ?= compose
 
 # Override per device family when the flash memory map differs.
-# BG21 flash starts at 0x00000000; BG24 (and default) at 0x08000000.
+# BG21 flash starts at 0x00000000; MG26 (and default) at 0x08000000.
 # Allow an explicit environment override; otherwise key off BOARD_NAME.
 ifndef FLASH_REGIONS_TEST
 FLASH_REGIONS_TEST := 0x08000000

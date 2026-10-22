@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION "3.25")
 # Project definition
 project(
 	IE60730_LIBRARY
-	VERSION 2.0.0
+	VERSION 2.0.1
 	LANGUAGES C ASM CXX
 )
 
