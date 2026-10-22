@@ -61,7 +61,7 @@ Coding convention
 - Add support for the EFR32MG26 family.
 - Supported compiler: GCC.
 - Support unit testing and integration testing for EFR32MG26.
-- Update the IEC60730 Library Simplicity SDK extension to version 2.0.1 to align with Simplicity SDK 2026.6.0.
+- IEC60730 Simplicity SDK Extension v2.3.0 bundles IEC60730 Library v2.0.1 and adds support for Simplicity SDK 2026.6.0.
 
 ----------------
 2.2.0 Release (SDK Extension)

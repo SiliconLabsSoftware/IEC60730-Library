@@ -73,7 +73,7 @@ SILICON LABS
 
 IEC 60730 is a safety standard used in household appliances. It defines diagnostic methods that help ensure safe device operation. This library provides tests for CPU registers, variable memory, invariable memory, program counter, clock, and interrupts.
 
-At the time of this writing, the IEC60730 Library SDK Extension **v2.3.0** has been tested on EFR32MG26 devices using GNU Arm Embedded Toolchain v12.2.1 with Simplicity SDK (SSDK) 2026.6.0. The runtime library version reported by `SL_IEC60730_LIBRARY_VERSION` remains **2.0.0**; only the SDK Extension package version is **2.3.0**.
+At the time of this writing, the IEC60730 Library SDK Extension **v2.3.0** has been tested on EFR32MG26 devices using GNU Arm Embedded Toolchain v12.2.1 with Simplicity SDK (SSDK) 2026.6.0. The runtime library version reported by `SL_IEC60730_LIBRARY_VERSION` **2.0.1**; only the SDK Extension package version is **2.3.0**.
 
 ## 2. Install the required software
 

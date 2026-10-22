@@ -33,7 +33,7 @@ See [docs/release_note.md](./docs/release_note.md).
 | SDK Extension (package) | **2.3.0** | `iec60730.slce` |
 | Runtime library | **2.0.1** | `IE60730_LIBRARY_VERSION` / `SL_IEC60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h` |
 
-This release updates the **SDK Extension** to 2.3.0 (MG26, SimSDK2026.6.0, tests). The library API/runtime version stays at **2.0.0**.
+This release updates the **SDK Extension** to 2.3.0 (MG26, SimSDK2026.6.0, tests). The library API/runtime version at **2.0.1**.
 
 ## IEC60730 certificate
 

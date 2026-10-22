@@ -37,6 +37,7 @@ If you configure the environment manually:
 Example shapes (replace paths with your local installs):
 
 ```sh
+# Simplicity SDK 2026.6.0 (typically from SLT)
 export SDK_PATH=$(slt where simplicity-sdk)
 export TOOL_DIRS=/path/to/arm-gnu-toolchain/bin
 export TOOL_CHAINS=GCC

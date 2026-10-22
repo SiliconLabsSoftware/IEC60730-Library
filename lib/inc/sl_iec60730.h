@@ -32,7 +32,7 @@ extern "C" {
 #include SL_IEC60730_BOARD_HEADER
 
 /* Runtime library version (API). SDK Extension package version is separate (iec60730.slce). */
-#define IE60730_LIBRARY_VERSION { 2, 0, 0 }
+#define IE60730_LIBRARY_VERSION { 2, 0, 1 }
 
 #ifdef DOXYGEN
 /// User SHOULD define #SL_IEC60730_BOARD_HEADER definition for using IMC and VMC modules.
