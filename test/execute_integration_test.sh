@@ -3,7 +3,7 @@
 # Usage (recommended from test/; also safe from repo root):
 #   bash execute_integration_test.sh <BOARD_NAME> <TASK> <COMPONENTS> <ADAPTER_SN> <COMPILER> [OPTIONS]
 #
-#   BOARD_NAME  : EFR32BG21A010F1024IM32 or EFR32BG24A010F1024IM40
+#   BOARD_NAME  : brd4121a
 #   TASK        : all, gen-only, run-only
 #   COMPONENTS  : all, or a single integration_test_iec60730_* target
 #   ADAPTER_SN  : J-Link / adapter serial number
@@ -11,8 +11,8 @@
 #   OPTIONS     : optional CMake flags, e.g. "-DENABLE_CAL_CRC_32=ON"
 #
 # Examples:
-#   cd test && bash execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC
-#   bash test/execute_integration_test.sh EFR32BG21A010F1024IM32 all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
+#   cd test && bash execute_integration_test.sh brd4121a all all 440111030 GCC
+#   bash test/execute_integration_test.sh brd4121a all all 440111030 GCC "-DENABLE_CAL_CRC_32=ON"
 
 # Paths are anchored to this script's directory so cwd may be test/ or repo root.
 BASH_DIRECTION="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -64,6 +64,12 @@ DEVICE_NAME=$(get_device_name $ADAPTER_SN)
 #    DEVICE_NAME=EFR32MG24BXXXF1536
 #fi
 #printf "===== $DEVICE_NAME\n"
+
+# Note
+if [[ "$DEVICE_NAME" == *"EFR32MG26B"* ]]; then
+    DEVICE_NAME=EFR32MG26BxxxF3200
+fi
+
 cd $BASH_DIRECTION/..
 if [ ! -e "log" ];then
     mkdir -p log
