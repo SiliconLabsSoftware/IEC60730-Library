@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['register_20check_20automated_20verification_20tests_0',['CPU Register Check Automated Verification Tests',['../group__IEC60730__CPU__REGISTERS__VERIFICATION.html',1,'']]],
-  ['registers_20check_1',['CPU Registers Check',['../group__IEC60730__CPU__REG__TEST.html',1,'']]],
-  ['registers_20verification_20unit_20tests_2',['CPU Registers Verification Unit Tests',['../group__IEC60730__CPU__REGISTERS__VERIFICATION__UNIT__TEST.html',1,'']]]
+  ['watchdog_20automated_20verification_20tests_926',['Watchdog Automated Verification Tests',['../group__IEC60730__WATCHDOG__VERIFICATION.html',1,'']]],
+  ['watchdog_20check_927',['Watchdog Check',['../group__IEC60730__WDOG__TEST.html',1,'']]],
+  ['watchdog_20verification_20unit_20tests_928',['Watchdog Verification Unit Tests',['../group__IEC60730__WATCHDOG__VERIFICATION__UNIT__TEST.html',1,'']]]
 ];

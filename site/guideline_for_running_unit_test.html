@@ -411,18 +411,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#select-sdk-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Select SDK version
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Select SDK version">
+    <nav class="md-nav" aria-label="Prerequisites">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -680,18 +669,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#select-sdk-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Select SDK version
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Select SDK version">
+    <nav class="md-nav" aria-label="Prerequisites">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -789,7 +767,7 @@
 
 
 <h1 id="guideline-for-running-unit-tests">Guideline for Running Unit Tests<a class="headerlink" href="#guideline-for-running-unit-tests" title="Permanent link">&para;</a></h1>
-<p>This document describes how to build and run IEC60730 unit tests with <strong>IEC60730 Library SDK Extension v2.2.0</strong>.</p>
+<p>This document describes how to build and run IEC60730 unit tests with <strong>IEC60730 Library SDK Extension v2.3.0</strong>.</p>
 <p>Supported SDKs:</p>
 <table>
 <thead>
@@ -805,19 +783,13 @@
 <td>2026.6.0</td>
 <td>Clone/setup through SLT (<code>make bootstrap</code> / <code>recipe.toml</code>)</td>
 </tr>
-<tr>
-<td>Gecko SDK (GSDK)</td>
-<td>4.5.0</td>
-<td>Maintained on GitHub — set <code>GSDK_PATH</code> or allow cache/download</td>
-</tr>
 </tbody>
 </table>
 <blockquote>
 <p>[!NOTE]
-<strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.
-<strong>GSDK 4.5.0 is maintained on GitHub</strong>, so resolve it with <code>GSDK_PATH</code>, a Docker mount, or <code>script/set_gsdk.sh</code> (see the repository <a href="../README.md">README</a>).</p>
+<strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.</p>
 </blockquote>
-<p>The build and execution flow is the same for both SDKs after you select the matching profile and environment.</p>
+<p>The build and execution flow described in this document applies to Simplicity SDK (SimSDK) 2026.6.0.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li>GCC Arm Embedded Toolchain (<code>arm-none-eabi-gcc</code>)</li>
@@ -826,25 +798,6 @@
 <li>Simplicity CLI (<code>slc</code>) on <code>PATH</code></li>
 <li>Simplicity Commander (<code>commander</code>) on <code>PATH</code> when the script queries device info</li>
 </ul>
-<h2 id="select-sdk-version">Select SDK version<a class="headerlink" href="#select-sdk-version" title="Permanent link">&para;</a></h2>
-<p>Apply the SDK profile that matches your target SDK, then load the environment.
-The committed default is <strong><code>ssdk_2026_6</code></strong>.</p>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6
-<span class="c1"># or</span>
-make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
-
-<span class="nb">source</span><span class="w"> </span>script/set_env.sh
-</code></pre></div>
-<p><code>script/set_env.sh</code> configures <code>SDK_PATH</code>, toolchain paths, and related variables for the active profile.</p>
-<blockquote>
-<p>[!IMPORTANT]
-<code>make apply-sdk-profile</code> <strong>overwrites tracked files</strong> (SLCPs, demos, <code>sdk.env</code>, etc.) from <code>sdk_profiles/&lt;profile&gt;/</code> snapshots and cleans <code>build/</code> / <code>autogen/</code> / <code>src/</code>. Do <strong>not</strong> commit those changes unless you mean to change the default profile. Restore with <code>make apply-sdk-profile PROFILE=ssdk_2026_6</code> before committing other work. Details: <a href="../README.md#dual-sdk-support">README — Dual SDK support</a>.</p>
-<p>[!NOTE]
-Prefer <code>source script/set_env.sh</code> over hard-coded machine paths.
-When configuring CMake manually, export the required variables before running CMake.
-<code>cmake/toolchain.cmake</code> can also discover <code>arm-none-eabi-gcc</code> from <code>PATH</code>.
-Prefer <code>make BOARD_NAME=... build-unit</code> so <code>FLASH_REGIONS_TEST</code> is set for BG21/BG24; if you invoke CMake directly, export <code>FLASH_REGIONS_TEST</code> yourself (see table below).</p>
-</blockquote>
 <h3 id="manual-environment-variables-reference-only">Manual environment variables (reference only)<a class="headerlink" href="#manual-environment-variables-reference-only" title="Permanent link">&para;</a></h3>
 <p>If you configure the environment manually:</p>
 <table>
@@ -857,7 +810,7 @@ Prefer <code>make BOARD_NAME=... build-unit</code> so <code>FLASH_REGIONS_TEST</
 <tbody>
 <tr>
 <td><code>SDK_PATH</code></td>
-<td>Root of GSDK 4.5.0 or Simplicity SDK 2026.6.0</td>
+<td>Root of Simplicity SDK 2026.6.0</td>
 </tr>
 <tr>
 <td><code>TOOL_DIRS</code></td>
@@ -882,14 +835,7 @@ Prefer <code>make BOARD_NAME=... build-unit</code> so <code>FLASH_REGIONS_TEST</
 </tbody>
 </table>
 <p>Example shapes (replace paths with your local installs):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># GSDK 4.5.0</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/path/to/gecko-sdk
-<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
-<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
-<span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/path/to/slc_cli:<span class="nv">$PATH</span>
-
-<span class="c1"># Simplicity SDK 2026.6.0 (typically from SLT)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simplicity SDK 2026.6.0 (typically from SLT)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span><span class="k">$(</span>slt<span class="w"> </span>where<span class="w"> </span>simplicity-sdk<span class="k">)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
 <span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
@@ -906,20 +852,13 @@ Prefer <code>make BOARD_NAME=... build-unit</code> so <code>FLASH_REGIONS_TEST</
 </thead>
 <tbody>
 <tr>
-<td><code>EFR32BG24A010F1024IM40</code></td>
+<td><code>brd4121a</code></td>
 <td><code>0x8000000</code></td>
-</tr>
-<tr>
-<td><code>EFR32BG21A010F1024IM32</code></td>
-<td><code>0x0000000</code></td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="c1"># BG24</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># brd4121a</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
-
-<span class="c1"># BG21</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x0000000
 </code></pre></div>
 <blockquote>
 <p>[!NOTE]
@@ -930,15 +869,8 @@ The current unit test implementation supports CRC calculation for a <strong>sing
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>prepare
 <span class="nb">cd</span><span class="w"> </span>build
 
-<span class="c1"># BG21</span>
-cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32
-
-<span class="c1"># BG24</span>
-cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG24A010F1024IM40
+<span class="c1"># brd4121a</span>
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4121a
 </code></pre></div>
 <p>Build individual components:</p>
 <div class="highlight"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>unit_test_iec60730_post<span class="w"> </span>-j4
@@ -967,7 +899,7 @@ bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>&lt;BOAR
 <tbody>
 <tr>
 <td><code>$1</code> BOARD_NAME</td>
-<td><code>EFR32BG21A010F1024IM32</code> or <code>EFR32BG24A010F1024IM40</code></td>
+<td><code>brd4121a</code></td>
 </tr>
 <tr>
 <td><code>$2</code> TASK</td>
@@ -1008,14 +940,13 @@ bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>&lt;BOAR
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
 
 <span class="c1"># Build and run all unit tests</span>
-bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
-bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG24A010F1024IM40<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
 
 <span class="c1"># CRC / software CRC options</span>
-bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
-bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON"</span>
-bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"</span>
-bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON"</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON"</span>
+bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CRC_USE_SW=ON -DENABLE_SW_CRC_TABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
 </code></pre></div>
 <p>For environment setup details, see also <a href="index.html">Overview</a>.</p>
 <h2 id="crc-calculation-options">CRC calculation options<a class="headerlink" href="#crc-calculation-options" title="Permanent link">&para;</a></h2>
@@ -1048,12 +979,12 @@ bash<span class="w"> </span>execute_unit_test.sh<span class="w"> </span>EFR32BG2
 
 cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4121a<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
 
 cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_UNIT_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4121a<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_CRC_USE_SW<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_SW_CRC_TABLE<span class="o">=</span>ON
 </code></pre></div>

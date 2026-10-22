@@ -1,3 +1,10 @@
+2.3.0 Release
+
+- Add support for the EFR32MG26 family.
+- Supported compiler: GCC.
+- Support unit testing and integration testing for EFR32MG26.
+- IEC60730 Simplicity SDK Extension v2.3.0 bundles IEC60730 Library v2.0.1 and adds support for Simplicity SDK 2026.6.0.
+
 2.2.0 Release (SDK Extension)
 
 - Package / SDK Extension version: **2.2.0** (`iec60730.slce`). Runtime library version remains **2.0.0** (`IE60730_LIBRARY_VERSION` in `lib/inc/sl_iec60730.h`).

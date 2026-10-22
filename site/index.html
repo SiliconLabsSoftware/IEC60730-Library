@@ -350,10 +350,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dual-sdk-support" class="md-nav__link">
+  <a href="#sdk-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dual SDK support
+        SDK support
       
     </span>
   </a>
@@ -846,10 +846,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dual-sdk-support" class="md-nav__link">
+  <a href="#sdk-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dual SDK support
+        SDK support
       
     </span>
   </a>
@@ -992,17 +992,17 @@
 <tbody>
 <tr>
 <td>SDK Extension (package)</td>
-<td><strong>2.2.0</strong></td>
+<td><strong>2.3.0</strong></td>
 <td><code>iec60730.slce</code></td>
 </tr>
 <tr>
 <td>Runtime library</td>
-<td><strong>2.0.0</strong></td>
+<td><strong>2.0.1</strong></td>
 <td><code>IE60730_LIBRARY_VERSION</code> / <code>SL_IEC60730_LIBRARY_VERSION</code> in <code>lib/inc/sl_iec60730.h</code></td>
 </tr>
 </tbody>
 </table>
-<p>This release updates the <strong>SDK Extension</strong> to 2.2.0 (BG21/BG24, dual-SDK profiles, tests). The library API/runtime version stays at <strong>2.0.0</strong>.</p>
+<p>This release updates the <strong>SDK Extension</strong> to 2.3.0 (MG26, SimSDK2026.6.0, tests). The library API/runtime version at <strong>2.0.1</strong>.</p>
 <h2 id="iec60730-certificate">IEC60730 certificate<a class="headerlink" href="#iec60730-certificate" title="Permanent link">&para;</a></h2>
 <p>The Silicon Labs Appliances homepage will host the final certificate and detailed report when they are available.</p>
 <h2 id="oem-testing">OEM testing<a class="headerlink" href="#oem-testing" title="Permanent link">&para;</a></h2>
@@ -1019,8 +1019,8 @@
 </ul>
 <h2 id="coding-convention-tool">Coding convention tool<a class="headerlink" href="#coding-convention-tool" title="Permanent link">&para;</a></h2>
 <p>See <a href="coding_convention_tool.html">coding_convention_tool.md</a>.</p>
-<h2 id="dual-sdk-support">Dual SDK support<a class="headerlink" href="#dual-sdk-support" title="Permanent link">&para;</a></h2>
-<p>The IEC60730 Library SDK Extension <strong>v2.2.0</strong> supports:</p>
+<h2 id="sdk-support">SDK support<a class="headerlink" href="#sdk-support" title="Permanent link">&para;</a></h2>
+<p>The IEC60730 Library SDK Extension <strong>v2.3.0</strong> supports:</p>
 <table>
 <thead>
 <tr>
@@ -1035,33 +1035,13 @@
 <td>2026.6.0</td>
 <td>Clone/setup through <strong>SLT</strong> via <code>recipe.toml</code> / <code>make bootstrap</code></td>
 </tr>
-<tr>
-<td>Gecko SDK (GSDK)</td>
-<td>4.5.0</td>
-<td>Maintained on GitHub — resolve via <code>GSDK_PATH</code>, Docker mount, local cache, or download</td>
-</tr>
 </tbody>
 </table>
 <blockquote>
 <p>[!NOTE]
 <strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.</p>
-<p><strong>Gecko SDK (GSDK) 4.5.0 is maintained on GitHub</strong>, so the <code>gecko_4_5</code> profile obtains it separately through <code>script/set_gsdk.sh</code>.</p>
 </blockquote>
-<p>The repository ships with <strong><code>ssdk_2026_6</code> as the committed default</strong>. Apply a profile before generating or building:</p>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6<span class="w">   </span><span class="c1"># default</span>
-make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
-</code></pre></div>
-<p>Recommended order: <code>apply-sdk-profile</code> → <code>bootstrap</code> / <code>source script/set_env.sh</code> → <code>build-*</code>.</p>
-<blockquote>
-<p>[!IMPORTANT]
-<strong><code>make apply-sdk-profile</code> overwrites tracked project files</strong> from snapshots under <code>sdk_profiles/&lt;profile&gt;/</code> (the <code>*.patch</code> files are full-file snapshots, not git diffs). It also removes <code>build/</code>, <code>autogen/</code>, <code>src/</code>, and <code>*.slconf</code>.</p>
-<ul>
-<li>Expect a dirty <code>git status</code> after switching (especially to <code>gecko_4_5</code>).</li>
-<li><strong>Do not commit</strong> those changes unless you intentionally change the default profile.</li>
-<li>Restore before commit: <code>make apply-sdk-profile PROFILE=ssdk_2026_6</code>.</li>
-</ul>
-<p>Full workflow notes: <a href="index.html#dual-sdk-support">README — Dual SDK support</a>.</p>
-</blockquote>
+<p>Recommended order: <code>bootstrap</code> / <code>source script/set_env.sh</code> → <code>build-*</code>.</p>
 <h2 id="cmake-and-slc-setup">CMake and SLC setup<a class="headerlink" href="#cmake-and-slc-setup" title="Permanent link">&para;</a></h2>
 <p>The project includes a CMake template for building and running tests.</p>
 <h3 id="add-the-iec60730-library-extension-to-the-sdk">Add the IEC60730 Library extension to the SDK<a class="headerlink" href="#add-the-iec60730-library-extension-to-the-sdk" title="Permanent link">&para;</a></h3>
@@ -1128,7 +1108,7 @@ slc<span class="w"> </span>generate<span class="w"> </span><span class="se">\</s
 <span class="w">    </span>-np<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span>iec60730_demo<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-name<span class="o">=</span>iec60730_demo<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--with<span class="w"> </span>EFR32BG21A010F1024IM32
+<span class="w">    </span>--with<span class="w"> </span>brd4121a
 </code></pre></div>
 <h3 id="run-tests">Run tests<a class="headerlink" href="#run-tests" title="Permanent link">&para;</a></h3>
 <ul>

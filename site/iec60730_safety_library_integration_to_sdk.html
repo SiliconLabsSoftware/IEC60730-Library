@@ -1625,7 +1625,7 @@
 <p><a href="#figure-18-configuration-for-system-clock-module">Figure 18 Configuration for system clock module</a></p>
 <h2 id="1-background">1. Background<a class="headerlink" href="#1-background" title="Permanent link">&para;</a></h2>
 <p>IEC 60730 is a safety standard used in household appliances. It defines diagnostic methods that help ensure safe device operation. This library provides tests for CPU registers, variable memory, invariable memory, program counter, clock, and interrupts.</p>
-<p>At the time of this writing, the IEC60730 Library SDK Extension <strong>v2.2.0</strong> has been tested on EFR32BG21 and EFR32BG24 devices using GNU Arm Embedded Toolchain v12.2.1 with both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. The runtime library version reported by <code>SL_IEC60730_LIBRARY_VERSION</code> remains <strong>2.0.0</strong>; only the SDK Extension package version is <strong>2.2.0</strong>.</p>
+<p>At the time of this writing, the IEC60730 Library SDK Extension <strong>v2.3.0</strong> has been tested on EFR32MG26 devices using GNU Arm Embedded Toolchain v12.2.1 with Simplicity SDK (SSDK) 2026.6.0. The runtime library version reported by <code>SL_IEC60730_LIBRARY_VERSION</code> <strong>2.0.1</strong>; only the SDK Extension package version is <strong>2.3.0</strong>.</p>
 <h2 id="2-install-the-required-software">2. Install the required software<a class="headerlink" href="#2-install-the-required-software" title="Permanent link">&para;</a></h2>
 <p>Install <a href="https://srecord.sourceforge.net/">SRecord</a> to calculate CRC values for Flash images.</p>
 <ul>
@@ -1640,39 +1640,26 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <ul>
 <li>Ubuntu 24.04</li>
 <li>Simplicity Studio 6</li>
-<li>Gecko SDK (GSDK) 4.5.0</li>
 <li>Simplicity SDK (SSDK) 2026.6.0</li>
 <li>GNU Arm Embedded Toolchain v12.2.1</li>
 </ul>
 <blockquote>
 <p>[!NOTE]
 <strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup (<code>make bootstrap</code> / <code>recipe.toml</code>).</p>
-<p><strong>Gecko SDK (GSDK) 4.5.0 is maintained on GitHub</strong>, so obtain it from the GitHub release, import it in Simplicity Studio, set <code>GSDK_PATH</code>, or use <code>script/set_gsdk.sh</code>.</p>
 </blockquote>
 <p><strong>Install Simplicity SDK 2026.6.0 in Studio:</strong> after installing <a href="https://www.silabs.com/software-and-tools/simplicity-studio?tab=getting-started">Simplicity Studio 6</a>, use <code>PACKAGES &gt; PACKAGE MANAGER &gt; Simplicity SDKs &gt; Add New SDK &gt; Simplicity SDK 2026.6.0</code>.</p>
-<p><strong>Install Gecko SDK 4.5.0 in Studio:</strong> download from the <a href="https://github.com/SiliconLabs/gecko_sdk/releases/tag/v4.5.0">Gecko SDK v4.5.0 release</a>, then import it with <code>SETTINGS &gt; SDKs &gt; Add SDK</code>.</p>
 <p>To add the IEC60730 extension: <code>SETTINGS &gt; SDKs &gt; &lt;selected SDK&gt; &gt; Add Extension</code>.</p>
 <p><img alt="Figure 1 Adding Extension to SDK" src="images/figure_1_adding_extension_to_sdk.png" /></p>
 <h6 id="figure-1-adding-extension-to-sdk">Figure 1 Adding Extension to SDK<a class="headerlink" href="#figure-1-adding-extension-to-sdk" title="Permanent link">&para;</a></h6>
-<p>Press <code>Browse</code> to find the directory of this extension. Then choose the folder that has the file name <code>iec60730.slce</code>. Simplicity Studio will detect SDK extensions automatically. Click <code>OK</code> then <code>Apply and Close</code></p>
+<p>Press <code>Browse</code> to find the directory of this extension. Then choose the folder that has the file name <code>iec60730.slce</code>. Simplicity Studio will detect SDK extensions automatically. Click <code>OK</code> then <code>Apply and Close</code>.</p>
 <p><img alt=" Figure 2 Browse to extension location" src="images/figure_2_brows_to_extension_location.png" /></p>
 <h6 id="figure-2-browse-to-extension-location">Figure 2 Browse to extension location<a class="headerlink" href="#figure-2-browse-to-extension-location" title="Permanent link">&para;</a></h6>
 <h2 id="4-generate-an-example-project">4. Generate an example project<a class="headerlink" href="#4-generate-an-example-project" title="Permanent link">&para;</a></h2>
-<p>Before generating a project in Simplicity Studio, confirm that the IEC60730 extension has been added to the selected SDK.</p>
+<p>Before using Simplicity Studio to generate the project, you need to add the IEC60730 extension. Please remember the following text:</p>
 <blockquote>
-<p>This extension provides demo projects for EFR32BG21 and EFR32BG24 on both Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0.</p>
+<p>This extension provides an IEC60730 demo project for EFR32MG26 devices.</p>
 </blockquote>
-<p>If you are working from this repository, apply the matching SDK profile before generating the project.
-The committed default is <strong><code>ssdk_2026_6</code></strong>.</p>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6
-<span class="c1"># or</span>
-make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
-</code></pre></div>
-<blockquote>
-<p>[!IMPORTANT]
-Profile apply <strong>overwrites tracked repository files</strong> from <code>sdk_profiles/&lt;profile&gt;/</code> snapshots (not git diffs) and clears generated build dirs. Use it for local build/Studio prep; restore <code>PROFILE=ssdk_2026_6</code> before committing unless you intentionally change the default. See the repository <a href="../README.md#dual-sdk-support">README — Dual SDK support</a>.</p>
-</blockquote>
-<p>The project-generation workflow is the same for both devices and both supported SDKs:</p>
+<p>The project-generation workflow for EFR32MG26 devices is shown below:</p>
 <p><img alt="Figure 3 Create new project" src="images/figure_3_create_new_project.png" /></p>
 <h6 id="figure-3-create-new-project">Figure 3 Create new project<a class="headerlink" href="#figure-3-create-new-project" title="Permanent link">&para;</a></h6>
 <p>To create a new Simplicity Studio® 6 (SSv6) project, follow these three dialog steps:</p>
@@ -1691,7 +1678,7 @@ Profile apply <strong>overwrites tracked repository files</strong> from <code>sd
 <p>In <code>Example Project Selection</code>, use the checkboxes or keywords to find the example of interest. To create a radio board example IEC60730 Demo, search the keyword <code>iec60730</code> in the search box, related examples will show. Choose <code>IEC60730 Example Demo</code>. Click <code>create</code></p>
 <p><img alt="Figure 4 Example Project Selection" src="images/figure_4_example_project_selection.png" /></p>
 <h6 id="figure-4-example-project-selection">Figure 4 Example Project Selection<a class="headerlink" href="#figure-4-example-project-selection" title="Permanent link">&para;</a></h6>
-<p>In Target Device, select the target device for the project. For this example, choose <code>EFR32BG24A010F1024IM40</code>, then click <code>Next</code>. The same steps apply to <code>BRD4264C</code> or <code>EFR32BG21A010F1024IM32</code>.
+<p>In Target Device, select the target device for the project. For this example, choose <code>brd4121a</code>, then click <code>Next</code>.
 <br></p>
 <p><img alt="Figure 5 Target Device Selection" src="images/figure_5_target_device_selection.png" /></p>
 <h6 id="figure-5-target-device-selection">Figure 5 Target Device Selection<a class="headerlink" href="#figure-5-target-device-selection" title="Permanent link">&para;</a></h6>
@@ -1728,10 +1715,10 @@ Profile apply <strong>overwrites tracked repository files</strong> from <code>sd
 </blockquote>
 <h3 id="studio-style-example-gcc">Studio-style example (GCC)<a class="headerlink" href="#studio-style-example-gcc" title="Permanent link">&para;</a></h3>
 <p>Single continuous region (start address to <code>check_sum</code>):</p>
-<div class="highlight"><pre><span></span><code>arm-none-eabi-objdump<span class="w"> </span>-t<span class="w"> </span>-h<span class="w"> </span>-d<span class="w"> </span>-S<span class="w"> </span><span class="s1">'${BuildArtifactFileBaseName}.axf'</span><span class="w"> </span>&gt;<span class="s1">'${BuildArtifactFileBaseName}.lst'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>bash<span class="w"> </span><span class="si">${</span><span class="nv">ProjDirPath</span><span class="si">}</span>/iec60730_2.2.0/lib/crc/sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span><span class="w"> </span><span class="s2">"&lt;path_build_dir&gt;"</span><span class="w"> </span><span class="s2">"&lt;path_srecord_bin&gt;"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000"</span>
+<div class="highlight"><pre><span></span><code>arm-none-eabi-objdump<span class="w"> </span>-t<span class="w"> </span>-h<span class="w"> </span>-d<span class="w"> </span>-S<span class="w"> </span><span class="s1">'${BuildArtifactFileBaseName}.axf'</span><span class="w"> </span>&gt;<span class="s1">'${BuildArtifactFileBaseName}.lst'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>bash<span class="w"> </span><span class="si">${</span><span class="nv">ProjDirPath</span><span class="si">}</span>/iec60730_2.3.0/lib/crc/sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span><span class="w"> </span><span class="s2">"&lt;path_build_dir&gt;"</span><span class="w"> </span><span class="s2">"&lt;path_srecord_bin&gt;"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000"</span>
 </code></pre></div>
 <p>Multiple regions (must match OEM Flash IMC regions; demo GCC offsets example):</p>
-<div class="highlight"><pre><span></span><code>arm-none-eabi-objdump<span class="w"> </span>-t<span class="w"> </span>-h<span class="w"> </span>-d<span class="w"> </span>-S<span class="w"> </span><span class="s1">'${BuildArtifactFileBaseName}.axf'</span><span class="w"> </span>&gt;<span class="s1">'${BuildArtifactFileBaseName}.lst'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>bash<span class="w"> </span><span class="si">${</span><span class="nv">ProjDirPath</span><span class="si">}</span>/iec60730_2.2.0/lib/crc/sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span><span class="w"> </span><span class="s2">"&lt;path_build_dir&gt;"</span><span class="w"> </span><span class="s2">"&lt;path_srecord_bin&gt;"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
+<div class="highlight"><pre><span></span><code>arm-none-eabi-objdump<span class="w"> </span>-t<span class="w"> </span>-h<span class="w"> </span>-d<span class="w"> </span>-S<span class="w"> </span><span class="s1">'${BuildArtifactFileBaseName}.axf'</span><span class="w"> </span>&gt;<span class="s1">'${BuildArtifactFileBaseName}.lst'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>bash<span class="w"> </span><span class="si">${</span><span class="nv">ProjDirPath</span><span class="si">}</span>/iec60730_2.3.0/lib/crc/sl_iec60730_cal_crc16.sh<span class="w"> </span><span class="si">${</span><span class="nv">BuildArtifactFileBaseName</span><span class="si">}</span><span class="w"> </span><span class="s2">"&lt;path_build_dir&gt;"</span><span class="w"> </span><span class="s2">"&lt;path_srecord_bin&gt;"</span><span class="w"> </span>GCC<span class="w"> </span><span class="s2">"0x8000000 0x8000050 0x80000a0 0x80000f0 0x8000140 0x8000190"</span>
 </code></pre></div>
 <p>These six addresses are <strong>three start/end pairs</strong>. They come from the demo OEM table in <code>oem_iec60730.c</code> (<code>OEM_FLASH_OFFSET = 20</code> words → <code>0x50</code> bytes per region, with one-region gaps). See <strong>Section 7.2</strong> for the OEM code to modify and why multiple regions are used.</p>
 <p><img alt="Figure 10 Output command from the Post-build Steps" src="images/figure_10_add_the_command_to_post_build_steps.png" /></p>
@@ -1746,7 +1733,7 @@ Profile apply <strong>overwrites tracked repository files</strong> from <code>sd
 <span class="w">    </span><span class="s">COMMAND</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_OBJCOPY</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">OBJCOPY_BIN_CMD</span><span class="o">}</span><span class="w">  </span><span class="s2">"$&lt;TARGET_FILE:iec60730_demo&gt;"</span><span class="w"> </span><span class="s2">"$&lt;TARGET_FILE_DIR:iec60730_demo&gt;/$&lt;TARGET_FILE_BASE_NAME:iec60730_demo&gt;.bin"</span>
 <span class="w">    </span><span class="c"># .lst + CRC-16 (*_crc16.bin/hex/s37). Use bash on Windows (MSYS/MinGW/Cygwin).</span>
 <span class="w">    </span><span class="s">COMMAND</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_OBJDUMP</span><span class="o">}</span><span class="w"> </span><span class="s">-t</span><span class="w"> </span><span class="s">-h</span><span class="w"> </span><span class="s">-d</span><span class="w"> </span><span class="s">-S</span><span class="w"> </span><span class="s2">"$&lt;TARGET_FILE:iec60730_demo&gt;"</span><span class="w"> </span><span class="s">&gt;</span><span class="w"> </span><span class="s2">"$&lt;TARGET_FILE_DIR:iec60730_demo&gt;/$&lt;TARGET_FILE_BASE_NAME:iec60730_demo&gt;.lst"</span>
-<span class="w">    </span><span class="s">COMMAND</span><span class="w"> </span><span class="s">bash</span><span class="w"> </span><span class="s2">"${CMAKE_CURRENT_LIST_DIR}/../iec60730_2.2.0/lib/crc/sl_iec60730_cal_crc16.sh"</span>
+<span class="w">    </span><span class="s">COMMAND</span><span class="w"> </span><span class="s">bash</span><span class="w"> </span><span class="s2">"${CMAKE_CURRENT_LIST_DIR}/../iec60730_2.3.0/lib/crc/sl_iec60730_cal_crc16.sh"</span>
 <span class="w">            </span><span class="s2">"$&lt;TARGET_FILE_BASE_NAME:iec60730_demo&gt;"</span>
 <span class="w">            </span><span class="s2">"$&lt;TARGET_FILE_DIR:iec60730_demo&gt;"</span>
 <span class="w">            </span><span class="s2">"C:/Program Files/srecord/bin"</span>
@@ -1995,6 +1982,11 @@ sl_iec60730_irq_cfg_t<span class="w"> </span>oem_irq_config<span class="p">;</sp
 <td>2.2.0</td>
 <td>Sep 2026</td>
 <td>SDK Extension packaging release (library runtime version remains 2.0.0). Support for EFR32BG21 and EFR32BG24 devices. Added dual SDK support for Gecko SDK (GSDK) 4.5.0 and Simplicity SDK (SSDK) 2026.6.0. Added SDK profile switching, unit test, and integration test support. Documented that SLT provides Simplicity SDK 2026.6.0 clone/setup, while GSDK 4.5.0 is maintained on GitHub and resolved separately.</td>
+</tr>
+<tr>
+<td>2.3.0</td>
+<td>Oct 2026</td>
+<td>Update the documentation to reflect the extension configuration changes that add support for the EFR32MG26 device</td>
 </tr>
 </tbody>
 </table>

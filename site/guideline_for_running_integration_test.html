@@ -438,18 +438,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#select-sdk-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Select SDK version
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Select SDK version">
+    <nav class="md-nav" aria-label="Prerequisites">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -719,18 +708,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#select-sdk-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Select SDK version
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Select SDK version">
+    <nav class="md-nav" aria-label="Prerequisites">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -867,7 +845,7 @@
 
 
 <h1 id="guideline-for-running-integration-tests">Guideline for Running Integration Tests<a class="headerlink" href="#guideline-for-running-integration-tests" title="Permanent link">&para;</a></h1>
-<p>This document describes how to build and run IEC60730 integration tests with <strong>IEC60730 Library SDK Extension v2.2.0</strong>.</p>
+<p>This document describes how to build and run IEC60730 integration tests with <strong>IEC60730 Library SDK Extension v2.3.0</strong>.</p>
 <p>Supported SDKs:</p>
 <table>
 <thead>
@@ -883,19 +861,13 @@
 <td>2026.6.0</td>
 <td>Clone/setup through SLT (<code>make bootstrap</code> / <code>recipe.toml</code>)</td>
 </tr>
-<tr>
-<td>Gecko SDK (GSDK)</td>
-<td>4.5.0</td>
-<td>Maintained on GitHub — set <code>GSDK_PATH</code> or allow cache/download</td>
-</tr>
 </tbody>
 </table>
 <blockquote>
 <p>[!NOTE]
-<strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.
-<strong>GSDK 4.5.0 is maintained on GitHub</strong>, so resolve it with <code>GSDK_PATH</code>, a Docker mount, or <code>script/set_gsdk.sh</code> (see the repository <a href="../README.md">README</a>).</p>
+<strong>SLT supports Simplicity SDK (SimSDK) 2026.6.0</strong> clone/setup.</p>
 </blockquote>
-<p>The build and execution flow is the same for both SDKs after you select the matching profile and environment.</p>
+<p>The build and execution flow described in this document applies to Simplicity SDK (SimSDK) 2026.6.0.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li>GCC Arm Embedded Toolchain (<code>arm-none-eabi-gcc</code>)</li>
@@ -904,24 +876,6 @@
 <li>Simplicity CLI (<code>slc</code>) on <code>PATH</code></li>
 <li>Ethernet connectivity to the target for watchdog integration tests (<code>HOST_IP</code>)</li>
 </ul>
-<h2 id="select-sdk-version">Select SDK version<a class="headerlink" href="#select-sdk-version" title="Permanent link">&para;</a></h2>
-<p>Apply the SDK profile that matches your target SDK, then load the environment.
-The committed default is <strong><code>ssdk_2026_6</code></strong>.</p>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>ssdk_2026_6
-<span class="c1"># or</span>
-make<span class="w"> </span>apply-sdk-profile<span class="w"> </span><span class="nv">PROFILE</span><span class="o">=</span>gecko_4_5
-
-<span class="nb">source</span><span class="w"> </span>script/set_env.sh
-</code></pre></div>
-<blockquote>
-<p>[!IMPORTANT]
-<code>make apply-sdk-profile</code> <strong>overwrites tracked files</strong> (SLCPs, demos, <code>sdk.env</code>, etc.) from <code>sdk_profiles/&lt;profile&gt;/</code> snapshots and cleans <code>build/</code> / <code>autogen/</code> / <code>src/</code>. Do <strong>not</strong> commit those changes unless you mean to change the default profile. Restore with <code>make apply-sdk-profile PROFILE=ssdk_2026_6</code> before committing other work. Details: <a href="../README.md#dual-sdk-support">README — Dual SDK support</a>.</p>
-<p>[!NOTE]
-Prefer <code>source script/set_env.sh</code> over hard-coded machine paths.
-When configuring CMake manually, export the required variables before running CMake.
-<code>cmake/toolchain.cmake</code> can also discover <code>arm-none-eabi-gcc</code> from <code>PATH</code>.
-Prefer <code>make BOARD_NAME=... build-integration</code> so <code>FLASH_REGIONS_TEST</code> is set for BG21/BG24; if you invoke CMake directly, export <code>FLASH_REGIONS_TEST</code> yourself (see table below).</p>
-</blockquote>
 <h3 id="manual-environment-variables-reference-only">Manual environment variables (reference only)<a class="headerlink" href="#manual-environment-variables-reference-only" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -933,7 +887,7 @@ Prefer <code>make BOARD_NAME=... build-integration</code> so <code>FLASH_REGIONS
 <tbody>
 <tr>
 <td><code>SDK_PATH</code></td>
-<td>Root of GSDK 4.5.0 or Simplicity SDK 2026.6.0</td>
+<td>Root of Simplicity SDK 2026.6.0</td>
 </tr>
 <tr>
 <td><code>TOOL_DIRS</code></td>
@@ -974,14 +928,7 @@ Prefer <code>make BOARD_NAME=... build-integration</code> so <code>FLASH_REGIONS
 </tbody>
 </table>
 <p>Example shapes (replace paths with your local installs):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># GSDK 4.5.0</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span>/path/to/gecko-sdk
-<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
-<span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
-<span class="nb">export</span><span class="w"> </span><span class="nv">JLINK_PATH</span><span class="o">=</span>/opt/SEGGER/JLink/libjlinkarm.so
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/path/to/slc_cli:<span class="nv">$PATH</span>
-
-<span class="c1"># Simplicity SDK 2026.6.0 (typically from SLT)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simplicity SDK 2026.6.0 (typically from SLT)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">SDK_PATH</span><span class="o">=</span><span class="k">$(</span>slt<span class="w"> </span>where<span class="w"> </span>simplicity-sdk<span class="k">)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_DIRS</span><span class="o">=</span>/path/to/arm-gnu-toolchain/bin
 <span class="nb">export</span><span class="w"> </span><span class="nv">TOOL_CHAINS</span><span class="o">=</span>GCC
@@ -994,27 +941,17 @@ Prefer <code>make BOARD_NAME=... build-integration</code> so <code>FLASH_REGIONS
 <tr>
 <th>Device</th>
 <th>Flash start</th>
-<th>Example CHIP</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>EFR32BG24A010F1024IM40</code></td>
+<td><code>brd4121a</code></td>
 <td><code>0x8000000</code></td>
-<td><code>EFR32BG24A010F1024IM40</code></td>
-</tr>
-<tr>
-<td><code>EFR32BG21A010F1024IM32</code></td>
-<td><code>0x0000000</code></td>
-<td><code>EFR32BG21A010F1024IM32</code></td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000<span class="w">   </span><span class="c1"># BG24</span>
-<span class="c1"># or</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x0000000<span class="w">   </span><span class="c1"># BG21</span>
-
-<span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32BG24A010F1024IM40
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">FLASH_REGIONS_TEST</span><span class="o">=</span>0x8000000
+<span class="nb">export</span><span class="w"> </span><span class="nv">CHIP</span><span class="o">=</span>EFR32MG26BXXXF3200
 <span class="nb">export</span><span class="w"> </span><span class="nv">HOST_IP</span><span class="o">=</span>&lt;board_ip&gt;
 <span class="nb">export</span><span class="w"> </span><span class="nv">ADAPTER_SN</span><span class="o">=</span>&lt;adapter_serial&gt;
 </code></pre></div>
@@ -1026,10 +963,10 @@ The current integration test implementation supports CRC calculation for a <stro
 <p>Watchdog integration tests require Ethernet access to the device. Export <code>CHIP</code>, <code>ADAPTER_SN</code>, <code>JLINK_PATH</code>, <code>HOST_IP</code>, and <code>LST_PATH</code> before running the Python test script.</p>
 <p><code>LST_PATH</code> points at the built watchdog output directory under <code>build/</code>, for example:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Non-secure peripherals (default)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span><span class="nv">$PWD</span>/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/NS
+<span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span><span class="nv">$PWD</span>/build/test/integration_test/build/brd4121a/GCC/integration_test_iec60730_watchdog/NS
 
 <span class="c1"># Secure peripherals</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span><span class="nv">$PWD</span>/build/test/integration_test/build/EFR32BG21A010F1024IM32/GCC/integration_test_iec60730_watchdog/S
+<span class="nb">export</span><span class="w"> </span><span class="nv">LST_PATH</span><span class="o">=</span><span class="nv">$PWD</span>/build/test/integration_test/build/brd4121a/GCC/integration_test_iec60730_watchdog/S
 </code></pre></div>
 <p>Adjust the board name and <code>S</code>/<code>NS</code> suffix to match your build.</p>
 <h2 id="manually-run-integration-tests">Manually run integration tests<a class="headerlink" href="#manually-run-integration-tests" title="Permanent link">&para;</a></h2>
@@ -1037,16 +974,8 @@ The current integration test implementation supports CRC calculation for a <stro
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>prepare
 <span class="nb">cd</span><span class="w"> </span>build
 
-cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32
-
-<span class="c1"># or BG24</span>
-cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG24A010F1024IM40
+cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span>-DBOARD_NAME<span class="o">=</span>brd4121a
 </code></pre></div>
 <p>Build targets:</p>
 <div class="highlight"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>integration_test_iec60730_program_counter<span class="w"> </span>-j4
@@ -1084,12 +1013,7 @@ cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </
 <div class="highlight"><pre><span></span><code>cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32
-
-cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolchain.cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DENABLE_INTEGRATION_TESTING<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG24A010F1024IM40
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4121a
 </code></pre></div>
 <h3 id="manual-python-test-helpers">Manual Python test helpers<a class="headerlink" href="#manual-python-test-helpers" title="Permanent link">&para;</a></h3>
 <p>From <code>test/test_script/</code> (after building images and exporting env vars):</p>
@@ -1112,7 +1036,7 @@ bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>&
 <tbody>
 <tr>
 <td><code>$1</code> BOARD_NAME</td>
-<td><code>EFR32BG21A010F1024IM32</code> or <code>EFR32BG24A010F1024IM40</code></td>
+<td><code>brd4121a</code></td>
 </tr>
 <tr>
 <td><code>$2</code> TASK</td>
@@ -1157,12 +1081,11 @@ bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>&
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
 
-bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
-bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG24A010F1024IM40<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC
 
-bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG21A010F1024IM32<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="s2">"-DENABLE_CAL_CRC_32=ON"</span>
 
-bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>EFR32BG24A010F1024IM40<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="se">\</span>
+bash<span class="w"> </span>execute_integration_test.sh<span class="w"> </span>brd4121a<span class="w"> </span>all<span class="w"> </span>all<span class="w"> </span>&lt;ADAPTER_SN&gt;<span class="w"> </span>GCC<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="s2">"-DTEST_SECURE_PERIPHERALS_ENABLE=ON -DINTEGRATION_TEST_WDOG1_ENABLE=ON -DINTEGRATION_TEST_USE_MARCHX_DISABLE=ON -DENABLE_CAL_CRC_32=ON"</span>
 </code></pre></div>
 <p>For environment setup details, see also <a href="index.html">Overview</a>.</p>
@@ -1199,7 +1122,7 @@ cmake<span class="w"> </span>--toolchain<span class="w"> </span>../cmake/toolcha
 <span class="w">  </span>-DTEST_SECURE_PERIPHERALS_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DINTEGRATION_TEST_WDOG1_ENABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DINTEGRATION_TEST_USE_MARCHX_DISABLE<span class="o">=</span>ON<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>EFR32BG21A010F1024IM32<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DBOARD_NAME<span class="o">=</span>brd4121a<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DENABLE_CAL_CRC_32<span class="o">=</span>ON
 </code></pre></div>
 <blockquote>
